@@ -3,19 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: database:3306
--- Tiempo de generación: 08-01-2026 a las 08:44:33
+-- Tiempo de generación: 08-01-2026 a las 09:10:06
 -- Versión del servidor: 8.4.5
 -- Versión de PHP: 8.2.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Base de datos: `esportin`
@@ -35,7 +29,8 @@ CREATE TABLE `articulo` (
   `precio` decimal(10,2) NOT NULL,
   `descuento` decimal(10,2) DEFAULT NULL,
   `imagen` longblob,
-  `id_tipoarticulo` bigint NOT NULL
+  `id_tipoarticulo` bigint NOT NULL,
+  `id_club` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
 
 -- --------------------------------------------------------
@@ -109,6 +104,20 @@ CREATE TABLE `compra` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `cuota`
+--
+
+CREATE TABLE `cuota` (
+  `id` bigint NOT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
+  `cantidad` decimal(5,2) NOT NULL,
+  `fecha` datetime NOT NULL,
+  `id_temporada` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `equipo`
 --
 
@@ -166,6 +175,19 @@ CREATE TABLE `noticia` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `pago`
+--
+
+CREATE TABLE `pago` (
+  `id` bigint NOT NULL,
+  `id_cuota` bigint NOT NULL,
+  `id_usuario` bigint NOT NULL,
+  `abonado` tinyint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `partido`
 --
 
@@ -209,7 +231,8 @@ CREATE TABLE `temporada` (
 
 CREATE TABLE `tipoarticulo` (
   `id` bigint NOT NULL,
-  `descripcion` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL
+  `descripcion` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
+  `id_club` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
 
 -- --------------------------------------------------------
@@ -283,6 +306,12 @@ ALTER TABLE `compra`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `cuota`
+--
+ALTER TABLE `cuota`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `equipo`
 --
 ALTER TABLE `equipo`
@@ -304,6 +333,12 @@ ALTER TABLE `jugador`
 -- Indices de la tabla `noticia`
 --
 ALTER TABLE `noticia`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `pago`
+--
+ALTER TABLE `pago`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -383,6 +418,12 @@ ALTER TABLE `compra`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `cuota`
+--
+ALTER TABLE `cuota`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `equipo`
 --
 ALTER TABLE `equipo`
@@ -404,6 +445,12 @@ ALTER TABLE `jugador`
 -- AUTO_INCREMENT de la tabla `noticia`
 --
 ALTER TABLE `noticia`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `pago`
+--
+ALTER TABLE `pago`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
@@ -442,7 +489,3 @@ ALTER TABLE `tipousuario`
 ALTER TABLE `usuario`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
