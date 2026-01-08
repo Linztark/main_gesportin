@@ -82,7 +82,15 @@ CREATE TABLE `puntuacion` (
   FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Estructura de tabla para la tabla `categoria`
+--
 
+CREATE TABLE `categoria` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
+  PRIMARY KEY(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
 
 --
 -- Índices para tablas volcadas
@@ -106,7 +114,6 @@ ALTER TABLE `temporada`
 COMMIT;
 
 COMMIT;
-
 
 
 
