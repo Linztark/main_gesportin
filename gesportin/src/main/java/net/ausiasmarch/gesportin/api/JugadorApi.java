@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import net.ausiasmarch.gesportin.entity.JugadorEntity;
 import net.ausiasmarch.gesportin.service.AleatorioService;
 import net.ausiasmarch.gesportin.service.JugadorService;
@@ -36,7 +37,7 @@ public class JugadorApi {
 
     // Crear un jugador
     @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody JugadorEntity oJugadorEntity) {
+    public ResponseEntity<JugadorEntity> create(@RequestBody JugadorEntity oJugadorEntity) {
         return ResponseEntity.ok(oJugadorService.create(oJugadorEntity));
     }
 
