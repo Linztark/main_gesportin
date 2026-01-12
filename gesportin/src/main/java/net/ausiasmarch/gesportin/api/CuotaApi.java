@@ -49,6 +49,12 @@ public class CuotaApi {
         return ResponseEntity.ok(oCuotaService.delete(id));
     }
 
+    // generar datos
+    @PostMapping("/generar-datos/{cantidad}")
+    public ResponseEntity<Long> generarDatos(@PathVariable int cantidad){
+        return ResponseEntity.ok(oCuotaService.generarDatos(cantidad));
+    }
+
     // listado paginado de posts
     @GetMapping("")
     public ResponseEntity<Page<CuotaEntity>> getPage(Pageable oPageable) {
