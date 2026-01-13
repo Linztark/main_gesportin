@@ -69,8 +69,8 @@ public class PuntuacionApi {
         return ResponseEntity.ok(oPuntuacionService.deleteAll());
     }
 
-    // POST fake data in the DB
-    @PostMapping("/fill/{quantity}")
+    // GET - create fake data in the DB
+    @GetMapping("/fill/{quantity}")
     public ResponseEntity<Long> fillDatabase(@PathVariable @Min(1) int quantity) {
         return ResponseEntity.ok(oPuntuacionService.fillDatabase(quantity));
     }
