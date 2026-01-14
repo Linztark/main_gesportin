@@ -30,7 +30,7 @@ public class FacturaService {
         facturaEntity.setFecha(LocalDateTime.now());
         Long idUsuario = facturaEntity.getIdUsuario();
         if (idUsuario == null || idUsuario <= 0) {
-            facturaEntity.setIdUsuario((long)oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            facturaEntity.setIdUsuario((long)oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
         }
         return oFacturaRepository.save(facturaEntity);
     }
@@ -62,7 +62,7 @@ public class FacturaService {
         for (int i = 0; i < numQuestions; i++) {
             FacturaEntity oFacturaEntity = new FacturaEntity();
             oFacturaEntity.setFecha(LocalDateTime.now());
-            oFacturaEntity.setIdUsuario((long)oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            oFacturaEntity.setIdUsuario((long)oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             oFacturaRepository.save(oFacturaEntity);
         }
         return numQuestions;

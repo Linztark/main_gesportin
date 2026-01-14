@@ -25,11 +25,11 @@ import net.ausiasmarch.gesportin.service.TipoarticuloService;
 public class TipoarticuloApi {
 
     @Autowired
-    private TipoarticuloService tipoarticuloService;
+    private TipoarticuloService oTipoarticuloService;
 
     @GetMapping("/{id}")
     public ResponseEntity<TipoarticuloEntity> get(@PathVariable Long id) {
-        return ResponseEntity.ok(tipoarticuloService.get(id));
+        return ResponseEntity.ok(oTipoarticuloService.get(id));
     }
 
     @GetMapping
@@ -37,41 +37,36 @@ public class TipoarticuloApi {
             @PageableDefault(size = 1000) Pageable pageable,
             @RequestParam(required = false) String descripcion,
             @RequestParam(required = false) Long idClub) {
-        return ResponseEntity.ok(tipoarticuloService.getPage(pageable, descripcion, idClub));
+        return ResponseEntity.ok(oTipoarticuloService.getPage(pageable, descripcion, idClub));
     }
 
     @PostMapping
     public ResponseEntity<TipoarticuloEntity> create(@RequestBody TipoarticuloEntity tipoarticulo) {
-        return ResponseEntity.ok(tipoarticuloService.create(tipoarticulo));
+        return ResponseEntity.ok(oTipoarticuloService.create(tipoarticulo));
     }
 
     @PutMapping
     public ResponseEntity<TipoarticuloEntity> update(@RequestBody TipoarticuloEntity tipoarticulo) {
-        return ResponseEntity.ok(tipoarticuloService.update(tipoarticulo));
+        return ResponseEntity.ok(oTipoarticuloService.update(tipoarticulo));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(tipoarticuloService.delete(id));
+        return ResponseEntity.ok(oTipoarticuloService.delete(id));
     }
 
     @GetMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(tipoarticuloService.fill(cantidad));
-    }
-
-    @GetMapping("/fill")
-    public ResponseEntity<Long> fillDefault() {
-        return ResponseEntity.ok(tipoarticuloService.fill(50L));
+        return ResponseEntity.ok(oTipoarticuloService.fill(cantidad));
     }
 
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(tipoarticuloService.empty());
+        return ResponseEntity.ok(oTipoarticuloService.empty());
     }
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(tipoarticuloService.count());
+        return ResponseEntity.ok(oTipoarticuloService.count());
     }
 }

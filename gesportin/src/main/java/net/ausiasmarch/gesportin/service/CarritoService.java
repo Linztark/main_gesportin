@@ -52,9 +52,9 @@ public class CarritoService {
     public Long fill(Long cantidad) {
         for (long i = 0L; i < cantidad; i++) {
             CarritoEntity oCarritoEntity = new CarritoEntity();
-            oCarritoEntity.setCantidad(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
-            oCarritoEntity.setIdArticulo((Long) (long)oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
-            oCarritoEntity.setIdUsuario((Long) (long)oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            oCarritoEntity.setCantidad(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            oCarritoEntity.setIdArticulo((Long) (long)oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            oCarritoEntity.setIdUsuario((Long) (long)oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             oCarritoRepository.save(oCarritoEntity);
         }
 

@@ -1,8 +1,8 @@
 package net.ausiasmarch.gesportin.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,56 +13,57 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import net.ausiasmarch.gesportin.entity.NoticiaEntity;
-import net.ausiasmarch.gesportin.service.NoticiaService;
+import net.ausiasmarch.gesportin.entity.ComentarioEntity;
+import net.ausiasmarch.gesportin.service.ComentarioService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/noticia")
-public class NoticiaApi {
+@RequestMapping("/comentario")
+public class ComentarioApi {
 
     @Autowired
-    private NoticiaService oNoticiaService;
+    private ComentarioService oComentarioService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<NoticiaEntity> get(@PathVariable Long id) {
-        return ResponseEntity.ok(oNoticiaService.get(id));
+    public ResponseEntity<ComentarioEntity> get(@PathVariable Long id) {
+        return ResponseEntity.ok(oComentarioService.get(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<NoticiaEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(oNoticiaService.getPage(oPageable));
+    public ResponseEntity<Page<ComentarioEntity>> getPage(
+            @PageableDefault(size = 1000) Pageable pageable) {
+        return ResponseEntity.ok(oComentarioService.getPage(pageable));
     }
 
     @PostMapping
-    public ResponseEntity<NoticiaEntity> create(@RequestBody NoticiaEntity noticiaEntity) {
-        return ResponseEntity.ok(oNoticiaService.create(noticiaEntity));
+    public ResponseEntity<Long> create(@RequestBody ComentarioEntity comentario) {
+        return ResponseEntity.ok(oComentarioService.create(comentario));
     }
 
     @PutMapping
-    public ResponseEntity<NoticiaEntity> update(@RequestBody NoticiaEntity noticiaEntity) {
-        return ResponseEntity.ok(oNoticiaService.update(noticiaEntity));
+    public ResponseEntity<Long> update(@RequestBody ComentarioEntity comentario) {
+        return ResponseEntity.ok(oComentarioService.update(comentario));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(oNoticiaService.delete(id));
+        return ResponseEntity.ok(oComentarioService.delete(id));
     }
 
     @GetMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(oNoticiaService.fill(cantidad));
+        return ResponseEntity.ok(oComentarioService.rellenaComentarios(cantidad));
     }
 
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(oNoticiaService.empty());
+        return ResponseEntity.ok(oComentarioService.empty());
     }
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(oNoticiaService.count());
+        return ResponseEntity.ok(oComentarioService.count());
     }
-
 }

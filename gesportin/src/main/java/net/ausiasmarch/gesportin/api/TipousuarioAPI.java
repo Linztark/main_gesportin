@@ -1,5 +1,4 @@
 package net.ausiasmarch.gesportin.api;
 
-public class TipousuarioAPI {
-    
-}
+// Deprecated placeholder. Replaced by TipousuarioApi.java
+

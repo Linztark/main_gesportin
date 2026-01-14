@@ -17,52 +17,52 @@ import org.springframework.web.bind.annotation.RestController;
 import net.ausiasmarch.gesportin.entity.EquipoEntity;
 import net.ausiasmarch.gesportin.service.EquipoService;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/equipo")
 public class EquipoApi {
 
     @Autowired
-    EquipoService equipoService;
+    private EquipoService oEquipoService;
 
-    // Obtener uno por ID
     @GetMapping("/{id}")
     public ResponseEntity<EquipoEntity> get(@PathVariable Long id) {
-        return ResponseEntity.ok(equipoService.get(id));
+        return ResponseEntity.ok(oEquipoService.get(id));
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<Page<EquipoEntity>> getPage(Pageable pageable) {
-        return ResponseEntity.ok(equipoService.getPage(pageable));
+        return ResponseEntity.ok(oEquipoService.getPage(pageable));
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(equipoService.count());
+    @PostMapping
+    public ResponseEntity<EquipoEntity> create(@RequestBody EquipoEntity equipoEntity) {
+        return ResponseEntity.ok(oEquipoService.create(equipoEntity));
     }
 
-    @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody EquipoEntity equipoEntity) {
-        return ResponseEntity.ok(equipoService.create(equipoEntity));
-    }
-
-    @PutMapping("")
-    public ResponseEntity<Long> update(@RequestBody EquipoEntity equipoEntity) {
-        return ResponseEntity.ok(equipoService.update(equipoEntity));
+    @PutMapping
+    public ResponseEntity<EquipoEntity> update(@RequestBody EquipoEntity equipoEntity) {
+        return ResponseEntity.ok(oEquipoService.update(equipoEntity));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(equipoService.delete(id));
+        return ResponseEntity.ok(oEquipoService.delete(id));
+    }
+
+    @GetMapping("/fill/{cantidad}")
+    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
+        return ResponseEntity.ok(oEquipoService.fill(cantidad));
     }
 
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(equipoService.empty());
+        return ResponseEntity.ok(oEquipoService.empty());
     }
 
-    @GetMapping("/fill/{amount}")
-    public ResponseEntity<Long> fill(@PathVariable("amount") Long amount) {
-        return ResponseEntity.ok(equipoService.fill(amount));
+    @GetMapping("/count")
+    public ResponseEntity<Long> count() {
+        return ResponseEntity.ok(oEquipoService.count());
     }
+
 }

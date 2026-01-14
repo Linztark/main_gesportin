@@ -13,13 +13,13 @@ import net.ausiasmarch.gesportin.bean.SessionBean;
 import net.ausiasmarch.gesportin.bean.TokenBean;
 import net.ausiasmarch.gesportin.service.SessionService;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/session")
 public class SessionApi {
     
     @Autowired
-    SessionService oSessionService;
+    private SessionService oSessionService;
 
     @PostMapping("/login")
     public ResponseEntity<TokenBean> login(@RequestBody SessionBean oSessionBean) {

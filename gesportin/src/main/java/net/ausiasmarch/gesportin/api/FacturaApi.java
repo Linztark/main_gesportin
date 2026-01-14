@@ -18,59 +18,52 @@ import org.springframework.web.bind.annotation.RestController;
 import net.ausiasmarch.gesportin.entity.FacturaEntity;
 import net.ausiasmarch.gesportin.service.FacturaService;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/factura")
-public class FacturaApi{
+public class FacturaApi {
 
     @Autowired
-    FacturaService oFacturaService;
+    private FacturaService oFacturaService;
 
-    //Get de Factura
     @GetMapping("/{id}")
     public ResponseEntity<FacturaEntity> get(@PathVariable Long id) {
         return ResponseEntity.ok(oFacturaService.get(id));
     }
 
-    //GetPage de Factura
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<Page<FacturaEntity>> getPage(Pageable oPageable) {
         return ResponseEntity.ok(oFacturaService.getPage(oPageable));
     }
 
-    //Crear Factura
-    @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody FacturaEntity facturaEntity) {
+    @PostMapping
+    public ResponseEntity<FacturaEntity> create(@RequestBody FacturaEntity facturaEntity) {
         return ResponseEntity.ok(oFacturaService.create(facturaEntity));
     }
 
-    //Modificar Factura
-    @PutMapping("")
-    public ResponseEntity<Long> update(@RequestBody FacturaEntity facturaEntity) {
+    @PutMapping
+    public ResponseEntity<FacturaEntity> update(@RequestBody FacturaEntity facturaEntity) {
         return ResponseEntity.ok(oFacturaService.update(facturaEntity));
     }
-    
-    //Borrar Factura
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oFacturaService.delete(id));
     }
 
-    //Borrar Todas las Facturas
+    @GetMapping("/fill/{cantidad}")
+    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
+        return ResponseEntity.ok(oFacturaService.fill(cantidad));
+    }
+
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(oFacturaService.empty());
     }
 
-    //Cuenta las Facturas
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(oFacturaService.count()); 
+        return ResponseEntity.ok(oFacturaService.count());
     }
 
-    //Crea Facturas
-    @GetMapping("/fill/{numFacturas}")
-    public ResponseEntity<Long> fillFacturas(@PathVariable int numFacturas) {
-        return ResponseEntity.ok(oFacturaService.fillFacturas(numFacturas));
-    }
 }

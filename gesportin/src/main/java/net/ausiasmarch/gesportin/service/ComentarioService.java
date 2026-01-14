@@ -46,16 +46,16 @@ public class ComentarioService {
             
             // Generar contenido aleatorio
             String contenidoGenerado = "";
-            int numFrases = oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 3);
+            int numFrases = oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 3);
             for (int i = 1; i <= numFrases; i++) {
                 contenidoGenerado += alComentarios
-                        .get(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, alComentarios.size() - 1)) + " ";
+                        .get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alComentarios.size() - 1)) + " ";
             }
             oComentariosEntity.setContenido(contenidoGenerado.trim());
             
             // Generar id_noticia e id_usuario aleatorios entre 0 y 50
-            oComentariosEntity.setIdNoticia((Long) (long) oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, 50));
-            oComentariosEntity.setIdUsuario((Long) (long) oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, 50));
+            oComentariosEntity.setIdNoticia((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
+            oComentariosEntity.setIdUsuario((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
             
             // Guardar entity en base de datos
             oComentariosRepository.save(oComentariosEntity);
@@ -72,10 +72,10 @@ public class ComentarioService {
     public Long create(ComentarioEntity comentariosEntity) {
         // Si no se especifican id_noticia o id_usuario, generar valores aleatorios
         if (comentariosEntity.getIdNoticia() == null) {
-            comentariosEntity.setIdNoticia((Long) (long) oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, 50));
+            comentariosEntity.setIdNoticia((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
         }
         if (comentariosEntity.getIdUsuario() == null) {
-            comentariosEntity.setIdUsuario((Long) (long) oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, 50));
+            comentariosEntity.setIdUsuario((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
         }
         oComentariosRepository.save(comentariosEntity);
         return comentariosEntity.getId();

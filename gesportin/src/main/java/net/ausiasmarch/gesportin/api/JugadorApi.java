@@ -17,59 +17,52 @@ import org.springframework.web.bind.annotation.RestController;
 import net.ausiasmarch.gesportin.entity.JugadorEntity;
 import net.ausiasmarch.gesportin.service.JugadorService;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/jugador")
 public class JugadorApi {
 
     @Autowired
-    JugadorService oJugadorService;
+    private JugadorService oJugadorService;
 
-    // Obtener un jugador por su ID
     @GetMapping("/{id}")
     public ResponseEntity<JugadorEntity> get(@PathVariable Long id) {
         return ResponseEntity.ok(oJugadorService.get(id));
     }
 
-    // Crear un jugador
-    @PostMapping("")
-    public ResponseEntity<JugadorEntity> create(@RequestBody JugadorEntity oJugadorEntity) {
-        return ResponseEntity.ok(oJugadorService.create(oJugadorEntity));
+    @GetMapping
+    public ResponseEntity<Page<JugadorEntity>> getPage(Pageable oPageable) {
+        return ResponseEntity.ok(oJugadorService.getPage(oPageable));
     }
 
-    // Modificar un jugador
-    @PutMapping("")
-    public ResponseEntity<Long> update(@RequestBody JugadorEntity oJugadorEntity) {
-        return ResponseEntity.ok(oJugadorService.update(oJugadorEntity));
+    @PostMapping
+    public ResponseEntity<JugadorEntity> create(@RequestBody JugadorEntity jugadorEntity) {
+        return ResponseEntity.ok(oJugadorService.create(jugadorEntity));
     }
 
-    // Borrar un jugador
+    @PutMapping
+    public ResponseEntity<JugadorEntity> update(@RequestBody JugadorEntity jugadorEntity) {
+        return ResponseEntity.ok(oJugadorService.update(jugadorEntity));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oJugadorService.delete(id));
     }
 
-    // Rellenar datos "fake"
-    @GetMapping("/rellena/{numPosts}")
-    public ResponseEntity<Long> creaEquipo(
-            @PathVariable Long numPosts) {
-        return ResponseEntity.ok(oJugadorService.crearJugador(numPosts));
+    @GetMapping("/fill/{cantidad}")
+    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
+        return ResponseEntity.ok(oJugadorService.fill(cantidad));
     }
 
-    // Vaciar la tabla (solo para administradores)
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(oJugadorService.empty());
-    }
-
-    // Listado paginado de jugador
-    @GetMapping("")
-    public ResponseEntity<Page<JugadorEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(oJugadorService.getPage(oPageable));
     }
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oJugadorService.count());
     }
+
 }

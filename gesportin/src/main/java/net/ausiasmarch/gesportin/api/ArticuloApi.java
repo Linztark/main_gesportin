@@ -25,11 +25,11 @@ import net.ausiasmarch.gesportin.service.ArticuloService;
 public class ArticuloApi {
 
     @Autowired
-    private ArticuloService articuloService;
+    private ArticuloService oArticuloService;
 
     @GetMapping("/{id}")
     public ResponseEntity<ArticuloEntity> get(@PathVariable Long id) {
-        return ResponseEntity.ok(articuloService.get(id));
+        return ResponseEntity.ok(oArticuloService.get(id));
     }
 
     @GetMapping
@@ -38,42 +38,42 @@ public class ArticuloApi {
             @RequestParam(required = false) String descripcion,
             @RequestParam(required = false) Long idTipoarticulo,
             @RequestParam(required = false) Long idClub) {
-        return ResponseEntity.ok(articuloService.getPage(pageable, descripcion, idTipoarticulo, idClub));
+        return ResponseEntity.ok(oArticuloService.getPage(pageable, descripcion, idTipoarticulo, idClub));
     }
 
     @PostMapping
     public ResponseEntity<ArticuloEntity> create(@RequestBody ArticuloEntity articulo) {
-        return ResponseEntity.ok(articuloService.create(articulo));
+        return ResponseEntity.ok(oArticuloService.create(articulo));
     }
 
     @PutMapping
     public ResponseEntity<ArticuloEntity> update(@RequestBody ArticuloEntity articulo) {
-        return ResponseEntity.ok(articuloService.update(articulo));
+        return ResponseEntity.ok(oArticuloService.update(articulo));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(articuloService.delete(id));
+        return ResponseEntity.ok(oArticuloService.delete(id));
     }
 
     @GetMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(articuloService.fill(cantidad));
+        return ResponseEntity.ok(oArticuloService.fill(cantidad));
     }
 
     @GetMapping("/fill")
     public ResponseEntity<Long> fillDefault() {
-        return ResponseEntity.ok(articuloService.fill(50L));
+        return ResponseEntity.ok(oArticuloService.fill(50L));
     }
 
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(articuloService.empty());
+        return ResponseEntity.ok(oArticuloService.empty());
     }
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(articuloService.count());
+        return ResponseEntity.ok(oArticuloService.count());
     }
 
 }

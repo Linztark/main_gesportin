@@ -15,37 +15,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.ausiasmarch.gesportin.entity.CarritoEntity;
-import net.ausiasmarch.gesportin.service.AleatorioService;
 import net.ausiasmarch.gesportin.service.CarritoService;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/carrito")
 public class CarritoApi {
 
     @Autowired
-    AleatorioService oAleatorioService;
-
-    @Autowired
-    CarritoService oCarritoService;
+    private CarritoService oCarritoService;
     
     @GetMapping("/{id}")
     public ResponseEntity<CarritoEntity> get(@PathVariable Long id) {
         return ResponseEntity.ok(oCarritoService.get(id));
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<Page<CarritoEntity>> getPage(Pageable oPageable) {
         return ResponseEntity.ok(oCarritoService.getPage(oPageable));
     }
 
-    @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody CarritoEntity oCarritoEntity) {
+    @PostMapping
+    public ResponseEntity<CarritoEntity> create(@RequestBody CarritoEntity oCarritoEntity) {
         return ResponseEntity.ok(oCarritoService.create(oCarritoEntity));
     }
 
-    @PutMapping("")
-    public ResponseEntity<Long> update(@RequestBody CarritoEntity oCarritoEntity) {
+    @PutMapping
+    public ResponseEntity<CarritoEntity> update(@RequestBody CarritoEntity oCarritoEntity) {
         return ResponseEntity.ok(oCarritoService.update(oCarritoEntity));
     }
 
@@ -54,7 +50,7 @@ public class CarritoApi {
         return ResponseEntity.ok(oCarritoService.delete(id));
     }
 
-    @PostMapping("/fill/{cantidad}")
+    @GetMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oCarritoService.fill(cantidad));
     }

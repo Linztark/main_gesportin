@@ -61,8 +61,8 @@ public class EquipoService {
         for (int i = 0; i < cantidad; i++) {
             EquipoEntity equipoEntity = new EquipoEntity();
             equipoEntity.setNombre("Equipo " + i);
-            equipoEntity.setIdEntrenador((long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
-            equipoEntity.setIdCategoria((long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            equipoEntity.setIdEntrenador((long) aleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            equipoEntity.setIdCategoria((long) aleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             equipoRepository.save(equipoEntity);
         }
         return cantidad;

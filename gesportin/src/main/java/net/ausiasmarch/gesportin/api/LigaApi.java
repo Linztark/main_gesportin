@@ -25,11 +25,11 @@ import net.ausiasmarch.gesportin.service.LigaService;
 public class LigaApi {
 
     @Autowired
-    private LigaService ligaService;
+    private LigaService oLigaService;
 
     @GetMapping("/{id}")
     public ResponseEntity<LigaEntity> get(@PathVariable Long id) {
-        return ResponseEntity.ok(ligaService.get(id));
+        return ResponseEntity.ok(oLigaService.get(id));
     }
 
     @GetMapping
@@ -37,41 +37,36 @@ public class LigaApi {
             @PageableDefault(size = 1000) Pageable pageable,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Long idEquipo) {
-        return ResponseEntity.ok(ligaService.getPage(pageable, nombre, idEquipo));
+        return ResponseEntity.ok(oLigaService.getPage(pageable, nombre, idEquipo));
     }
 
     @PostMapping
     public ResponseEntity<LigaEntity> create(@RequestBody LigaEntity liga) {
-        return ResponseEntity.ok(ligaService.create(liga));
+        return ResponseEntity.ok(oLigaService.create(liga));
     }
 
     @PutMapping
     public ResponseEntity<LigaEntity> update(@RequestBody LigaEntity liga) {
-        return ResponseEntity.ok(ligaService.update(liga));
+        return ResponseEntity.ok(oLigaService.update(liga));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(ligaService.delete(id));
+        return ResponseEntity.ok(oLigaService.delete(id));
     }
 
     @GetMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(ligaService.fill(cantidad));
-    }
-
-    @GetMapping("/fill")
-    public ResponseEntity<Long> fillDefault() {
-        return ResponseEntity.ok(ligaService.fill(50L));
+        return ResponseEntity.ok(oLigaService.fill(cantidad));
     }
 
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(ligaService.empty());
+        return ResponseEntity.ok(oLigaService.empty());
     }
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(ligaService.count());
+        return ResponseEntity.ok(oLigaService.count());
     }
 }

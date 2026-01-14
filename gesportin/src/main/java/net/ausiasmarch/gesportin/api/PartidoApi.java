@@ -16,58 +16,49 @@ import org.springframework.web.bind.annotation.RestController;
 import net.ausiasmarch.gesportin.entity.PartidoEntity;
 import net.ausiasmarch.gesportin.service.PartidoService;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/partido")
 public class PartidoApi {
 
     @Autowired
-    PartidoService oPartidoService;
+    private PartidoService oPartidoService;
 
-    //GET:
     @GetMapping("/{id}")
     public ResponseEntity<PartidoEntity> get(@PathVariable Long id) {
         return ResponseEntity.ok(oPartidoService.get(id));
     }
 
-    //GET PAGE:
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<Page<PartidoEntity>> getPage(Pageable oPageable) {
         return ResponseEntity.ok(oPartidoService.getPage(oPageable));
     }
 
-    //CREATE:
-    @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody PartidoEntity partidoEntity) {
+    @PostMapping
+    public ResponseEntity<PartidoEntity> create(@RequestBody PartidoEntity partidoEntity) {
         return ResponseEntity.ok(oPartidoService.create(partidoEntity));
     }
 
-    // UPDATE:
-    @PutMapping("")
-    public ResponseEntity<Long> update(@RequestBody PartidoEntity partidoEntity) {
+    @PutMapping
+    public ResponseEntity<PartidoEntity> update(@RequestBody PartidoEntity partidoEntity) {
         return ResponseEntity.ok(oPartidoService.update(partidoEntity));
     }
 
-    // DELETE:
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oPartidoService.delete(id));
     }
 
-    //FILL:
-    @GetMapping("/rellena/{numPosts}")
-    public ResponseEntity<Long> rellenaBlog(
-            @PathVariable Long numPosts) {
-        return ResponseEntity.ok(oPartidoService.rellenaPartido(numPosts));
+    @GetMapping("/fill/{cantidad}")
+    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
+        return ResponseEntity.ok(oPartidoService.fill(cantidad));
     }
 
-    //EMPTY:
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(oPartidoService.empty());
     }
 
-    //COUNT:
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oPartidoService.count());

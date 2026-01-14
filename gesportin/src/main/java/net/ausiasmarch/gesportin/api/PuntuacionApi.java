@@ -19,59 +19,52 @@ import jakarta.validation.constraints.NotNull;
 import net.ausiasmarch.gesportin.entity.PuntuacionEntity;
 import net.ausiasmarch.gesportin.service.PuntuacionService;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/puntuacion")
 public class PuntuacionApi {
 
     @Autowired
-    PuntuacionService oPuntuacionService;
+    private PuntuacionService oPuntuacionService;
 
-    // GET quantity of records
+    @GetMapping("/{id}")
+    public ResponseEntity<PuntuacionEntity> get(@PathVariable Long id) {
+        return ResponseEntity.ok(oPuntuacionService.get(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<PuntuacionEntity>> getPage(Pageable oPageable) {
+        return ResponseEntity.ok(oPuntuacionService.getPage(oPageable));
+    }
+
+    @PostMapping
+    public ResponseEntity<PuntuacionEntity> create(@RequestBody PuntuacionEntity oPuntuacionEntity) {
+        return ResponseEntity.ok(oPuntuacionService.create(oPuntuacionEntity));
+    }
+
+    @PutMapping
+    public ResponseEntity<PuntuacionEntity> update(@RequestBody PuntuacionEntity oPuntuacionEntity) {
+        return ResponseEntity.ok(oPuntuacionService.update(oPuntuacionEntity));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(oPuntuacionService.delete(id));
+    }
+
+    @GetMapping("/fill/{cantidad}")
+    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
+        return ResponseEntity.ok(oPuntuacionService.fill(cantidad));
+    }
+
+    @DeleteMapping("/empty")
+    public ResponseEntity<Long> empty() {
+        return ResponseEntity.ok(oPuntuacionService.empty());
+    }
+
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oPuntuacionService.count());
     }
 
-    // GET page
-    @GetMapping("")
-    public ResponseEntity<Page<PuntuacionEntity>> getPage(@NotNull Pageable oPageable) {
-        return ResponseEntity.ok(oPuntuacionService.getPage(oPageable));
-    }
-
-    // GET puntuacion by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<PuntuacionEntity> getById(@NotNull @PathVariable Long id) {
-        return ResponseEntity.ok(oPuntuacionService.get(id));
-    }
-
-    // POST puntuación
-    @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody PuntuacionEntity oPuntuacionEntity) {
-        return ResponseEntity.ok(oPuntuacionService.create(oPuntuacionEntity));
-    }
-
-    // PUT puntuacion
-    @PutMapping("")
-    public ResponseEntity<Long> update(@RequestBody PuntuacionEntity oPuntuacionEntity) {
-        return ResponseEntity.ok(oPuntuacionService.update(oPuntuacionEntity));
-    }
-
-    // DELETE by id
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Long> delete(@NotNull @PathVariable Long id) {
-        return ResponseEntity.ok(oPuntuacionService.delete(id));
-    }
-
-    // DELETE all records
-    @DeleteMapping("/empty")
-    public ResponseEntity<Long> deleteAll() {
-        return ResponseEntity.ok(oPuntuacionService.deleteAll());
-    }
-
-    // GET - create fake data in the DB
-    @GetMapping("/fill/{quantity}")
-    public ResponseEntity<Long> fillDatabase(@PathVariable @Min(1) int quantity) {
-        return ResponseEntity.ok(oPuntuacionService.fillDatabase(quantity));
-    }
 }

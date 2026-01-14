@@ -1,10 +1,5 @@
 package net.ausiasmarch.gesportin.api;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,80 +9,57 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.ausiasmarch.gesportin.entity.ClubEntity;
 import net.ausiasmarch.gesportin.service.ClubService;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/clubs")
-@CrossOrigin(origins = "*")
+@RequestMapping("/club")
 public class ClubApi {
 
-    private final ClubService clubService;
+    @org.springframework.beans.factory.annotation.Autowired
+    private ClubService oClubService;
 
-    public ClubApi(ClubService clubService) {
-        this.clubService = clubService;
-    }
-
-    // GET
-    @GetMapping
-    public List<ClubEntity> getAll() {
-        return clubService.getAll();
-    }
-
-    // GET BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<ClubEntity> getById(@PathVariable Long id) {
-        return clubService.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ClubEntity> get(@PathVariable Long id) {
+        return ResponseEntity.ok(oClubService.get(id));
     }
 
-    // GET PAGE
-    @GetMapping("/page")
-    public Page<ClubEntity> getPage(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        return clubService.getPage(pageable);
+    @GetMapping
+    public ResponseEntity<org.springframework.data.domain.Page<ClubEntity>> getPage(org.springframework.data.domain.Pageable pageable) {
+        return ResponseEntity.ok(oClubService.getPage(pageable));
     }
 
-    // CREATE
     @PostMapping
-    public ClubEntity create(@RequestBody ClubEntity club) {
-        return clubService.create(club);
+    public ResponseEntity<ClubEntity> create(@RequestBody ClubEntity clubEntity) {
+        return ResponseEntity.ok(oClubService.create(clubEntity));
     }
 
-    // UPDATE
-    @PutMapping("/{id}")
-    public ClubEntity update(@PathVariable Long id, @RequestBody ClubEntity club) {
-        return clubService.update(id, club);
+    @PutMapping
+    public ResponseEntity<ClubEntity> update(@RequestBody ClubEntity clubEntity) {
+        return ResponseEntity.ok(oClubService.update(clubEntity));
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        clubService.delete(id);
+    public ResponseEntity<Long> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(oClubService.delete(id));
     }
 
-    // FILL
-    @GetMapping("/fill/{amount}")
-    public void fill(@PathVariable int amount) {
-        clubService.fill(amount);
+    @GetMapping("/fill/{cantidad}")
+    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
+        return ResponseEntity.ok(oClubService.fill(cantidad));
     }
 
-    // EMPTY
     @DeleteMapping("/empty")
-    public void empty() {
-        clubService.empty();
+    public ResponseEntity<Long> empty() {
+        return ResponseEntity.ok(oClubService.empty());
     }
 
-    // COUNT
     @GetMapping("/count")
-    public Long count() {
-        return clubService.count();
+    public ResponseEntity<Long> count() {
+        return ResponseEntity.ok(oClubService.count());
     }
+
 }

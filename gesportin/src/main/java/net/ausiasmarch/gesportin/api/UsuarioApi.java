@@ -25,11 +25,11 @@ import net.ausiasmarch.gesportin.service.UsuarioService;
 public class UsuarioApi {
 
     @Autowired
-    private UsuarioService usuarioService;
+    private UsuarioService oUsuarioService;
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioEntity> get(@PathVariable Long id) {
-        return ResponseEntity.ok(usuarioService.get(id));
+        return ResponseEntity.ok(oUsuarioService.get(id));
     }
 
     @GetMapping
@@ -39,41 +39,36 @@ public class UsuarioApi {
             @RequestParam(required = false) String username,
             @RequestParam(required = false) Long idTipousuario,
             @RequestParam(required = false) Long idClub) {
-        return ResponseEntity.ok(usuarioService.getPage(pageable, nombre, username, idTipousuario, idClub));
+        return ResponseEntity.ok(oUsuarioService.getPage(pageable, nombre, username, idTipousuario, idClub));
     }
 
     @PostMapping
     public ResponseEntity<UsuarioEntity> create(@RequestBody UsuarioEntity usuario) {
-        return ResponseEntity.ok(usuarioService.create(usuario));
+        return ResponseEntity.ok(oUsuarioService.create(usuario));
     }
 
     @PutMapping
     public ResponseEntity<UsuarioEntity> update(@RequestBody UsuarioEntity usuario) {
-        return ResponseEntity.ok(usuarioService.update(usuario));
+        return ResponseEntity.ok(oUsuarioService.update(usuario));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(usuarioService.delete(id));
+        return ResponseEntity.ok(oUsuarioService.delete(id));
     }
 
     @GetMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(usuarioService.fill(cantidad));
-    }
-
-    @GetMapping("/fill")
-    public ResponseEntity<Long> fillDefault() {
-        return ResponseEntity.ok(usuarioService.fill(50L));
+        return ResponseEntity.ok(oUsuarioService.fill(cantidad));
     }
 
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(usuarioService.empty());
+        return ResponseEntity.ok(oUsuarioService.empty());
     }
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(usuarioService.count());
+        return ResponseEntity.ok(oUsuarioService.count());
     }
 }

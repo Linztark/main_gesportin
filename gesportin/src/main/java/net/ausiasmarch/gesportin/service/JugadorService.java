@@ -48,18 +48,18 @@ public class JugadorService {
             // Crea una entidad y la rellana con datos aleatorios
             JugadorEntity oJugadorEntity = new JugadorEntity();
 
-            oJugadorEntity.setDorsal(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 99));
+                oJugadorEntity.setDorsal(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 99));
 
-            oJugadorEntity.setPosicion(
-                    posiciones.get(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, posiciones.size() - 1)));
+                oJugadorEntity.setPosicion(
+                    posiciones.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, posiciones.size() - 1)));
             
-            oJugadorEntity.setCapitan(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, 1) == 1);
+                oJugadorEntity.setCapitan(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
 
-            oJugadorEntity.setImagen(null);
+                oJugadorEntity.setImagen(null);
 
-            oJugadorEntity.setIdUsuario(Long.valueOf(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50)));
+                oJugadorEntity.setIdUsuario(Long.valueOf(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50)));
             
-            oJugadorEntity.setIdEquipo(Long.valueOf(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50)));
+                oJugadorEntity.setIdEquipo(Long.valueOf(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50)));
             
             // Guardar la entidad en la base de datos
             oJugadorRepository.save(oJugadorEntity);

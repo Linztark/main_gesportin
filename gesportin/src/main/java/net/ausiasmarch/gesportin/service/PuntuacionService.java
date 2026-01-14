@@ -79,9 +79,9 @@ public class PuntuacionService {
         for (int i = 0; i < quantity; i++) {
             PuntuacionEntity newEntity = new PuntuacionEntity();
 
-            newEntity.setPuntuacion(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 5));
-            newEntity.setIdNoticia(Long.valueOf(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50)));
-            newEntity.setIdUsuario(Long.valueOf(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50)));
+            newEntity.setPuntuacion(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 5));
+            newEntity.setIdNoticia(Long.valueOf(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50)));
+            newEntity.setIdUsuario(Long.valueOf(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50)));
 
             oPuntuacionRepository.save(newEntity);
         }

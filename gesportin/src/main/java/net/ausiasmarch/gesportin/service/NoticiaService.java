@@ -50,19 +50,19 @@ public class NoticiaService {
 
         for (long j = 0; j < numPosts; j++) {
             NoticiaEntity oNoticiaEntity = new NoticiaEntity();
-            oNoticiaEntity.setTitulo(alFrases.get(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, alFrases.size() - 1)));
+            oNoticiaEntity.setTitulo(alFrases.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alFrases.size() - 1)));
             String contenidoGenerado = "";
-            int numFrases = oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 30);
+            int numFrases = oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 30);
             for (int i = 1; i <= numFrases; i++) {
-                contenidoGenerado += alFrases.get(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, alFrases.size() - 1)) + " ";
-                if (oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, 10) == 1) {
+                contenidoGenerado += alFrases.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alFrases.size() - 1)) + " ";
+                if (oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 10) == 1) {
                     contenidoGenerado += "\n";
                 }
             }
             oNoticiaEntity.setContenido(contenidoGenerado.trim());
             oNoticiaEntity.setFecha(LocalDateTime.now());
             // id_club aleatorio entre 1 y 10 (puedes ajustar el rango)
-            oNoticiaEntity.setIdClub((Long) (long) oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 10));
+            oNoticiaEntity.setIdClub((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 10));
             // imagen null (o puedes poner datos de prueba)
             oNoticiaEntity.setImagen(null);
             oNoticiaRepository.save(oNoticiaEntity);

@@ -17,54 +17,52 @@ import org.springframework.web.bind.annotation.RestController;
 import net.ausiasmarch.gesportin.entity.CuotaEntity;
 import net.ausiasmarch.gesportin.service.CuotaService;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")    //ESTO ES PARA SOLUCIONAR EL CORS
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/cuota")
 public class CuotaApi {
     
     @Autowired
-    CuotaService oCuotaService;
+    private CuotaService oCuotaService;
 
-    // obtener post por id
     @GetMapping("/{id}")
     public ResponseEntity<CuotaEntity> get(@PathVariable Long id) {
         return ResponseEntity.ok(oCuotaService.get(id));
     }
 
-    // crear posts
-    @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody CuotaEntity cuotaEntity) {
+    @GetMapping
+    public ResponseEntity<Page<CuotaEntity>> getPage(Pageable oPageable) {
+        return ResponseEntity.ok(oCuotaService.getPage(oPageable));
+    }
+
+    @PostMapping
+    public ResponseEntity<CuotaEntity> create(@RequestBody CuotaEntity cuotaEntity) {
         return ResponseEntity.ok(oCuotaService.create(cuotaEntity));
     }
 
-    // modificar posts
-    @PutMapping("")
-    public ResponseEntity<Long> update(@RequestBody CuotaEntity cuotaEntity) {
+    @PutMapping
+    public ResponseEntity<CuotaEntity> update(@RequestBody CuotaEntity cuotaEntity) {
         return ResponseEntity.ok(oCuotaService.update(cuotaEntity));
     }
 
-    // borrar posts
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oCuotaService.delete(id));
     }
 
-    // generar datos
     @GetMapping("/fill/{cantidad}")
-    public ResponseEntity<Long> generarDatos(@PathVariable int cantidad){
-        return ResponseEntity.ok(oCuotaService.generarDatos(cantidad));
+    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
+        return ResponseEntity.ok(oCuotaService.fill(cantidad));
     }
 
-    // listado paginado de posts
-    @GetMapping("")
-    public ResponseEntity<Page<CuotaEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(oCuotaService.getPage(oPageable));
-        
+    @DeleteMapping("/empty")
+    public ResponseEntity<Long> empty() {
+        return ResponseEntity.ok(oCuotaService.empty());
     }
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok(oCuotaService.count()); 
+        return ResponseEntity.ok(oCuotaService.count());
     }
 
 }

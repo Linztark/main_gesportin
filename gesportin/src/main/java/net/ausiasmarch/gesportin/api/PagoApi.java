@@ -19,63 +19,52 @@ import net.ausiasmarch.gesportin.entity.PagoEntity;
 import net.ausiasmarch.gesportin.service.AleatorioService;
 import net.ausiasmarch.gesportin.service.PagoService;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/pago")
 public class PagoApi {
 
     @Autowired
-    AleatorioService oAleatorioService;
+    private PagoService oPagoService;
 
-    @Autowired
-    PagoService oPagoService;
-
-    // obtener pago por id
     @GetMapping("/{id}")
     public ResponseEntity<PagoEntity> get(@PathVariable Long id) {
         return ResponseEntity.ok(oPagoService.get(id));
     }
 
-    // crear pago
-    @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody PagoEntity pagoEntity) {
+    @GetMapping
+    public ResponseEntity<Page<PagoEntity>> getPage(Pageable oPageable) {
+        return ResponseEntity.ok(oPagoService.getPage(oPageable));
+    }
+
+    @PostMapping
+    public ResponseEntity<PagoEntity> create(@RequestBody PagoEntity pagoEntity) {
         return ResponseEntity.ok(oPagoService.create(pagoEntity));
     }
 
-    // modificar pago
-    @PutMapping("")
-    public ResponseEntity<Long> update(@RequestBody PagoEntity pagoEntity) {
+    @PutMapping
+    public ResponseEntity<PagoEntity> update(@RequestBody PagoEntity pagoEntity) {
         return ResponseEntity.ok(oPagoService.update(pagoEntity));
     }
 
-    // borrar pago
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oPagoService.delete(id));
     }
 
-    // vaciar tabla pago (solo administradores)
+    @GetMapping("/fill/{cantidad}")
+    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
+        return ResponseEntity.ok(oPagoService.fill(cantidad));
+    }
+
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(oPagoService.empty());
-    }
-
-    // listado paginado de pagos
-    @GetMapping("")
-    public ResponseEntity<Page<PagoEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(oPagoService.getPage(oPageable));
     }
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oPagoService.count());
     }
-
-    // llenar tabla con datos de prueba
-    @PostMapping("/fill/{cantidad}")
-    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(oPagoService.fill(cantidad));
-    }
-
 
 }

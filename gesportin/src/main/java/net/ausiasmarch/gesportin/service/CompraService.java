@@ -36,12 +36,12 @@ public class CompraService {
             // crea entity compra y la rellena con datos aleatorios
             CompraEntity oCompraEntity = new CompraEntity();
             // generar cantidad aleatoria entre 1 y 50
-            oCompraEntity.setCantidad(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            oCompraEntity.setCantidad(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             // obtener un articulo aleatorio de la base de datos
             Long totalArticulos = oArticuloRepository.count();
             if (totalArticulos > 0) {
                 List<ArticuloEntity> alArticulos = oArticuloRepository.findAll();
-                ArticuloEntity oArticulo = alArticulos.get(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, alArticulos.size() - 1));
+                ArticuloEntity oArticulo = alArticulos.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alArticulos.size() - 1));
                 oCompraEntity.setIdArticulo(oArticulo.getId());
                 // usar el precio del articulo
                 oCompraEntity.setPrecio(oArticulo.getPrecio());
@@ -50,7 +50,7 @@ public class CompraService {
             Long totalFacturas = oFacturaRepository.count();
             if (totalFacturas > 0) {
                 List<FacturaEntity> alFacturas = oFacturaRepository.findAll();
-                FacturaEntity oFactura = alFacturas.get(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, alFacturas.size() - 1));
+                FacturaEntity oFactura = alFacturas.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alFacturas.size() - 1));
                 oCompraEntity.setIdFactura(oFactura.getId());
             }
             // guardar entity en base de datos
