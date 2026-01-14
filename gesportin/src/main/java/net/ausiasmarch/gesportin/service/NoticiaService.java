@@ -62,7 +62,7 @@ public class NoticiaService {
             oNoticiaEntity.setContenido(contenidoGenerado.trim());
             oNoticiaEntity.setFecha(LocalDateTime.now());
             // id_club aleatorio entre 1 y 10 (puedes ajustar el rango)
-            oNoticiaEntity.setId_club((Long) (long) oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 10));
+            oNoticiaEntity.setIdClub((Long) (long) oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 10));
             // imagen null (o puedes poner datos de prueba)
             oNoticiaEntity.setImagen(null);
             oNoticiaRepository.save(oNoticiaEntity);
@@ -94,7 +94,7 @@ public class NoticiaService {
         existingNoticia.setTitulo(noticiaEntity.getTitulo());
         existingNoticia.setContenido(noticiaEntity.getContenido());
         existingNoticia.setFecha(noticiaEntity.getFecha());
-        existingNoticia.setId_club(noticiaEntity.getId_club());
+        existingNoticia.setIdClub(noticiaEntity.getIdClub());
         existingNoticia.setImagen(noticiaEntity.getImagen());
         oNoticiaRepository.save(existingNoticia);
         return existingNoticia.getId();

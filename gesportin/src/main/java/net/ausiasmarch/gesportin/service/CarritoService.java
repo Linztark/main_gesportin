@@ -37,8 +37,8 @@ public class CarritoService {
         CarritoEntity existingCarrito = oCarritoRepository.findById(oCarritoEntity.getId())
                 .orElseThrow(() -> new EntityNotFoundException("No se puede actualizar ID no encontrado"));
         existingCarrito.setCantidad(oCarritoEntity.getCantidad());
-        existingCarrito.setId_articulo(oCarritoEntity.getId_articulo());
-        existingCarrito.setId_usuario(oCarritoEntity.getId_usuario());
+        existingCarrito.setIdArticulo(oCarritoEntity.getIdArticulo());
+        existingCarrito.setIdUsuario(oCarritoEntity.getIdUsuario());
         oCarritoRepository.save(existingCarrito);
         return existingCarrito.getId();
     }
@@ -55,8 +55,8 @@ public class CarritoService {
         for (long i = 0L; i < cantidad; i++) {
             CarritoEntity oCarritoEntity = new CarritoEntity();
             oCarritoEntity.setCantidad(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
-            oCarritoEntity.setId_articulo((Long) (long)oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
-            oCarritoEntity.setId_usuario((Long) (long)oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            oCarritoEntity.setIdArticulo((Long) (long)oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            oCarritoEntity.setIdUsuario((Long) (long)oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
             oCarritoRepository.save(oCarritoEntity);
         }
 

@@ -32,9 +32,9 @@ public class PuntuacionEntity {
     @Max(5)
     private Integer puntuacion;
 
-    @Column(name = "id_articulo")
+    @Column(name = "id_noticia")
     @NotNull
-    private Long idArticulo;
+    private Long idNoticia;
 
     @Column(name = "id_usuario")
     @NotNull

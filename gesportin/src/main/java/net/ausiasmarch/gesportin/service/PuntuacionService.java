@@ -51,7 +51,7 @@ public class PuntuacionService {
                 .orElseThrow(() -> new ResourceNotFoundException("The record not found."));
 
         existingRecord.setPuntuacion(oPuntuacionEntity.getPuntuacion());
-        existingRecord.setIdArticulo(oPuntuacionEntity.getIdArticulo());
+        existingRecord.setIdNoticia(oPuntuacionEntity.getIdNoticia());
         existingRecord.setIdUsuario(oPuntuacionEntity.getIdUsuario());
 
         oPuntuacionRepository.save(existingRecord);
@@ -84,7 +84,7 @@ public class PuntuacionService {
             PuntuacionEntity newEntity = new PuntuacionEntity();
 
             newEntity.setPuntuacion(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 5));
-            newEntity.setIdArticulo(Long.valueOf(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50)));
+            newEntity.setIdNoticia(Long.valueOf(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50)));
             newEntity.setIdUsuario(Long.valueOf(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50)));
 
             oPuntuacionRepository.save(newEntity);

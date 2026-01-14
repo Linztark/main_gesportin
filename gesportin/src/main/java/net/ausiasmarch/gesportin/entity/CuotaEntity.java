@@ -1,10 +1,11 @@
 package net.ausiasmarch.gesportin.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,15 +29,19 @@ public class CuotaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     @Size(max=255)
-    private String nombre;
+    private String descripcion;
+
     @NotNull
-    @Size(max=255)
-    private float cantidad;
+    private BigDecimal cantidad;
+
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime fecha;
-    @Nullable
-    private Long id_temporada;
+
+    @NotNull
+    @Column(name = "id_equipo")
+    private Long idEquipo;
 }

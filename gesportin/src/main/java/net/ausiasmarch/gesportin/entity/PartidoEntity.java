@@ -1,5 +1,6 @@
 package net.ausiasmarch.gesportin.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,9 +30,11 @@ public class PartidoEntity {
     private String rival;
 
     @NotNull
-    private Long id_liga;
+    @Column(name = "id_liga", nullable = false)
+    private Long idLiga;
 
     @NotNull
+    @Column(nullable = false)
     private Boolean local;
 
     @NotNull

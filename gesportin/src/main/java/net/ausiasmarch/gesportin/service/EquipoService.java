@@ -34,11 +34,8 @@ public class EquipoService {
     public Long update(EquipoEntity equipoEntity) {
         EquipoEntity oEquipoEntity = equipoRepository.findById(equipoEntity.getId()).orElseThrow(() -> new ResourceNotFoundException("Equipo not found"));
         oEquipoEntity.setNombre(equipoEntity.getNombre());
-        oEquipoEntity.setId_club(equipoEntity.getId_club());
-        oEquipoEntity.setId_entrenador(equipoEntity.getId_entrenador());
-        oEquipoEntity.setId_categoria(equipoEntity.getId_categoria());
-        oEquipoEntity.setId_liga(equipoEntity.getId_liga());
-        oEquipoEntity.setId_temporada(equipoEntity.getId_temporada());
+        oEquipoEntity.setIdEntrenador(equipoEntity.getIdEntrenador());
+        oEquipoEntity.setIdCategoria(equipoEntity.getIdCategoria());
         return equipoRepository.save(oEquipoEntity).getId();
     }
 
@@ -64,11 +61,8 @@ public class EquipoService {
         for (int i = 0; i < cantidad; i++) {
             EquipoEntity equipoEntity = new EquipoEntity();
             equipoEntity.setNombre("Equipo " + i);
-            equipoEntity.setId_club((Long) (long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
-            equipoEntity.setId_entrenador((Long) (long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
-            equipoEntity.setId_categoria((Long) (long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
-            equipoEntity.setId_liga((Long) (long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
-            equipoEntity.setId_temporada((Long) (long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            equipoEntity.setIdEntrenador((Long) (long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            equipoEntity.setIdCategoria((Long) (long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
             equipoRepository.save(equipoEntity);
         }
         return count();

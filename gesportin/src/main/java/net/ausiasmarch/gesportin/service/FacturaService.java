@@ -24,9 +24,9 @@ public class FacturaService {
 
     public Long create(FacturaEntity facturaEntity) {
         facturaEntity.setFecha(LocalDateTime.now());
-        Long idUsuario = facturaEntity.getId_usuario();
+        Long idUsuario = facturaEntity.getIdUsuario();
         if (idUsuario <= 0) {
-            facturaEntity.setId_usuario((long)GenerarNumeroAleatorioEnRango(1, 50));
+            facturaEntity.setIdUsuario((long)GenerarNumeroAleatorioEnRango(1, 50));
         }
         oFacturaRepository.save(facturaEntity);
         return facturaEntity.getId();
@@ -35,7 +35,7 @@ public class FacturaService {
     public Long update(FacturaEntity facturaEntity) {
         FacturaEntity existingFacturaCompra = oFacturaRepository.findById(facturaEntity.getId())
                 .orElseThrow(() -> new RuntimeException("Factura no encontrada"));
-        existingFacturaCompra.setId_usuario(facturaEntity.getId_usuario());
+        existingFacturaCompra.setIdUsuario(facturaEntity.getIdUsuario());
         existingFacturaCompra.setFecha(LocalDateTime.now());
         oFacturaRepository.save(existingFacturaCompra);
         return existingFacturaCompra.getId();
@@ -61,7 +61,7 @@ public class FacturaService {
         for (int i = 0; i < numQuestions; i++) {
             FacturaEntity oFacturaEntity = new FacturaEntity();
             oFacturaEntity.setFecha(LocalDateTime.now());
-            oFacturaEntity.setId_usuario((long)GenerarNumeroAleatorioEnRango(1, 50));
+            oFacturaEntity.setIdUsuario((long)GenerarNumeroAleatorioEnRango(1, 50));
             oFacturaRepository.save(oFacturaEntity);
         }
         return oFacturaRepository.count();

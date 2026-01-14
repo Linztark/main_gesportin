@@ -1,5 +1,6 @@
 package net.ausiasmarch.gesportin.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,12 +23,17 @@ public class ComentarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @NotNull
     @Size(min = 3, max = 1024)
     private String contenido;
+    
     @NotNull
-    private Long id_noticia;
+    @Column(name = "id_noticia", nullable = false)
+    private Long idNoticia;
+    
     @NotNull
-    private Long id_usuario;
+    @Column(name = "id_usuario", nullable = false)
+    private Long idUsuario;
     
 }

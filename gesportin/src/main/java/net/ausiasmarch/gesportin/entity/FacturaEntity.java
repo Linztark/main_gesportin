@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,8 +30,10 @@ public class FacturaEntity {
 
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @Column(nullable = false)
     private LocalDateTime fecha;
 
     @NotNull
-    private Long id_usuario;
+    @Column(name = "id_usuario", nullable = false)
+    private Long idUsuario;
 }

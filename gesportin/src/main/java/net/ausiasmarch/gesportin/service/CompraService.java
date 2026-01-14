@@ -42,7 +42,7 @@ public class CompraService {
             if (totalArticulos > 0) {
                 List<ArticuloEntity> alArticulos = oArticuloRepository.findAll();
                 ArticuloEntity oArticulo = alArticulos.get(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, alArticulos.size() - 1));
-                oCompraEntity.setId_articulo(oArticulo.getId());
+                oCompraEntity.setIdArticulo(oArticulo.getId());
                 // usar el precio del articulo
                 oCompraEntity.setPrecio(oArticulo.getPrecio());
             }
@@ -51,7 +51,7 @@ public class CompraService {
             if (totalFacturas > 0) {
                 List<FacturaEntity> alFacturas = oFacturaRepository.findAll();
                 FacturaEntity oFactura = alFacturas.get(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, alFacturas.size() - 1));
-                oCompraEntity.setId_factura(oFactura.getId());
+                oCompraEntity.setIdFactura(oFactura.getId());
             }
             // guardar entity en base de datos
             oCompraRepository.save(oCompraEntity);
@@ -74,8 +74,8 @@ public class CompraService {
                 .orElseThrow(() -> new ResourceNotFoundException("Compra not found"));
         existingCompra.setCantidad(compraEntity.getCantidad());
         existingCompra.setPrecio(compraEntity.getPrecio());
-        existingCompra.setId_articulo(compraEntity.getId_articulo());
-        existingCompra.setId_factura(compraEntity.getId_factura());
+        existingCompra.setIdArticulo(compraEntity.getIdArticulo());
+        existingCompra.setIdFactura(compraEntity.getIdFactura());
         oCompraRepository.save(existingCompra);
         return existingCompra.getId();
     }

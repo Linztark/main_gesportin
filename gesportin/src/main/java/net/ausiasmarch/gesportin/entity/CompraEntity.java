@@ -2,6 +2,7 @@ package net.ausiasmarch.gesportin.entity;
 
 import java.math.BigDecimal;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,15 +27,19 @@ public class CompraEntity {
     private Long id;
 
     @NotNull
+    @Column(nullable = false)
     private Integer cantidad;
 
     @NotNull
+    @Column(nullable = false)
     private BigDecimal precio;
 
     @NotNull
-    private Long id_articulo;
+    @Column(name = "id_articulo", nullable = false)
+    private Long idArticulo;
 
     @NotNull
-    private Long id_factura;
+    @Column(name = "id_factura", nullable = false)
+    private Long idFactura;
 
 }

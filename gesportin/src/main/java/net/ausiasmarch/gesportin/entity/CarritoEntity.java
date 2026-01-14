@@ -1,5 +1,6 @@
 package net.ausiasmarch.gesportin.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,12 +23,18 @@ public class CarritoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @NotNull
+    @Column(nullable = false)
     private Integer cantidad;
+    
     @NotNull
-    private Long id_articulo;
+    @Column(name = "id_articulo", nullable = false)
+    private Long idArticulo;
+    
     @NotNull
-    private Long id_usuario;
+    @Column(name = "id_usuario", nullable = false)
+    private Long idUsuario;
 
     
 
