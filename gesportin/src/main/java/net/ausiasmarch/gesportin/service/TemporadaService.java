@@ -49,7 +49,7 @@ public class TemporadaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Temporada no encontrado con id: " + temporada.getId()));
 
         existing.setDescripcion(temporada.getDescripcion());
-        existing.setIdClub(temporada.getIdClub());
+        //existing.setIdClub(temporada.getIdClub());
         return oTemporadaRepository.save(existing);
     }
 
@@ -75,7 +75,7 @@ public class TemporadaService {
             TemporadaEntity temporada = new TemporadaEntity();
             int indice = (int) (Math.random() * nombres.length);
             temporada.setDescripcion(nombres[indice]);
-            temporada.setIdClub((long) (Math.random() * 50 + 1));
+            //temporada.setIdClub((long) (Math.random() * 50 + 1));
             oTemporadaRepository.save(temporada);
         }
         return cantidad;
