@@ -41,8 +41,4 @@ public class ArticuloEntity {
     @Column(name = "id_tipoarticulo")
     private Long idTipoarticulo;
 
-    @NotNull
-    @Column(name = "id_club")
-    private Long idClub;
-
 }

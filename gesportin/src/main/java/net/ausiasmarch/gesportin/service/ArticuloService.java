@@ -42,13 +42,11 @@ public class ArticuloService {
                 .orElseThrow(() -> new ResourceNotFoundException("Articulo no encontrado con id: " + id));
     }
 
-    public Page<ArticuloEntity> getPage(Pageable pageable, String descripcion, Long idTipoarticulo, Long idClub) {
+    public Page<ArticuloEntity> getPage(Pageable pageable, String descripcion, Long idTipoarticulo) {
         if (descripcion != null && !descripcion.isEmpty()) {
             return oArticuloRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable);
         } else if (idTipoarticulo != null) {
-            return oArticuloRepository.findByIdTipoarticulo(idTipoarticulo, pageable);
-        } else if (idClub != null) {
-            return oArticuloRepository.findByIdClub(idClub, pageable);
+            return oArticuloRepository.findByIdTipoarticulo(idTipoarticulo, pageable);        
         } else {
             return oArticuloRepository.findAll(pageable);
         }
@@ -67,8 +65,7 @@ public class ArticuloService {
         oArticuloExistente.setPrecio(oArticuloEntity.getPrecio());
         oArticuloExistente.setDescuento(oArticuloEntity.getDescuento());
         oArticuloExistente.setImagen(oArticuloEntity.getImagen());
-        oArticuloExistente.setIdTipoarticulo(oArticuloEntity.getIdTipoarticulo());
-        oArticuloExistente.setIdClub(oArticuloEntity.getIdClub());
+        oArticuloExistente.setIdTipoarticulo(oArticuloEntity.getIdTipoarticulo());        
         
         return oArticuloRepository.save(oArticuloExistente);
     }
