@@ -51,7 +51,7 @@ public class FacturaApi {
         return ResponseEntity.ok(oFacturaService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oFacturaService.fill(cantidad));
     }
