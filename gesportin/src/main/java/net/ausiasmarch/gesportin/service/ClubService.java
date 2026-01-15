@@ -45,7 +45,7 @@ public class ClubService {
         clubExistente.setFechaAlta(club.getFechaAlta());
         //clubExistente.setIdPresidente(club.getIdPresidente());
         //clubExistente.setIdVicepresidente(club.getIdVicepresidente());
-        clubExistente.setImagen(club.getImagen());
+        // clubExistente.setImagen(club.getImagen());
         
         return oClubRepository.save(clubExistente);
     }
@@ -76,7 +76,7 @@ public class ClubService {
             club.setFechaAlta(LocalDateTime.now());
             //club.setIdPresidente((long) (random.nextInt(50) + 1));
             //club.setIdVicepresidente((long) (random.nextInt(50) + 1));
-            club.setImagen(("imagen" + i).getBytes());
+            // club.setImagen(("imagen" + i).getBytes());
             oClubRepository.save(club);
         }
         return cantidad;

@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -52,11 +53,11 @@ public class NoticiaEntity {
     @JoinColumn(name = "id_club")
     private ClubEntity club;
 
-    //@OneToMany(mappedBy = "noticia", fetch = FetchType.LAZY)
-    //private java.util.List<ComentarioEntity> comentarios;
+    @OneToMany(mappedBy = "noticia", fetch = FetchType.LAZY)
+    private java.util.List<ComentarioEntity> comentarios;
 
-    //@OneToMany(mappedBy = "noticia", fetch = FetchType.LAZY)
-    //private java.util.List<PuntuacionEntity> puntuaciones;
+    @OneToMany(mappedBy = "noticia", fetch = FetchType.LAZY)
+    private java.util.List<PuntuacionEntity> puntuaciones;
 
 }
 
