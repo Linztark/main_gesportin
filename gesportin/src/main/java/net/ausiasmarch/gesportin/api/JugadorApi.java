@@ -50,7 +50,7 @@ public class JugadorApi {
         return ResponseEntity.ok(oJugadorService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oJugadorService.fill(cantidad));
     }

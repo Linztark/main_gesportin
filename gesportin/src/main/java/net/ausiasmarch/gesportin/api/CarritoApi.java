@@ -50,7 +50,7 @@ public class CarritoApi {
         return ResponseEntity.ok(oCarritoService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oCarritoService.fill(cantidad));
     }

@@ -50,7 +50,7 @@ public class CategoriaApi {
         return ResponseEntity.ok(oCategoriaService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oCategoriaService.fill(cantidad));
     }

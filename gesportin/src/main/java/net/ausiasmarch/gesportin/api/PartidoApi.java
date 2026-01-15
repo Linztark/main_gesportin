@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import net.ausiasmarch.gesportin.entity.PartidoEntity;
 import net.ausiasmarch.gesportin.service.PartidoService;
 
@@ -49,7 +50,7 @@ public class PartidoApi {
         return ResponseEntity.ok(oPartidoService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oPartidoService.fill(cantidad));
     }

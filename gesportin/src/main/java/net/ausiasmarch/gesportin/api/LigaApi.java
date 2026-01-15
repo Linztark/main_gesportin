@@ -55,7 +55,7 @@ public class LigaApi {
         return ResponseEntity.ok(oLigaService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oLigaService.fill(cantidad));
     }

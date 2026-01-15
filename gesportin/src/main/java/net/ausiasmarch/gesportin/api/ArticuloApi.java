@@ -56,7 +56,7 @@ public class ArticuloApi {
         return ResponseEntity.ok(oArticuloService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oArticuloService.fill(cantidad));
     }

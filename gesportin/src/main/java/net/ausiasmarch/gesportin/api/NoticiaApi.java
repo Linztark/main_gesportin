@@ -50,7 +50,7 @@ public class NoticiaApi {
         return ResponseEntity.ok(oNoticiaService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oNoticiaService.fill(cantidad));
     }

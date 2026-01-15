@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import net.ausiasmarch.gesportin.entity.PuntuacionEntity;
 import net.ausiasmarch.gesportin.service.PuntuacionService;
 
@@ -52,7 +50,7 @@ public class PuntuacionApi {
         return ResponseEntity.ok(oPuntuacionService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oPuntuacionService.fill(cantidad));
     }

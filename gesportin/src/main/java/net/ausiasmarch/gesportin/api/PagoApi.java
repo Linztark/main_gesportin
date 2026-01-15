@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.ausiasmarch.gesportin.entity.PagoEntity;
-import net.ausiasmarch.gesportin.service.AleatorioService;
 import net.ausiasmarch.gesportin.service.PagoService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -52,7 +51,7 @@ public class PagoApi {
         return ResponseEntity.ok(oPagoService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oPagoService.fill(cantidad));
     }

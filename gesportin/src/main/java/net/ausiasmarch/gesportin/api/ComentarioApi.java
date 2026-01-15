@@ -1,5 +1,6 @@
 package net.ausiasmarch.gesportin.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import net.ausiasmarch.gesportin.entity.ComentarioEntity;
 import net.ausiasmarch.gesportin.service.ComentarioService;
@@ -52,7 +52,7 @@ public class ComentarioApi {
         return ResponseEntity.ok(oComentarioService.delete(id));
     }
 
-    @GetMapping("/fill/{cantidad}")
+    @PostMapping("/fill/{cantidad}")
     public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
         return ResponseEntity.ok(oComentarioService.rellenaComentarios(cantidad));
     }
