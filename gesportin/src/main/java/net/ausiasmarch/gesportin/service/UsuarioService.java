@@ -46,12 +46,12 @@ public class UsuarioService {
             return oUsuarioRepository.findByNombreContainingIgnoreCase(nombre, pageable);
         } else if (username != null && !username.isEmpty()) {
             return oUsuarioRepository.findByUsernameContainingIgnoreCase(username, pageable);
-         }//  else if (idTipousuario != null) {
+        }//  else if (idTipousuario != null) {
         //     return oUsuarioRepository.findByIdTipousuario(idTipousuario, pageable);
         //  } // else if (idClub != null) {
         //     // return oUsuarioRepository.findByIdClub(idClub, pageable);
-         //} else {
-            {
+        //} else {
+        {
             return oUsuarioRepository.findAll(pageable);
         }
     }
@@ -64,7 +64,7 @@ public class UsuarioService {
     public UsuarioEntity update(UsuarioEntity usuario) {
         UsuarioEntity usuarioExistente = oUsuarioRepository.findById(usuario.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + usuario.getId()));
-        
+
         usuarioExistente.setNombre(usuario.getNombre());
         usuarioExistente.setApellido1(usuario.getApellido1());
         usuarioExistente.setApellido2(usuario.getApellido2());
@@ -74,7 +74,7 @@ public class UsuarioService {
         usuarioExistente.setGenero(usuario.getGenero());
         // usuarioExistente.setIdTipousuario(usuario.getIdTipousuario());
         // usuarioExistente.setIdClub(usuario.getIdClub());
-        
+
         return oUsuarioRepository.save(usuarioExistente);
     }
 
@@ -110,5 +110,14 @@ public class UsuarioService {
             oUsuarioRepository.save(usuario);
         }
         return cantidad;
+    }
+
+    public UsuarioEntity getOneRandom() {
+        Long count = oUsuarioRepository.count();
+        if (count == 0) {
+            return null;
+        }
+        int index = (int) (Math.random() * count);
+        return oUsuarioRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
     }
 }

@@ -75,4 +75,14 @@ public class FacturaService {
         }
         return cantidad;
     }
+
+    public FacturaEntity getOneRandom() {
+        Long count = oFacturaRepository.count();
+        if (count == 0) {
+            return null;
+        }
+        int index = (int) (Math.random() * count);
+        return oFacturaRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
+    }
+
 }

@@ -90,4 +90,13 @@ public class JugadorService {
         }
         return cantidad;
     }
+
+    public JugadorEntity getOneRandom() {
+        Long count = oJugadorRepository.count();
+        if (count == 0) {
+            return null;
+        }
+        int index = (int) (Math.random() * count);
+        return oJugadorRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
+    }
 }

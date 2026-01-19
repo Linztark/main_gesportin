@@ -18,6 +18,9 @@ public class ClubService {
     @Autowired
     private ClubRepository oClubRepository;
 
+    @Autowired
+    private UsuarioService oUsuarioService;
+
     private final Random random = new Random();
 
     public ClubEntity get(Long id) {
@@ -38,7 +41,7 @@ public class ClubService {
     public ClubEntity update(ClubEntity club) {
         ClubEntity clubExistente = oClubRepository.findById(club.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Club no encontrado con id: " + club.getId()));
-        
+
         clubExistente.setNombre(club.getNombre());
         clubExistente.setDireccion(club.getDireccion());
         clubExistente.setTelefono(club.getTelefono());
@@ -46,7 +49,7 @@ public class ClubService {
         //clubExistente.setIdPresidente(club.getIdPresidente());
         //clubExistente.setIdVicepresidente(club.getIdVicepresidente());
         // clubExistente.setImagen(club.getImagen());
-        
+
         return oClubRepository.save(clubExistente);
     }
 
@@ -74,11 +77,20 @@ public class ClubService {
             club.setDireccion("Dirección " + i);
             club.setTelefono("600000" + i);
             club.setFechaAlta(LocalDateTime.now());
-            //club.setIdPresidente((long) (random.nextInt(50) + 1));
-            //club.setIdVicepresidente((long) (random.nextInt(50) + 1));
             // club.setImagen(("imagen" + i).getBytes());
+            club.setPresidente(oUsuarioService.getOneRandom());
+            club.setVicepresidente(oUsuarioService.getOneRandom());
             oClubRepository.save(club);
         }
         return cantidad;
+    }
+
+    public ClubEntity getOneRandom() {
+        Long count = oClubRepository.count();
+        if (count == 0) {
+            return null;
+        }
+        int index = random.nextInt(count.intValue());
+        return oClubRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
     }
 }

@@ -16,7 +16,7 @@ public class TipousuarioService {
     TipousuarioRepository tipousuarioRepository;
 
     private static final String[] TIPOS = {
-            "Administrador", "Administrador de equipo", "Usuario"
+        "Administrador", "Administrador de equipo", "Usuario"
     };
 
     public TipousuarioEntity get(Long id) {
@@ -46,4 +46,14 @@ public class TipousuarioService {
         }
         return this.count();
     }
+
+    public TipousuarioEntity getOneRandom() {
+        Long count = tipousuarioRepository.count();
+        if (count == 0) {
+            return null;
+        }
+        int index = (int) (Math.random() * count);
+        return tipousuarioRepository.findAll(org.springframework.data.domain.Pageable.ofSize(1).withPage(index)).getContent().get(0);
+    }
+
 }

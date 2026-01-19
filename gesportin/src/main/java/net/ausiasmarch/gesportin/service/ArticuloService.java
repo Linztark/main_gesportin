@@ -19,6 +19,9 @@ public class ArticuloService {
     @Autowired
     private ArticuloRepository oArticuloRepository;
 
+    @Autowired
+    private TipoarticuloService oTipoarticuloService;
+
     private final Random random = new Random();
 
     private final String[] descripciones = {
@@ -92,11 +95,20 @@ public class ArticuloService {
             ArticuloEntity oArticulo = new ArticuloEntity();
             oArticulo.setDescripcion(descripciones[i % descripciones.length] + " " + (i + 1));
             oArticulo.setPrecio(BigDecimal.valueOf(random.nextDouble() * 100 + 5).setScale(2, RoundingMode.HALF_UP));
-            oArticulo.setDescuento(random.nextBoolean() ? BigDecimal.valueOf(random.nextDouble() * 30).setScale(2, RoundingMode.HALF_UP) : null);
-            //oArticulo.setIdTipoarticulo((Long) (long) (Long) (long)(random.nextInt(50) + 1));            
+            oArticulo.setDescuento(random.nextBoolean() ? BigDecimal.valueOf(random.nextDouble() * 30).setScale(2, RoundingMode.HALF_UP) : null);            
+            oArticulo.setTipoArticulo(oTipoarticuloService.getOneRandom());
             oArticuloRepository.save(oArticulo);
         }
         return cantidad;
+    }
+
+    public ArticuloEntity getOneRandom() {
+        Long count = oArticuloRepository.count();
+        if (count == 0) {
+            return null;
+        }
+        int index = random.nextInt(count.intValue());
+        return oArticuloRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
     }
 
 }

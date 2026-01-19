@@ -66,4 +66,13 @@ public class EquipoService {
         }
         return cantidad;
     }
+
+    public EquipoEntity getOneRandom() {
+        Long count = oEquipoRepository.count();
+        if (count == 0) {
+            return null;
+        }
+        int index = (int) (Math.random() * count);
+        return oEquipoRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
+    }
 }

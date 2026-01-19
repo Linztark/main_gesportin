@@ -38,6 +38,6 @@ public class TipoarticuloEntity {
     @JoinColumn(name = "id_club")
     private ClubEntity club;
 
-    @OneToMany(mappedBy = "tipoArticulo", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tipoarticulo", fetch = FetchType.LAZY)
     private List<ArticuloEntity> articulos;
 }

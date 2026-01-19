@@ -26,6 +26,6 @@ public class TipousuarioEntity {
     @NotBlank
     private String descripcion;
 
-    @OneToMany(mappedBy = "tipoUsuario", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tipousuario", fetch = FetchType.LAZY)
     private java.util.List<UsuarioEntity> usuarios;
 }

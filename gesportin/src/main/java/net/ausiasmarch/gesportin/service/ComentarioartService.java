@@ -20,6 +20,12 @@ public class ComentarioartService {
     @Autowired
     AleatorioService oAleatorioService;
 
+    @Autowired
+    UsuarioService oUsuarioService;
+
+    @Autowired
+    ArticuloService oArticuloService;
+
     ArrayList<String> alComentarios = new ArrayList<>();
 
     public ComentarioartService() {
@@ -52,12 +58,8 @@ public class ComentarioartService {
                         .get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alComentarios.size() - 1)) + " ";
             }
             oComentarioartEntity.setContenido(contenidoGenerado.trim());
-
-            // Generar id_articulo e id_usuario aleatorios entre 0 y 50
-            // oComentarioartEntity.setIdArticulo((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
-            // oComentarioartEntity.setIdUsuario((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
-
-            // Guardar entity en base de datos
+            oComentarioartEntity.setArticulo(oArticuloService.getOneRandom());
+            oComentarioartEntity.setUsuario(oUsuarioService.getOneRandom());
             oComentarioartRepository.save(oComentarioartEntity);
         }
         return oComentarioartRepository.count();

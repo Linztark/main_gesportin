@@ -50,7 +50,7 @@ public class ClubEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_presidente")
     private UsuarioEntity presidente;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vicepresidente")
@@ -64,4 +64,7 @@ public class ClubEntity {
 
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
     private List<TipoarticuloEntity> tipoarticulos;
+
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
+    private List<UsuarioEntity> usuarios;
 }

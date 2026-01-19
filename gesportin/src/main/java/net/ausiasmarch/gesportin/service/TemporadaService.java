@@ -80,7 +80,13 @@ public class TemporadaService {
         }
         return cantidad;
     }
+
+    public TemporadaEntity getOneRandom() {
+        Long count = oTemporadaRepository.count();
+        if (count == 0) {
+            return null;
+        }
+        int index = (int) (Math.random() * count);
+        return oTemporadaRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
+    }
 }
-
-
-

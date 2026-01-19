@@ -1,7 +1,6 @@
 package net.ausiasmarch.gesportin.service;
 
 //import java.util.Random;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,6 @@ public class TipoarticuloService {
     private TipoarticuloRepository oTipoarticuloRepository;
 
     //private final Random random = new Random();
-
     private final String[] descripciones = {
         "Equipación oficial", "Material deportivo", "Accesorios", "Calzado deportivo", "Ropa de entrenamiento",
         "Complementos", "Merchandising", "Artículos de portería", "Equipamiento técnico", "Protecciones",
@@ -55,10 +53,10 @@ public class TipoarticuloService {
     public TipoarticuloEntity update(TipoarticuloEntity tipoarticulo) {
         TipoarticuloEntity tipoarticuloExistente = oTipoarticuloRepository.findById(tipoarticulo.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Tipoarticulo no encontrado con id: " + tipoarticulo.getId()));
-        
+
         tipoarticuloExistente.setDescripcion(tipoarticulo.getDescripcion());
         //tipoarticuloExistente.setIdClub(tipoarticulo.getIdClub());
-        
+
         return oTipoarticuloRepository.save(tipoarticuloExistente);
     }
 
@@ -87,5 +85,14 @@ public class TipoarticuloService {
             oTipoarticuloRepository.save(tipoarticulo);
         }
         return cantidad;
+    }
+
+    public TipoarticuloEntity getOneRandom() {
+        Long count = oTipoarticuloRepository.count();
+        if (count == 0) {
+            return null;
+        }
+        int index = (int) (Math.random() * count);
+        return oTipoarticuloRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
     }
 }

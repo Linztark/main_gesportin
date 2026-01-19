@@ -105,4 +105,14 @@ public class NoticiaService {
         }
         return cantidad;
     }
+
+    public NoticiaEntity getOneRandom() {
+        Long count = oNoticiaRepository.count();
+        if (count == 0) {
+            return null;
+        }
+        int index = (int) (Math.random() * count);
+        return oNoticiaRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
+
+    }
 }

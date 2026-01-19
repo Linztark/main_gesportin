@@ -20,6 +20,9 @@ public class ComentarioService {
     @Autowired
     AleatorioService oAleatorioService;
 
+    @Autowired
+    UsuarioService oUsuarioService;
+
     ArrayList<String> alComentarios = new ArrayList<>();
 
     public ComentarioService() {
@@ -42,22 +45,15 @@ public class ComentarioService {
 
     public Long rellenaComentarios(Long numComentarios) {
         for (long j = 0; j < numComentarios; j++) {
-            ComentarioEntity oComentariosEntity = new ComentarioEntity();
-            
-            // Generar contenido aleatorio
+            ComentarioEntity oComentariosEntity = new ComentarioEntity();    
             String contenidoGenerado = "";
             int numFrases = oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 3);
             for (int i = 1; i <= numFrases; i++) {
                 contenidoGenerado += alComentarios
                         .get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alComentarios.size() - 1)) + " ";
             }
-            oComentariosEntity.setContenido(contenidoGenerado.trim());
-            
-            // Generar id_noticia e id_usuario aleatorios entre 0 y 50
-            // oComentariosEntity.setIdNoticia((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
-            oComentariosEntity.setIdUsuario((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
-            
-            // Guardar entity en base de datos
+            oComentariosEntity.setContenido(contenidoGenerado.trim());        
+            oComentariosEntity.setUsuario(oUsuarioService.getOneRandom());
             oComentariosRepository.save(oComentariosEntity);
         }
         return oComentariosRepository.count();
