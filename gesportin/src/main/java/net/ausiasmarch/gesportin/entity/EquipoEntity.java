@@ -43,7 +43,7 @@ public class EquipoEntity {
     @JoinColumn(name = "id_entrenador")
     private UsuarioEntity entrenador;
 
-    @OneToMany(mappedBy = "equipo", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idEquipo", fetch = FetchType.LAZY)
     private List<JugadorEntity> jugadores;
 
     @OneToMany(mappedBy = "equipo", fetch = FetchType.LAZY)
