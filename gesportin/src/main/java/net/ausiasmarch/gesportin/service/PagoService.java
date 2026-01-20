@@ -30,6 +30,8 @@ public class PagoService {
     @Autowired
     AleatorioService oAleatorioService;
 
+
+
     // ----------------------------CRUD---------------------------------
     public PagoEntity get(Long id) {
         return oPagoRepository.findById(id)
@@ -39,6 +41,20 @@ public class PagoService {
     public PagoEntity create(PagoEntity pagoEntity) {
         pagoEntity.setId(null);
         pagoEntity.setFecha(LocalDateTime.now());
+        
+        if (pagoEntity.getCuota() == null || pagoEntity.getJugador() == null) {
+            throw new IllegalArgumentException("La cuota y el jugador no pueden ser nulos");
+        }
+
+        CuotaEntity existingCuota= oCuotaRepository.findById(pagoEntity.getCuota().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cuota no encontrada con id: " + pagoEntity.getCuota().getId()));
+
+        JugadorEntity existingJugador = oJugadorRepository.findById(pagoEntity.getJugador().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + pagoEntity.getJugador().getId()));
+
+        pagoEntity.setCuota(existingCuota);
+        pagoEntity.setJugador(existingJugador);
+
         return oPagoRepository.save(pagoEntity);
     }
 
@@ -46,8 +62,14 @@ public class PagoService {
         PagoEntity existingPago = oPagoRepository.findById(pagoEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Pago no encontrado con id: " + pagoEntity.getId()));
 
-        existingPago.setCuota(pagoEntity.getCuota());
-        existingPago.setJugador(pagoEntity.getJugador());
+        CuotaEntity existingCuota= oCuotaRepository.findById(pagoEntity.getCuota().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cuota no encontrada con id: " + pagoEntity.getCuota().getId()));
+
+        JugadorEntity existingJugador = oJugadorRepository.findById(pagoEntity.getJugador().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + pagoEntity.getJugador().getId()));
+
+        existingPago.setCuota(existingCuota);
+        existingPago.setJugador(existingJugador);
         existingPago.setAbonado(pagoEntity.getAbonado());
         existingPago.setFecha(pagoEntity.getFecha());
 
