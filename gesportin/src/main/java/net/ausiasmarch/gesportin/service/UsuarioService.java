@@ -24,6 +24,9 @@ public class UsuarioService {
     @Autowired
     private TipousuarioService oTipousuarioService; 
 
+    @Autowired
+    private RolusuarioService oRolusuarioService;
+
     private final Random random = new Random();
 
     private final String[] nombres = {
@@ -66,6 +69,7 @@ public class UsuarioService {
         oUsuarioEntity.setId(null);
         oUsuarioEntity.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioEntity.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
+        oUsuarioEntity.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
         return oUsuarioRepository.save(oUsuarioEntity);
     }
 
@@ -82,9 +86,7 @@ public class UsuarioService {
         oUsuarioExistente.setGenero(oUsuarioEntity.getGenero());
         oUsuarioExistente.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioExistente.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
-
-
-
+        oUsuarioExistente.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
         return oUsuarioRepository.save(oUsuarioExistente);
     }
 
@@ -117,6 +119,7 @@ public class UsuarioService {
             usuario.setGenero(random.nextInt(2));
             usuario.setTipousuario(oTipousuarioService.getOneRandom());
             usuario.setClub(oClubService.getOneRandom());
+            usuario.setRolusuario(oRolusuarioService.getOneRandom());
             oUsuarioRepository.save(usuario);
         }
         return cantidad;

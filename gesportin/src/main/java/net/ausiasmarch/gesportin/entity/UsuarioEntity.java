@@ -65,6 +65,11 @@ public class UsuarioEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_rolusuario")
+    private RolusuarioEntity rolusuario;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_club")
     private ClubEntity club;
 
@@ -73,12 +78,6 @@ public class UsuarioEntity {
 
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<PuntuacionEntity> puntuaciones;
-
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<ClubEntity> presidencias;
-
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<ClubEntity> vicepresidencias;
 
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<ComentarioartEntity> comentarioarts;

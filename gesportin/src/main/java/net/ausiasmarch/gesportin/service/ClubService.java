@@ -18,9 +18,6 @@ public class ClubService {
     @Autowired
     private ClubRepository oClubRepository;
 
-    @Autowired
-    private UsuarioService oUsuarioService;
-
     private final Random random = new Random();
 
     public ClubEntity get(Long id) {
@@ -35,8 +32,6 @@ public class ClubService {
     public ClubEntity create(ClubEntity oClubEntity) {
         oClubEntity.setId(null);
         oClubEntity.setFechaAlta(LocalDateTime.now());
-        oClubEntity.setPresidente(oUsuarioService.get(oClubEntity.getPresidente().getId()));
-        oClubEntity.setVicepresidente(oUsuarioService.get(oClubEntity.getVicepresidente().getId()));
         return oClubRepository.save(oClubEntity);
     }
 
@@ -48,8 +43,6 @@ public class ClubService {
         oClubExistente.setDireccion(oClubEntity.getDireccion());
         oClubExistente.setTelefono(oClubEntity.getTelefono());
         oClubExistente.setFechaAlta(oClubEntity.getFechaAlta());
-        oClubExistente.setPresidente(oUsuarioService.get(oClubEntity.getPresidente().getId()));
-        oClubExistente.setVicepresidente(oUsuarioService.get(oClubEntity.getVicepresidente().getId()));
         return oClubRepository.save(oClubExistente);
     }
 
@@ -78,8 +71,6 @@ public class ClubService {
             club.setTelefono("600000" + i);
             club.setFechaAlta(LocalDateTime.now());
             // club.setImagen(("imagen" + i).getBytes());
-            club.setPresidente(oUsuarioService.getOneRandom());
-            club.setVicepresidente(oUsuarioService.getOneRandom());
             oClubRepository.save(club);
         }
         return cantidad;
