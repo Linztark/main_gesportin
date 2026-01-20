@@ -48,19 +48,19 @@ public class TipoarticuloService {
         }
     }
 
-    public TipoarticuloEntity create(TipoarticuloEntity tipoarticulo) {
-        tipoarticulo.setId(null);
-        return oTipoarticuloRepository.save(tipoarticulo);
+    public TipoarticuloEntity create(TipoarticuloEntity oTipoarticuloEntity) {
+        oTipoarticuloEntity.setId(null);
+        oTipoarticuloEntity.setClub(oClubService.get(oTipoarticuloEntity.getClub().getId()));
+        return oTipoarticuloRepository.save(oTipoarticuloEntity);
     }
 
-    public TipoarticuloEntity update(TipoarticuloEntity tipoarticulo) {
-        TipoarticuloEntity tipoarticuloExistente = oTipoarticuloRepository.findById(tipoarticulo.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Tipoarticulo no encontrado con id: " + tipoarticulo.getId()));
+    public TipoarticuloEntity update(TipoarticuloEntity oTipoarticuloEntity) {
+        TipoarticuloEntity oTipoarticuloExistente = oTipoarticuloRepository.findById(oTipoarticuloEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Tipoarticulo no encontrado con id: " + oTipoarticuloEntity.getId()));
 
-        tipoarticuloExistente.setDescripcion(tipoarticulo.getDescripcion());
-        tipoarticuloExistente.setClub(oClubService.getOneRandom());
-
-        return oTipoarticuloRepository.save(tipoarticuloExistente);
+        oTipoarticuloExistente.setDescripcion(oTipoarticuloEntity.getDescripcion());
+        oTipoarticuloExistente.setClub(oClubService.get(oTipoarticuloEntity.getClub().getId()));
+        return oTipoarticuloRepository.save(oTipoarticuloExistente);
     }
 
     public Long delete(Long id) {
