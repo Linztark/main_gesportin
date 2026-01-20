@@ -49,27 +49,30 @@ public class JugadorService {
         return oJugadorRepository.findAll(pageable);
     }
 
-    public JugadorEntity create(JugadorEntity jugador) {
-        jugador.setId(null);
-        return oJugadorRepository.save(jugador);
+    public JugadorEntity create(JugadorEntity oJugadorEntity) {
+        oJugadorEntity.setId(null);
+        oJugadorEntity.setEquipo(oEquipoService.get(oJugadorEntity.getEquipo().getId()));
+        oJugadorEntity.setUsuario(oUsuarioService.get(oJugadorEntity.getUsuario().getId()));
+
+        return oJugadorRepository.save(oJugadorEntity);
     }
 
-    public JugadorEntity update(JugadorEntity jugador) {
-        JugadorEntity oExistingJugador = oJugadorRepository.findById(jugador.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + jugador.getId()));
-        oExistingJugador.setDorsal(jugador.getDorsal());
-        oExistingJugador.setPosicion(jugador.getPosicion());
-        oExistingJugador.setCapitan(jugador.getCapitan());
-        oExistingJugador.setImagen(jugador.getImagen());
-        oExistingJugador.setIdUsuario(jugador.getIdUsuario());
-        oExistingJugador.setIdEquipo(jugador.getIdEquipo());
-        return oJugadorRepository.save(oExistingJugador);
+    public JugadorEntity update(JugadorEntity oJugadorEntity) {
+        JugadorEntity oJugadorExistente = oJugadorRepository.findById(oJugadorEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + oJugadorEntity.getId()));
+        oJugadorExistente.setDorsal(oJugadorEntity.getDorsal());
+        oJugadorExistente.setPosicion(oJugadorEntity.getPosicion());
+        oJugadorExistente.setCapitan(oJugadorEntity.getCapitan());
+        oJugadorExistente.setImagen(oJugadorEntity.getImagen());
+        oJugadorExistente.setUsuario(oUsuarioService.get(oJugadorEntity.getUsuario().getId()));
+        oJugadorExistente.setEquipo(oEquipoService.get(oJugadorEntity.getEquipo().getId()));
+        return oJugadorRepository.save(oJugadorExistente);
     }
 
     public Long delete(Long id) {
-        JugadorEntity jugador = oJugadorRepository.findById(id)
+        JugadorEntity oJugador = oJugadorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + id));
-        oJugadorRepository.delete(jugador);
+        oJugadorRepository.delete(oJugador);
         return id;
     }
 
@@ -90,8 +93,8 @@ public class JugadorService {
             jugador.setPosicion(posiciones.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, posiciones.size() - 1)));
             jugador.setCapitan(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
             jugador.setImagen(null);
-            jugador.setIdUsuario(oUsuarioService.getOneRandom());
-            jugador.setIdEquipo(oEquipoService.getOneRandom());
+            jugador.setUsuario(oUsuarioService.getOneRandom());
+            jugador.setEquipo(oEquipoService.getOneRandom());
             oJugadorRepository.save(jugador);
         }
         return cantidad;
