@@ -36,10 +36,9 @@ public class JugadorApi {
     public ResponseEntity<Page<JugadorEntity>> getPage(
             @PageableDefault(size = 1000) Pageable pageable,
             @RequestParam(required = false) String posicion,
-            @RequestParam(required = false) Boolean capitan,
             @RequestParam(required = false) Long idUsuario,
             @RequestParam(required = false) Long idEquipo) {
-        return ResponseEntity.ok(oJugadorService.getPage(pageable, posicion, capitan, idUsuario, idEquipo));
+        return ResponseEntity.ok(oJugadorService.getPage(pageable, posicion, idUsuario, idEquipo));
     }
 
     @PostMapping
