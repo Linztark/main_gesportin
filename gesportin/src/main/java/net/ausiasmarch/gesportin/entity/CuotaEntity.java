@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,8 +17,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -49,7 +50,11 @@ public class CuotaEntity {
     @JoinColumn(name = "id_equipo")
     private EquipoEntity equipo;
 
-    @JsonIgnore
+    @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "cuota", fetch = FetchType.LAZY)
     private List<PagoEntity> pagos;
+
+    public int getPagos() {
+        return pagos.size();
+    }
 }
