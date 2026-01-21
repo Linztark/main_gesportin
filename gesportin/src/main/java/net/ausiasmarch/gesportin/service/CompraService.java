@@ -36,7 +36,12 @@ public class CompraService {
         return oCompraRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Compra no encontrada con id: " + id));
     }
 
-    public Page<CompraEntity> getPage(Pageable pageable) {
+    public Page<CompraEntity> getPage(Pageable pageable, Long id_articulo, Long id_factura) {
+        if (id_articulo != null) {
+            return oCompraRepository.findByArticuloId(id_articulo, pageable);
+        } else if (id_factura != null) {
+            return oCompraRepository.findByFacturaId(id_factura, pageable);
+        }
         return oCompraRepository.findAll(pageable);
     }
 
