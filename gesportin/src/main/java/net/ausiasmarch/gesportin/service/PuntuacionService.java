@@ -29,15 +29,14 @@ public class PuntuacionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Puntuación no encontrado con id: " + id));
     }
 
-    public Page<PuntuacionEntity> getPage(Pageable pageable, Long idNoticia, Long idUsuario) {
-        if (idNoticia != null && idUsuario != null) {
-            return oPuntuacionRepository.findByNoticiaIdAndUsuarioId(idNoticia, idUsuario, pageable);
-        } else if (idNoticia != null) {
-            return oPuntuacionRepository.findByNoticiaId(idNoticia, pageable);
-        } else if (idUsuario != null) {
-            return oPuntuacionRepository.findByUsuarioId(idUsuario, pageable);
+    public Page<PuntuacionEntity> getPage(Pageable pageable, Long id_noticia, Long id_usuario) {
+        if (id_noticia != null) {
+            return oPuntuacionRepository.findByNoticiaId(id_noticia, pageable);
+        } else if (id_usuario != null) {
+            return oPuntuacionRepository.findByUsuarioId(id_usuario, pageable);
+        } else {
+            return oPuntuacionRepository.findAll(pageable);
         }
-        return oPuntuacionRepository.findAll(pageable);
     }
 
     public PuntuacionEntity create(PuntuacionEntity oPuntuacionEntity) {

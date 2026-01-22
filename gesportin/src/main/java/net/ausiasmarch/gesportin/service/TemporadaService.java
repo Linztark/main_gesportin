@@ -38,8 +38,14 @@ public class TemporadaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Temporada no encontrado con id: " + id));
     }
 
-    public Page<TemporadaEntity> getPage(Pageable pageable) {
-        return oTemporadaRepository.findAll(pageable);
+    public Page<TemporadaEntity> getPage(Pageable pageable, String descripcion, Long id_club) {
+        if (descripcion != null && !descripcion.isEmpty()) {
+            return oTemporadaRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable);
+        } else if (id_club != null) {
+            return oTemporadaRepository.findByClubId(id_club, pageable);
+        } else {
+            return oTemporadaRepository.findAll(pageable);
+        }
     }
 
     public TemporadaEntity create(TemporadaEntity oTemporadaEntity) {
