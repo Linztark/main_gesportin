@@ -11,4 +11,6 @@ public interface NoticiaRepository extends JpaRepository<NoticiaEntity, Long> {
 
     Page<NoticiaEntity> findByClubId(Long idClub, Pageable pageable);
 
+    Page<NoticiaEntity> findByTituloContainingIgnoreCaseOrContenidoContainingIgnoreCase(String titulo, String contenido, Pageable pageable);
+
 }

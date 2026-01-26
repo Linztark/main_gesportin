@@ -35,8 +35,9 @@ public class NoticiaApi {
     @GetMapping
     public ResponseEntity<Page<NoticiaEntity>> getPage(
             @PageableDefault(size = 1000) Pageable oPageable,
+            @RequestParam(required = false) String contenido,
             @RequestParam(required = false) Long idClub) {
-        return ResponseEntity.ok(oNoticiaService.getPage(oPageable, idClub));
+        return ResponseEntity.ok(oNoticiaService.getPage(oPageable, contenido, idClub));
     }
 
     @PostMapping
