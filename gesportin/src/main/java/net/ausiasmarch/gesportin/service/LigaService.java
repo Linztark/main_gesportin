@@ -40,7 +40,7 @@ public class LigaService {
         if (nombre != null && !nombre.isEmpty()) {
             return oLigaRepository.findByNombreContainingIgnoreCase(nombre, pageable);
         } else if (id_equipo != null) {
-            return oLigaRepository.findByIdEquipo(id_equipo, pageable);
+            return oLigaRepository.findByEquipoId(id_equipo, pageable);
         } else {
             return oLigaRepository.findAll(pageable);
         }

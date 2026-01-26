@@ -55,9 +55,9 @@ public class ComentarioService {
         if (contenido != null && !contenido.isEmpty()) {
             return oComentariosRepository.findByContenidoContainingIgnoreCase(contenido, oPageable);
         } else if (id_usuario != null) {
-            return oComentariosRepository.findByIdUsuario(id_usuario, oPageable);
+            return oComentariosRepository.findByUsuarioId(id_usuario, oPageable);
         } else if (id_noticia != null) {
-            return oComentariosRepository.findByIdNoticia(id_noticia, oPageable);
+            return oComentariosRepository.findByNoticiaId(id_noticia, oPageable);
         } else
         return oComentariosRepository.findAll(oPageable);
     }
