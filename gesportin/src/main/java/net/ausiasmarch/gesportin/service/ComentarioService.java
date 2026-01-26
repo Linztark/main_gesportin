@@ -44,6 +44,11 @@ public class ComentarioService {
         alComentarios.add("Esto me ha ayudado mucho, gracias.");
         alComentarios.add("No me queda claro el último punto.");
         alComentarios.add("Muy útil para mi proyecto actual.");
+        alComentarios.add("Podrías incluir más referencias?");
+        alComentarios.add("Excelente redacción y estructura.");
+        alComentarios.add("No comparto tu perspectiva sobre este tema.");
+        alComentarios.add("Gracias por la información, muy valiosa.");
+        alComentarios.add("Espero leer más artículos como este.");
     }
 
     public ComentarioEntity get(Long id) {
