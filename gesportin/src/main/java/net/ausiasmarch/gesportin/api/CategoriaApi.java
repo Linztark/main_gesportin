@@ -1,5 +1,7 @@
 package net.ausiasmarch.gesportin.api;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +33,7 @@ public class CategoriaApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoriaEntity>> getPage(Pageable pageable, @PathVariable String nombre, @PathVariable Long id_temporada) {
+    public ResponseEntity<Page<CategoriaEntity>> getPage(Pageable pageable, @PathVariable Optional<String> nombre, @PathVariable Optional<Long> id_temporada) {
         return ResponseEntity.ok(oCategoriaService.getPage(pageable, nombre, id_temporada));
     }
 

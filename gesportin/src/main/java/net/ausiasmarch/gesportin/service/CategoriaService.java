@@ -1,5 +1,7 @@
 package net.ausiasmarch.gesportin.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,12 +30,12 @@ public class CategoriaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrado con id: " + id));
     }
 
-    public Page<CategoriaEntity> getPage(Pageable pageable, String nombre, Long id_temporada) {
+    public Page<CategoriaEntity> getPage(Pageable pageable, Optional<String> nombre, Optional<Long> id_temporada) {
 
-        if(nombre != null && !nombre.isEmpty()) {
-            return oCategoriaRepository.findByNombreContainingIgnoreCase(nombre, pageable);
-        } else if(id_temporada != null) {
-            return oCategoriaRepository.findByTemporadaId(id_temporada, pageable);
+        if(nombre.isPresent() && !nombre.get().isEmpty()) {
+            return oCategoriaRepository.findByNombreContainingIgnoreCase(nombre.get(), pageable);
+        } else if( id_temporada.isPresent()) {
+            return oCategoriaRepository.findByTemporadaId(id_temporada.get(), pageable);
         } else {
             return oCategoriaRepository.findAll(pageable);
         }
