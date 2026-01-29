@@ -95,6 +95,14 @@ public class UsuarioEntity {
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<FacturaEntity> facturas;
 
+    @Getter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "entrenador", fetch = FetchType.LAZY)
+    private List<EquipoEntity> equiposentrenados;
+
+    @Getter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private List<JugadorEntity> jugadores;
+
     public int getComentarios() {
         return comentarios.size();
     }
