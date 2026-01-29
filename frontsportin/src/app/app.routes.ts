@@ -5,5 +5,5 @@ import { ArticuloPlistAdminRouted } from './component/articulo/plist-admin-route
 export const routes: Routes = [
     { path: '', component: Home },
     { path: 'articulo', component: ArticuloPlistAdminRouted},
-    { path: 'articulo?:id_tipoarticulo', component: ArticuloPlistAdminRouted} //pte
+    { path: 'articulo/:tipoarticulo', component: ArticuloPlistAdminRouted}    
 ];

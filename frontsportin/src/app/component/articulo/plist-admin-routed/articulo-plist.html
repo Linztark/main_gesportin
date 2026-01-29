@@ -12,10 +12,36 @@
     </div>
   }
 
+  <!-- Búsqueda por descripción usando debounce -->
+  <div class="d-flex justify-content-center my-2">
+    <input
+      class="form-control me-2"
+      type="search"      
+      placeholder="Buscar por descripción"
+      aria-label="Search"
+      (input)="onSearchDescription($event.target.value)"
+      [value]="descripcion()"
+      name="searchDescription"
+    />
+  </div>
+
   <!-- Total registros -->
   <div class="d-flex justify-content-center my-1">
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    @if (tipoarticulo() > 0) {
+      <small class="text-muted ms-3">Filtro: id de tipo de artículo = {{ tipoarticulo() }}</small>
+      <!-- quitar el filtro -->
+      <a class="ms-2" [routerLink]="['/articulo']" role="button" title="Quitar filtro"
+        ><i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro</a
+      >
+    }
+    @if (descripcion().length > 0) {
+      <small class="text-muted ms-3">Filtro: descripción contiene "{{ descripcion() }}"</small>
+      <!-- quitar el filtro -->
+    }
   </div>
+        
+  
 
   <!-- Ocultar paginación y RPP si no hay registros -->
   @if (totalRecords() > 0) {
@@ -87,7 +113,7 @@
               }
             </span>
           </th>
-          <th scope="col" (click)="onOrder('tipoarticulo')" style="cursor: pointer; width: 20%">
+          <th scope="col" (click)="onOrder('tipoarticulo')" style="cursor: pointer; width: 25%">
             <span class="header-inline"
               >Tipo de Artículo
               @if (orderField() === 'nombreTipoArticulo') {
@@ -103,7 +129,7 @@
           <th scope="col" style="width: 10%">
             <span class="header-inline">Comentarios </span>
           </th>
-          <th scope="col" style="width: 10%">
+          <th scope="col" style="width: 5%">
             <span class="header-inline">Compras </span>
           </th>
           <th scope="col" style="width: 10%">
@@ -130,17 +156,15 @@
 
             <td>
               {{ oArticulo.tipoarticulo.descripcion | trim: 20 }}
-            
-
-                  <a
-                    class="btn btn-warning btn-sm"
-                    [routerLink]="['/articulo/edit', oArticulo.id]"
-                    role="button"
-                    title="Editar"
-                    ><i class="bi bi-pencil" aria-hidden="true"></i
-                  >  {{ ' (' + oArticulo.tipoarticulo.id + ')' }}</a>
-
-
+              {{ ' (' + oArticulo.tipoarticulo.id + ')' }}
+              <!-- Botón alineado a la derecha para filtrar tipoarticulo -->
+              <a
+                class="btn btn-warning btn-sm ms-2 float-end"
+                [routerLink]="['/articulo/', oArticulo.tipoarticulo.id]"
+                role="button"
+                title="Editar"
+                ><i class="bi bi-funnel-fill" aria-hidden="true"></i
+              ></a>
             </td>
             <td style="text-align: center">{{ oArticulo.comentarioarts }}</td>
             <td style="text-align: center">{{ oArticulo.compras }}</td>
