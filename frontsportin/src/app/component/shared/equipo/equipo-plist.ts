@@ -6,11 +6,13 @@ import { rpp as RPP, rpp } from '../../../environment/environment';
 import { EquipoService } from '../../../service/equipo';
 import { IEquipo } from '../../../model/equipo';
 import { IPage } from '../../../model/plist';
+import { Paginacion } from '../../shared/paginacion/paginacion';
+import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 
 @Component({
   selector: 'app-plist-equipo',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, Paginacion, BotoneraRpp],
   templateUrl: './equipo-plist.html',
   styleUrls: ['./equipo-plist.css'],
 })
