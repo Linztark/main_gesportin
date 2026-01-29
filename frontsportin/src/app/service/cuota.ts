@@ -22,15 +22,5 @@ export class CuotaService {
     return this.oHttp.get<IPage<ICuota>>(serverURL + `/cuota?page=${page}&size=${rpp}&sort=${order},${direction}`);
   }
 
-  // pte: filtrado por equipo
-  // getPageByEquipo(page: number, rpp: number, order: string = '', direction: string = '', id_equipo: number): Observable<IPage<ICuota>> {
-  //   if (order === '') {
-  //     order = 'id';
-  //   }
-  //   if (direction === '') {
-  //     direction = 'asc';
-  //   }
-  //   return this.oHttp.get<IPage<ICuota>>(serverURL + `/cuota?page=${page}&size=${rpp}&sort=${order},${direction}&id_equipo=${id_equipo}`);
-  // }
 
 }

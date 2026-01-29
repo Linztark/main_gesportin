@@ -7,6 +7,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 import { DatetimePipe } from '../../../pipe/datetime-pipe';
+import { TrimPipe } from '../../../pipe/trim-pipe';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTimeSearch } from '../../../environment/environment';
 
 @Component({
   selector: 'app-cuota-plist',
@@ -22,6 +26,8 @@ export class CuotaPlistAdminRouted {
   rellenando = signal<boolean>(false);
   rellenaOk = signal<number | null>(null);
   rellenaError = signal<string | null>(null);
+  publishingId = signal<number | null>(null);
+  publishingAction = signal<'publicar' | 'despublicar' | null>(null);
 
   message = signal<string | null>(null);
   totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
@@ -30,16 +36,37 @@ export class CuotaPlistAdminRouted {
   orderField = signal<string>('id');
   orderDirection = signal<'asc' | 'desc'>('asc');
 
+  //variables de filtro
+  equipo = signal<number>(0);
+
+  //variables de búsqueda
+  descripcion = signal<string>('');
+  private searchSubject = new Subject<string>();
+  private searchSubcription?: Subscription;
+
   constructor(
     private oCuotaService: CuotaService,
     private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
-    const msg = this.route.snapshot.queryParamMap.get('msg');
-    if (msg) {
-      this.showMessage(msg);
+    const id = this.route.snapshot.paramMap.get('equipo');
+    if (id) {
+      this.equipo.set(+id);
     }
+
+    //Configurar el debounce para la búsqueda
+    this.searchSubcription = this.searchSubject
+    .pipe(
+      debounceTime(debounceTimeSearch),
+      distinctUntilChanged(),
+    )
+    .subscribe((searchTerm: string) => {
+      this.descripcion.set(searchTerm);
+      this.numPage.set(0);
+      this.getPage();
+    });
+
     this.getPage();
   }
 
