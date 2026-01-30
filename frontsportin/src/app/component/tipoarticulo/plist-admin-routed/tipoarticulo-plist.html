@@ -30,7 +30,7 @@
       <small class="text-muted ms-3">Filtro: descripción contiene "{{ descripcion() }}"</small>
     }
   </div>
-   <!-- Ocultar paginación y RPP si no hay registros -->
+  <!-- Ocultar paginación y RPP si no hay registros -->
   @if (totalRecords() > 0) {
     <div class="d-flex justify-content-between my-1">
       <app-paginacion
@@ -76,27 +76,35 @@
                 ><i class="bi bi-funnel-fill" aria-hidden="true"></i
               ></a>
             </td>
-            <td class="text-center">{{ tipoarticulo.articulos }}</td>
+            <td style="text-align: center">
+              @if (tipoarticulo.articulos === 0) {
+                <i class="bi bi-ban" aria-hidden="true"></i>
+              } @else {
+                <a [routerLink]="['/articulo', tipoarticulo.id]">
+                  {{ tipoarticulo.articulos }}
+                </a>
+              }
+            </td>
             <td>
               <div class="d-flex justify-content-center">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
                   <a
                     class="btn btn-primary btn-sm"
-                    [routerLink]="['/articulo/view', tipoarticulo.id]"
+                    [routerLink]="['/tipoarticulo/view', tipoarticulo.id]"
                     role="button"
                     title="Ver"
                     ><i class="bi bi-eye" aria-hidden="true"></i
                   ></a>
                   <a
                     class="btn btn-warning btn-sm"
-                    [routerLink]="['/articulo/edit', tipoarticulo.id]"
+                    [routerLink]="['/tipoarticulo/edit', tipoarticulo.id]"
                     role="button"
                     title="Editar"
                     ><i class="bi bi-pencil" aria-hidden="true"></i
                   ></a>
                   <a
                     class="btn btn-danger btn-sm"
-                    [routerLink]="['/articulo/delete', tipoarticulo.id]"
+                    [routerLink]="['/tipoarticulo/delete', tipoarticulo.id]"
                     role="button"
                     title="Eliminar"
                     ><i class="bi bi-trash" aria-hidden="true"></i
