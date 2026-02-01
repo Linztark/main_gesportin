@@ -1,12 +1,14 @@
-import { Component, computed, OnInit } from '@angular/core';
+import { Component, computed, signal, OnInit, OnDestroy } from '@angular/core';
 import { ILiga } from '../../../model/liga';
 import { IPage } from '../../../model/plist';
 import { LigaService } from '../../../service/liga';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Paginacion } from "../../shared/paginacion/paginacion";
 import { BotoneraRpp } from "../../shared/botonera-rpp/botonera-rpp";
-import { ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTimeSearch } from '../../../environment/environment';
 
 @Component({
   selector: 'app-liga-plist',
@@ -14,37 +16,63 @@ import { RouterLink } from '@angular/router';
   templateUrl: './liga-plist.html',
   styleUrl: './liga-plist.css',
 })
-export class LigaPlistAdminRouted implements OnInit {
-  oPage: IPage<ILiga> | null = null;
-  numPage: number = 0;
-  numRpp: number = 5;
-  rellenaOk: number | null = null;
-  rellenaError: string | null = null;
-  totalElementsCount: number = 0;
-  totalRecords = computed(() => this.oPage?.totalElements ?? 0);
+export class LigaPlistAdminRouted implements OnInit, OnDestroy {
+  oPage = signal<IPage<ILiga> | null>(null);
+  numPage = signal<number>(0);
+  numRpp = signal<number>(5);
+  rellenaOk = signal<number | null>(null);
+  rellenaError = signal<string | null>(null);
+  totalElementsCount = signal<number>(0);
+  totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
 
-  constructor(private oLigaService: LigaService, private cdr: ChangeDetectorRef) { }
+  // Variables de ordenamiento
+  orderField = signal<string>('id');
+  orderDirection = signal<'asc' | 'desc'>('asc');
 
-  oBotonera: string[] = [];
-  orderField: string = 'id';
-  orderDirection: string = 'asc';
+  // Variables de búsqueda
+  nombre = signal<string>('');
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
+
+  constructor(private oLigaService: LigaService) { }
 
   ngOnInit() {
+    // Configurar el debounce para la búsqueda
+    this.searchSubscription = this.searchSubject
+      .pipe(
+        debounceTime(debounceTimeSearch),
+        distinctUntilChanged(),
+      )
+      .subscribe((searchTerm: string) => {
+        this.nombre.set(searchTerm);
+        this.numPage.set(0);
+        this.getPage();
+      });
+
     this.getPage();
   }
 
-  getPage() {
-    this.oLigaService.getPage(this.numPage, this.numRpp, this.orderField, this.orderDirection).subscribe({
-      next: (data: IPage<ILiga>) => {
-        this.oPage = data;
-        // actualizar contador actual
-        this.totalElementsCount = data.totalElements ?? 0;
-        this.rellenaOk = this.totalElementsCount;
-        this.cdr.markForCheck();
+  ngOnDestroy() {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+  }
 
-        // si estamos en una página que supera el límite entonces nos situamos en la ultima disponible
-        if (this.numPage > 0 && this.numPage >= data.totalPages) {
-          this.numPage = data.totalPages - 1;
+  getPage() {
+    this.oLigaService.getPage(
+      this.numPage(),
+      this.numRpp(),
+      this.orderField(),
+      this.orderDirection(),
+      this.nombre(),
+    ).subscribe({
+      next: (data: IPage<ILiga>) => {
+        this.oPage.set(data);
+        this.totalElementsCount.set(data.totalElements ?? 0);
+        this.rellenaOk.set(this.totalElementsCount());
+
+        if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
+          this.numPage.set(data.totalPages - 1);
           this.getPage();
         }
       },
@@ -55,26 +83,31 @@ export class LigaPlistAdminRouted implements OnInit {
   }
 
   onOrder(order: string) {
-    if (this.orderField === order) {
-      this.orderDirection = this.orderDirection === 'asc' ? 'desc' : 'asc';
+    if (this.orderField() === order) {
+      this.orderDirection.set(this.orderDirection() === 'asc' ? 'desc' : 'asc');
     } else {
-      this.orderField = order;
-      this.orderDirection = 'asc';
+      this.orderField.set(order);
+      this.orderDirection.set('asc');
     }
-    this.numPage = 0;
+    this.numPage.set(0);
     this.getPage();
     return false;
   }
 
   goToPage(numPage: number) {
-    this.numPage = numPage;
+    this.numPage.set(numPage);
     this.getPage();
     return false;
   }
 
   onRppChange(n: number) {
-    this.numRpp = n;
+    this.numRpp.set(n);
+    this.numPage.set(0);
     this.getPage();
     return false;
+  }
+
+  onSearchName(value: string) {
+    this.searchSubject.next(value);
   }
 }
