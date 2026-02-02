@@ -19,13 +19,20 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './equipo-plist.css',
 })
 export class PlistEquipo {
-  oPage = signal<IPage<IEquipo> | null>(null);
+  // Datos originales del servidor (todos los registros)
+  allEquipos = signal<IEquipo[]>([]);
+  // Datos filtrados por búsqueda
+  filteredEquipos = signal<IEquipo[]>([]);
+  // Datos paginados para mostrar en la tabla
+  paginatedContent = signal<IEquipo[]>([]);
+  
   numPage = signal<number>(0);
   numRpp = signal<number>(5);
 
   // Mensajes y total
   message = signal<string | null>(null);
-  totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
+  totalRecords = computed(() => this.filteredEquipos().length);
+  totalPages = computed(() => Math.ceil(this.filteredEquipos().length / this.numRpp()) || 1);
   private messageTimeout: any = null;
 
   // Variables de ordenamiento
@@ -64,11 +71,11 @@ export class PlistEquipo {
       )
       .subscribe((searchTerm: string) => {
         this.nombre.set(searchTerm);
-        this.numPage.set(0);
-        this.getPage();
+        this.numPage.set(0); // Volver a la primera página al buscar
+        this.filterAndPaginate();
       });
 
-    this.getPage();
+    this.loadAllData();
   }
 
   ngOnDestroy() {
@@ -78,28 +85,59 @@ export class PlistEquipo {
     }
   }
 
-  getPage() {
+  // Cargar todos los datos del servidor
+  loadAllData() {
     this.oEquipoService
       .getPage(
-        this.numPage(),
-        this.numRpp(),
+        0,
+        10000, // Cargar todos los registros
         this.orderField(),
         this.orderDirection(),
-        this.nombre(),
+        '',
         this.categoria(),
       )
       .subscribe({
         next: (data: IPage<IEquipo>) => {
-          this.oPage.set(data);
-          if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
-            this.numPage.set(data.totalPages - 1);
-            this.getPage();
-          }
+          this.allEquipos.set(data.content);
+          this.filterAndPaginate();
         },
         error: (error: HttpErrorResponse) => {
           console.error(error);
         },
       });
+  }
+
+  // Filtrar por nombre y/o ID, y paginar
+  filterAndPaginate() {
+    const all = this.allEquipos();
+    const searchTerm = this.nombre().toLowerCase().trim();
+    const idFilter = this.filtroId();
+    
+    // Filtrar
+    let filtered: IEquipo[];
+    
+    // Si hay filtro por ID, solo mostrar ese equipo
+    if (idFilter > 0) {
+      filtered = all.filter(equipo => equipo.id === idFilter);
+    } else if (searchTerm.length === 0) {
+      filtered = all;
+    } else {
+      filtered = all.filter(equipo => 
+        equipo.nombre?.toLowerCase().includes(searchTerm)
+      );
+    }
+    this.filteredEquipos.set(filtered);
+    
+    // Ajustar página si es necesario
+    const maxPage = Math.max(0, this.totalPages() - 1);
+    if (this.numPage() > maxPage) {
+      this.numPage.set(maxPage);
+    }
+    
+    // Paginar
+    const start = this.numPage() * this.numRpp();
+    const end = start + this.numRpp();
+    this.paginatedContent.set(filtered.slice(start, end));
   }
 
   onOrder(order: string) {
@@ -110,18 +148,18 @@ export class PlistEquipo {
       this.orderDirection.set('asc');
     }
     this.numPage.set(0);
-    this.getPage();
+    this.loadAllData(); // Recargar con nuevo orden
   }
 
   goToPage(numPage: number) {
     this.numPage.set(numPage);
-    this.getPage();
+    this.filterAndPaginate(); // Solo repaginar, no recargar
   }
 
   onRppChange(n: number) {
     this.numRpp.set(n);
     this.numPage.set(0);
-    this.getPage();
+    this.filterAndPaginate(); // Solo repaginar, no recargar
   }
 
   onSearchNombre(value: string) {
@@ -129,17 +167,27 @@ export class PlistEquipo {
     this.searchSubject.next(value);
   }
 
+  onSearchIdChange() {
+    // Si se borra el campo de ID, quitar el filtro
+    if (!this.searchId || this.searchId <= 0) {
+      this.filtroId.set(0);
+      this.numPage.set(0);
+      this.filterAndPaginate();
+    }
+  }
+
   onSearchById() {
     if (this.searchId && this.searchId > 0) {
       this.filtroId.set(this.searchId);
-      // Navegar a la vista del equipo con ese ID
-      this.router.navigate(['/equipo/view', this.searchId]);
+      this.numPage.set(0);
+      this.filterAndPaginate();
     }
   }
 
   clearIdFilter() {
     this.searchId = null;
     this.filtroId.set(0);
-    this.getPage();
+    this.numPage.set(0);
+    this.filterAndPaginate();
   }
 }
