@@ -1,205 +1,125 @@
-import { Component, ChangeDetectorRef, inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { rpp as RPP, rpp } from '../../../environment/environment';
-import { EquipoService } from '../../../service/equipo';
+import { Component, signal, computed } from '@angular/core';
 import { IEquipo } from '../../../model/equipo';
 import { IPage } from '../../../model/plist';
-import { Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { EquipoService } from '../../../service/equipo';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
+import { TrimPipe } from '../../../pipe/trim-pipe';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTimeSearch } from '../../../environment/environment';
 
 @Component({
   selector: 'app-plist-equipo',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, Paginacion, BotoneraRpp],
+  imports: [Paginacion, BotoneraRpp, TrimPipe, RouterLink],
   templateUrl: './equipo-plist.html',
-  styleUrls: ['./equipo-plist.css'],
+  styleUrl: './equipo-plist.css',
 })
-export class PlistEquipo implements OnDestroy {
-  private cd: ChangeDetectorRef = inject(ChangeDetectorRef);
-  private equipoService: EquipoService = inject(EquipoService as any);
+export class PlistEquipo {
+  oPage = signal<IPage<IEquipo> | null>(null);
+  numPage = signal<number>(0);
+  numRpp = signal<number>(5);
 
-  aEquipos: IEquipo[] = [];
-  // allEquipos holds the full dataset when doing a client-side global search
-  allEquipos: IEquipo[] = [];
-  pageNumber: number = 0;
-  pageSize: number = 10;
-  totalPages: number = 1;
-  totalElements: number = 0;
-  sort: string = 'id,asc';
+  // Mensajes y total
+  message = signal<string | null>(null);
+  totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
+  private messageTimeout: any = null;
 
-  rpp = RPP;
+  // Variables de ordenamiento
+  orderField = signal<string>('id');
+  orderDirection = signal<'asc' | 'desc'>('asc');
 
-  loading: boolean = false;
-  error: string | null = null;
-  searchTerm: string = '';
-  // When true we assume the backend is doing the global filtering and
-  // page/total values returned by the server reflect the search.
-  serverSearchActive: boolean = false;
-  // When true we will perform a client-side global search: download all
-  // records (if not already present) and then filter/paginate locally.
-  clientGlobalSearchActive: boolean = false;
-  // Debounce subject for live search
-  private searchSubject: Subject<string> = new Subject<string>();
-  private searchSub?: Subscription;
+  // Variables de filtro
+  categoria = signal<number>(0);
+
+  // Variables de búsqueda
+  nombre = signal<string>('');
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
+
+  constructor(
+    private oEquipoService: EquipoService,
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit() {
-    this.loadPage();
-    // subscribe to debounced search term changes
-    this.searchSub = this.searchSubject.pipe(
-      debounceTime(400),
-      distinctUntilChanged()
-    ).subscribe((q: string) => {
-      // set term and perform search
-      this.searchTerm = q;
-      this.onSearch();
-    });
+    const id = this.route.snapshot.paramMap.get('categoria');
+    if (id) {
+      this.categoria.set(+id);
+    }
+
+    // Configurar el debounce para la búsqueda
+    this.searchSubscription = this.searchSubject
+      .pipe(
+        debounceTime(debounceTimeSearch), // Espera después de que el usuario deje de escribir
+        distinctUntilChanged(), // Solo emite si el valor cambió
+      )
+      .subscribe((searchTerm: string) => {
+        this.nombre.set(searchTerm);
+        this.numPage.set(0);
+        this.getPage();
+      });
+
+    this.getPage();
   }
 
-  ngOnDestroy(): void {
-    try { this.searchSub?.unsubscribe(); } catch (e) { }
+  ngOnDestroy() {
+    // Limpiar la suscripción para evitar memory leaks
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
-  loadPage(page: number = this.pageNumber) {
-    this.loading = true;
-    this.error = null;
-    // If client-side global search is active, we must ensure we have the
-    // full dataset and then filter/paginate locally.
-    if (this.clientGlobalSearchActive) {
-      const proceedWithLocalPagination = (all: IEquipo[]) => {
-        this.allEquipos = all || [];
-        // apply local filter across allEquipos
-        const filtered = this.filterArray(this.allEquipos, this.searchTerm);
-        this.totalElements = filtered.length;
-        this.totalPages = Math.max(1, Math.ceil(this.totalElements / this.pageSize));
-        this.pageNumber = Math.max(0, Math.min(page, this.totalPages - 1));
-        const start = this.pageNumber * this.pageSize;
-        this.aEquipos = filtered.slice(start, start + this.pageSize);
-        this.loading = false;
-        try { this.cd.detectChanges(); } catch (e) { }
-      };
-
-      // If we already downloaded all items and they look current, reuse them.
-      if (this.allEquipos && this.allEquipos.length > 0 && !this.searchTermChanged()) {
-        proceedWithLocalPagination(this.allEquipos);
-      } else {
-        // Attempt to fetch all items in a single request. We use a large page size
-        // as a pragmatic approach; if the backend supports server search, that is
-        // preferable and handled elsewhere.
-        const bigRpp = 100000; // assumption: backend allows this size
-        this.equipoService.getPage(0, bigRpp, 'id', 'asc').subscribe({
-          next: (res: IPage<IEquipo>) => {
-            proceedWithLocalPagination(res.content || []);
-          },
-          error: (err: any) => {
-            this.loading = false;
-            this.error = err?.message || ('Error ' + err?.status || 'Unknown');
-            console.error('Error cargando equipos (all)', err);
+  getPage() {
+    this.oEquipoService
+      .getPage(
+        this.numPage(),
+        this.numRpp(),
+        this.orderField(),
+        this.orderDirection(),
+        this.nombre(),
+        this.categoria(),
+      )
+      .subscribe({
+        next: (data: IPage<IEquipo>) => {
+          this.oPage.set(data);
+          if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
+            this.numPage.set(data.totalPages - 1);
+            this.getPage();
           }
-        });
-      }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error(error);
+        },
+      });
+  }
 
-      return;
+  onOrder(order: string) {
+    if (this.orderField() === order) {
+      this.orderDirection.set(this.orderDirection() === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.orderField.set(order);
+      this.orderDirection.set('asc');
     }
-
-    // Default: rely on backend paging/search behavior
-    this.equipoService.getPage(page, this.pageSize, 'id', 'asc', this.serverSearchActive ? this.searchTerm : undefined).subscribe({
-      next: (res: IPage<IEquipo>) => {
-        this.aEquipos = res.content || [];
-        this.pageNumber = res.number || 0;
-        this.pageSize = res.size || this.pageSize;
-        this.totalPages = res.totalPages || 1;
-        this.totalElements = res.totalElements || 0;
-        this.loading = false;
-        try { this.cd.detectChanges(); } catch (e) { }
-      },
-      error: (err: any) => {
-        this.loading = false;
-        this.error = err?.message || ('Error ' + err?.status || 'Unknown');
-        console.error('Error cargando equipos', err);
-      }
-    });
+    this.numPage.set(0);
+    this.getPage();
   }
 
-  // Simple heuristic to detect if searchTerm changed since last full download
-  private lastSearchForAll: string = '';
-  private searchTermChanged(): boolean {
-    const cur = (this.searchTerm || '').toString().trim();
-    if (cur !== this.lastSearchForAll) {
-      this.lastSearchForAll = cur;
-      return true;
-    }
-    return false;
+  goToPage(numPage: number) {
+    this.numPage.set(numPage);
+    this.getPage();
   }
 
-  // Helper to filter an array of equipos by a search string (same logic as previous getFilteredEquipos)
-  private filterArray(arr: IEquipo[], qRaw: string): IEquipo[] {
-    const q = (qRaw || '').toString().trim().toLowerCase();
-    if (!q) return arr.slice();
-    return arr.filter((e: IEquipo) => {
-      const parts = [
-        (e.id ?? '').toString(),
-        e.nombre ?? '',
-        e.categoria?.nombre ?? '',
-        (e.categoria?.id ?? '').toString(),
-        e.entrenador?.nombre ?? '',
-        e.entrenador?.apellido1 ?? '',
-        (e.jugadores ?? '').toString()
-      ];
-      return parts.join(' ').toLowerCase().includes(q);
-    });
+  onRppChange(n: number) {
+    this.numRpp.set(n);
+    this.numPage.set(0);
+    this.getPage();
   }
 
-  onSearch() {
-    // start search from first page
-    this.pageNumber = 0;
-    const hasQuery = (String(this.searchTerm || '').trim().length > 0);
-    // Use client-side global search to ensure search across ALL records and
-    // pagination adapts to the filtered result set when there is a query.
-    this.clientGlobalSearchActive = hasQuery;
-    // When client-side global search is active we don't do server-side filtering.
-    this.serverSearchActive = false;
-    this.loadPage(0);
+  onSearchNombre(value: string) {
+    // Emitir el valor al Subject para que sea procesado con debounce
+    this.searchSubject.next(value);
   }
-
-  // Called from the template on ngModelChange so we can debounce typing
-  onSearchTermChange(value: string) {
-    // Emit to subject; the debounced subscriber will perform the search.
-    this.searchSubject.next(value || '');
-  }
-
-  // Client-side filter for the current page results
-  getFilteredEquipos(): IEquipo[] {
-    // If either server or client global search is active, the items in
-    // `aEquipos` already reflect the intended filtered page, so show them
-    // directly without further filtering.
-    if (this.serverSearchActive || this.clientGlobalSearchActive) {
-      return this.aEquipos;
-    }
-
-    // Otherwise no global search is active and we show the current page's
-    // items (no extra filtering needed).
-    return this.aEquipos;
-  }
-
-  onPageChange(newPage: number) {
-    if (newPage < 0) return;
-    if (this.totalPages != null && newPage >= this.totalPages) return;
-    this.loadPage(newPage);
-  }
-
-  getPages(): number[] {
-    const pages: number[] = [];
-    for (let i = 0; i < this.totalPages; i++) pages.push(i);
-    return pages;
-  }
-
-  onSizeChange(value: any) {
-    this.pageSize = Number(value);
-    this.loadPage(0);
-  }
-
 }

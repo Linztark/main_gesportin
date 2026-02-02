@@ -6,21 +6,59 @@ import { HttpClient } from '@angular/common/http';
 import { serverURL } from '../environment/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EquipoService {
-  constructor(private oHttp: HttpClient) { }
+  constructor(private oHttp: HttpClient) {}
 
-  /**
-   * Get a paged list of equipos. If `search` is provided it will be added as a query
-   * parameter to let the backend filter results server-side (recommended for global search).
-   */
-  getPage(page: number, rpp: number, order: string = 'id', direction: string = 'asc', search?: string): Observable<IPage<IEquipo>> {
-    let url = serverURL + `/equipo?page=${page}&size=${rpp}&sort=${order},${direction}`;
-    if (search != null && String(search).trim() !== '') {
-      // assume backend supports a `search` query param that filters across fields
-      url += `&search=${encodeURIComponent(String(search).trim())}`;
+  getPage(
+    page: number,
+    rpp: number,
+    order: string = '',
+    direction: string = '',
+    nombre: string = '',
+    categoria: number = 0,
+  ): Observable<IPage<IEquipo>> {
+    if (order === '') {
+      order = 'id';
     }
-    return this.oHttp.get<IPage<IEquipo>>(url);
+    if (direction === '') {
+      direction = 'asc';
+    }
+    if (categoria > 0) {
+      return this.oHttp.get<IPage<IEquipo>>(
+        serverURL +
+          `/equipo?page=${page}&size=${rpp}&sort=${order},${direction}&categoria=${categoria}`,
+      );
+    }
+    if (nombre && nombre.length > 0) {
+      return this.oHttp.get<IPage<IEquipo>>(
+        serverURL +
+          `/equipo?page=${page}&size=${rpp}&sort=${order},${direction}&nombre=${nombre}`,
+      );
+    }
+    return this.oHttp.get<IPage<IEquipo>>(
+      serverURL + `/equipo?page=${page}&size=${rpp}&sort=${order},${direction}`,
+    );
   }
+
+  // get(id: number): Observable<IEquipo> {
+  //   return this.oHttp.get<IEquipo>(serverURL + '/equipo/' + id);
+  // }
+
+  // create(equipo: Partial<IEquipo>): Observable<number> {
+  //   return this.oHttp.post<number>(serverURL + '/equipo', equipo);
+  // }
+
+  // update(equipo: Partial<IEquipo>): Observable<number> {
+  //   return this.oHttp.put<number>(serverURL + '/equipo', equipo);
+  // }
+
+  // delete(id: number): Observable<number> {
+  //   return this.oHttp.delete<number>(serverURL + '/equipo/' + id);
+  // }
+
+  // empty(): Observable<number> {
+  //   return this.oHttp.delete<number>(serverURL + '/equipo/empty');
+  // }
 }
