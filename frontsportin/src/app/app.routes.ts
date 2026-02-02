@@ -30,7 +30,7 @@ export const routes: Routes = [
     { path: 'partido', component: PartidoPlistAdminRouted},
     { path: 'partido/:id_liga', component: PartidoPlistAdminRouted},
     { path: 'factura', component: FacturaPlistAdminRouted },
-    { path: 'factura/:usuario', component: FacturaPlistAdminRouted },    
+    { path: 'factura/:usuario', component: FacturaPlistAdminRouted },
     { path: 'rolusuario', component: RolusuarioPlist },  
     { path: 'tipoarticulo', component : TipoarticuloPlistAdminRouted}, 
     { path: 'tipoarticulo/:club', component : TipoarticuloPlistAdminRouted},
@@ -39,12 +39,11 @@ export const routes: Routes = [
     { path: 'jugador/equipo/:id', component: JugadorPlisComponent},
     { path: 'noticia', component: NoticiaPlistAdminRouted},
     { path: 'noticia/:club', component: NoticiaPlistAdminRouted},
-    { path: 'club/plist', component: ClubPlistAdminRouted},    
+    { path: 'club/plist', component: ClubPlistAdminRouted},
     { path: 'cuota', component: CuotaPlistAdminRouted},
     { path: 'cuota/:equipo', component: CuotaPlistAdminRouted},
     { path: 'tipousuario', component: TipousuarioPlistAdminRouted},
-
-    { path: 'articulo/:tipoarticulo', component: ArticuloPlistAdminRouted},
     { path: 'equipo', component: PlistEquipo },
-    { path: 'equipo/:categoria', component: PlistEquipo }
+    { path: 'equipo/:categoria', component: PlistEquipo },
+
 ];
