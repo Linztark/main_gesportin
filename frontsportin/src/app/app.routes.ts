@@ -7,6 +7,7 @@ import { UsuarioViewRouted } from './component/usuario/view-routed/usuario-view'
 import { CategoriaPlistAdminRouted } from './component/categoria/plist-admin-routed/categoria-plist';
 import { PartidoPlistAdminRouted } from './component/partido/plist-admin-routed/partido-plist';
 import { FacturaPlistAdminRouted } from './component/factura/plist-admin-routed/factura-plist';
+import { CompraPlistAdminRouted } from './component/compra/plist-admin-routed/compra-plist';
 import { RolusuarioPlist } from './component/rolusuario/plist-admin-routed/rolusuario-plist';
 import { TipoarticuloPlistAdminRouted } from './component/tipoarticulo/plist-admin-routed/tipoarticulo-plist';
 import { JugadorPlisComponent } from './component/jugador/jugadorPlist/jugador-plist';
@@ -39,6 +40,9 @@ export const routes: Routes = [
     { path: 'partido/:id_liga', component: PartidoPlistAdminRouted},
     { path: 'factura', component: FacturaPlistAdminRouted },
     { path: 'factura/:usuario', component: FacturaPlistAdminRouted },
+    { path: 'compra', component: CompraPlistAdminRouted },
+    { path: 'compra/:articulo', component: CompraPlistAdminRouted },
+    { path: 'compra/factura/:factura', component: CompraPlistAdminRouted },
     { path: 'rolusuario', component: RolusuarioPlist },  
     { path: 'tipoarticulo', component : TipoarticuloPlistAdminRouted}, 
     { path: 'tipoarticulo/:club', component : TipoarticuloPlistAdminRouted},
