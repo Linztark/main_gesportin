@@ -40,7 +40,7 @@
     @if (nombre().length > 0) {
       <small class="text-muted ms-3">Filtro: nombre contiene "{{ nombre() }}"</small>
       <!-- quitar el filtro -->
-      <a class="ms-2" [routerLink]="['/categoria']" role="button" title="Quitar filtro"
+      <a class="ms-2" (click)="clearSearchFilter()" role="button" style="cursor: pointer" title="Quitar filtro"
         ><i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro</a
       >
     }
@@ -128,8 +128,8 @@
             <td>{{ oCategoria.nombre }}</td>
             <td>
               <a [routerLink]="['/temporada', '/view', oCategoria.temporada.id]">
-                @if (oCategoria.temporada.nombre) {
-                  {{ oCategoria.temporada.nombre }} ({{ oCategoria.temporada.id }})
+                @if (oCategoria.temporada.descripcion) {
+                  {{ oCategoria.temporada.descripcion }} ({{ oCategoria.temporada.id }})
                 } @else {
                   @if (oCategoria.temporada.id) {
                     {{ 'Temporada (' + oCategoria.temporada.id + ')' }}
