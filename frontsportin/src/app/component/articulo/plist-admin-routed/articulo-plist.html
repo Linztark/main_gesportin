@@ -172,7 +172,7 @@
               @if (oArticulo.comentarioarts === 0) {
                 <i class="bi bi-ban" aria-hidden="true"></i> 
               } @else {
-                <a [routerLink]="['/comentarioart', oArticulo.id]">
+                <a [routerLink]="['/comentarioart/articulo', oArticulo.id]">
                   {{ oArticulo.comentarioarts }}
                 </a>
               }
@@ -182,7 +182,7 @@
                 <!-- icono de vacío-->
                 <i class="bi bi-ban" aria-hidden="true"></i> 
               } @else {
-                <a [routerLink]="['/compra', oArticulo.id]">
+                <a [routerLink]="['/compra/articulo', oArticulo.id]">
                   {{ oArticulo.compras }}
                 </a>
               }
@@ -191,7 +191,7 @@
               @if (oArticulo.carritos === 0) {
                 <i class="bi bi-ban" aria-hidden="true"></i> 
               } @else {
-                <a [routerLink]="['/carrito', oArticulo.id]">
+                <a [routerLink]="['/carrito/articulo', oArticulo.id]">
                   {{ oArticulo.carritos }}
                 </a>
               }

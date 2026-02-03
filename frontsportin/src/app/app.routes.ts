@@ -45,7 +45,7 @@ export const routes: Routes = [
     { path: 'factura', component: FacturaPlistAdminRouted },
     { path: 'factura/:usuario', component: FacturaPlistAdminRouted },
     { path: 'compra', component: CompraPlistAdminRouted },
-    { path: 'compra/:articulo', component: CompraPlistAdminRouted },
+    { path: 'compra/articulo/:articulo', component: CompraPlistAdminRouted },
     { path: 'compra/factura/:factura', component: CompraPlistAdminRouted },
     { path: 'rolusuario', component: RolusuarioPlist },  
     { path: 'tipoarticulo', component : TipoarticuloPlistAdminRouted}, 
