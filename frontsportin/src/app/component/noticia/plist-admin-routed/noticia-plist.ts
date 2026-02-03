@@ -9,7 +9,6 @@ import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 import { DatetimePipe } from '../../../pipe/datetime-pipe';
 import { TrimPipe } from '../../../pipe/trim-pipe';
-import { DecimalPipe } from '@angular/common';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { debounceTimeSearch } from '../../../environment/environment';
@@ -17,7 +16,7 @@ import { debounceTimeSearch } from '../../../environment/environment';
 @Component({
   selector: 'app-noticia-plist',
   standalone: true,
-  imports: [Paginacion, BotoneraRpp, DatetimePipe, TrimPipe, RouterLink, DecimalPipe],
+  imports: [Paginacion, BotoneraRpp, DatetimePipe, TrimPipe, RouterLink],
   templateUrl: './noticia-plist.html',
   styleUrl: './noticia-plist.css',
 })

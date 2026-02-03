@@ -162,10 +162,12 @@
               }
             </td>
             <td style="text-align: center">
-              @if (oNoticia.puntuaciones === null || oNoticia.puntuaciones === undefined) {
+              @if (!oNoticia.puntuaciones || oNoticia.puntuaciones === 0) {
                 <i class="bi bi-ban" aria-hidden="true"></i>
               } @else {
-                {{ oNoticia.puntuaciones | number: '1.1-1' }}
+                <a [routerLink]="['/puntuacion/noticia', oNoticia.id]">
+                  {{ oNoticia.puntuaciones }}
+                </a>
               }
             </td>
             <td>
