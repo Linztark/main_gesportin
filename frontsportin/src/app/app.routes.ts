@@ -25,6 +25,7 @@ import { ComentarioPlistAdminRouted } from './component/comentario/plist-admin-r
 import { ComentarioViewRouted } from './component/comentario/view-routed/comentario-view';
 import { PagoPlistComponent } from './component/pago/plist-admin-routed/pago-plist';
 import { PuntuacionPlistAdminRouted } from './component/puntuacion/plist-admin-routed/puntuacion-plist';
+import { FacturaViewAdminRouted } from './component/factura/view-admin-routed/factura-view';
 import { ViewAdminRouted } from './component/noticia/view-admin-routed/view-admin-routed';
 import { ComentarioartPlistAdminRouted } from './component/comentarioart/comentarioart-plist';
 
@@ -51,6 +52,8 @@ export const routes: Routes = [
     { path: 'partido', component: PartidoPlistAdminRouted},
     { path: 'partido/liga/:id_liga', component: PartidoPlistAdminRouted},
     { path: 'factura', component: FacturaPlistAdminRouted },
+    { path: 'factura/:usuario', component: FacturaPlistAdminRouted },
+    { path: 'factura/view/:id', component: FacturaViewAdminRouted },
     { path: 'factura/usuario/:id_usuario', component: FacturaPlistAdminRouted },
     { path: 'compra', component: CompraPlistAdminRouted },
     { path: 'compra/articulo/:id_articulo', component: CompraPlistAdminRouted },
