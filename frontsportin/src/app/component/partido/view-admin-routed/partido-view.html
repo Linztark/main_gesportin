@@ -72,7 +72,9 @@
               <div class="col-5 text-muted small text-uppercase">Liga</div>
               <div class="col-7 fw-semibold small">
                 @if (oPartido()?.liga?.nombre) {
-                  {{ oPartido()?.liga?.nombre }} ({{ oPartido()?.liga?.id }})
+                  <a [routerLink]="['/liga/view', oPartido()?.liga?.id]" class="link-primary text-decoration-none">
+                    {{ oPartido()?.liga?.nombre }} ({{ oPartido()?.liga?.id }})
+                  </a>
                 } @else {
                   Sin liga
                 }
