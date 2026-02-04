@@ -43,14 +43,13 @@
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID Partido</div>
-              <div class="col-7 fw-semibold small">{{ oPartido()?.id }}</div>
-
+              <div class="col-7 fw-semibold small">
+                {{ oPartido()?.id }}
+              </div>
               <div class="col-5 text-muted small text-uppercase">Rival</div>
-              <div class="col-7 fw-semibold small">{{ oPartido()?.rival }}</div>
-
-              <div class="col-5 text-muted small text-uppercase">Resultado</div>
-              <div class="col-7 fw-semibold small">{{ oPartido()?.resultado || 'Sin resultado' }}</div>
-
+              <div class="col-7 fw-semibold small">
+                {{ oPartido()?.rival }}
+              </div>
               <div class="col-5 text-muted small text-uppercase">Condición</div>
               <div class="col-7 fw-semibold small">
                 @if (oPartido()?.local) {
@@ -71,13 +70,9 @@
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">Liga</div>
               <div class="col-7 fw-semibold small">
-                @if (oPartido()?.liga?.nombre) {
-                  <a [routerLink]="['/liga/view', oPartido()?.liga?.id]" class="link-primary text-decoration-none">
-                    {{ oPartido()?.liga?.nombre }} ({{ oPartido()?.liga?.id }})
-                  </a>
-                } @else {
-                  Sin liga
-                }
+                <a class="text-decoration-none" [routerLink]="['/liga/view', oPartido()?.liga?.id]">
+                  {{ oPartido()?.liga?.nombre }} ({{ oPartido()?.liga?.id }})
+                </a>
               </div>
             </div>
           </div>
@@ -86,13 +81,15 @@
 
       <div class="col-lg-4">
         <div class="card border">
-          <div class="card-header bg-light small text-uppercase fw-semibold">Detalles</div>
+          <div class="card-header bg-light small text-uppercase fw-semibold">Actividad</div>
           <div class="card-body p-2">
             <div class="row g-2">
-              <div class="col-12">
+              <div class="col-6">
                 <div class="border rounded p-2 bg-white">
-                  <div class="text-muted small text-uppercase">Resultado Final</div>
-                  <div class="fw-bold">{{ oPartido()?.resultado || 'Pendiente' }}</div>
+                  <div class="text-muted small text-uppercase">Resultado</div>
+                  <div class="fw-bold">
+                    {{ oPartido()?.resultado || 'Pendiente' }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -100,11 +97,11 @@
         </div>
       </div>
 
-      @if (oPartido()?.liga) {
-        <div class="col-12">
-          <div class="card border">
-            <div class="card-header bg-light small text-uppercase fw-semibold">Liga (detalle)</div>
-            <div class="card-body p-2">
+      <div class="col-12">
+        <div class="card border">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Liga (detalle)</div>
+          <div class="card-body p-2">
+            @if (oPartido()?.liga) {
               <div class="row g-2">
                 <div class="col-sm-6 col-lg-3">
                   <div class="border rounded p-2 bg-white">
@@ -121,14 +118,32 @@
                 <div class="col-sm-6 col-lg-3">
                   <div class="border rounded p-2 bg-white">
                     <div class="text-muted small text-uppercase">Total Partidos</div>
-                    <div class="fw-semibold">{{ oPartido()?.liga?.partidos || 0 }}</div>
+                    <div class="fw-semibold">
+                      {{ oPartido()?.liga?.partidos || 0 }}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                  <div class="border rounded p-2 bg-white">
+                    <div class="text-muted small text-uppercase">Equipo</div>
+                    <div class="fw-semibold">
+                      @if (oPartido()?.liga?.equipo?.nombre) {
+                        <a class="text-decoration-none" [routerLink]="['/equipo/view', oPartido()?.liga?.equipo?.id]">
+                          {{ oPartido()?.liga?.equipo?.nombre }} ({{ oPartido()?.liga?.equipo?.id }})
+                        </a>
+                      } @else {
+                        Sin equipo
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            } @else {
+              <div class="text-muted">Sin liga asignada.</div>
+            }
           </div>
         </div>
-      }
+      </div>
     </div>
   }
 </div>
