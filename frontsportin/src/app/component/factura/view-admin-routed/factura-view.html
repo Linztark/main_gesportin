@@ -1,8 +1,8 @@
 <div class="container py-3">
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
     <div>
-      <div class="text-uppercase small text-muted fw-semibold">Usuarios</div>
-      <div class="fw-bold">Detalle de usuario</div>
+      <div class="text-uppercase small text-muted fw-semibold">Facturas</div>
+      <div class="fw-bold">Detalle de factura</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
     <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/factura">
@@ -64,7 +64,7 @@
           <div class="card-header bg-light small text-uppercase fw-semibold">Relaciones</div>
           <div class="card-body p-2">
             <div class="row g-1">
-              <div class="col-5 text-muted small text-uppercase">Facturas</div>
+              <div class="col-5 text-muted small text-uppercase">Usuarios</div>
               <div class="col-7 fw-semibold small">
                   {{ oFactura()?.usuario?.nombre }} {{ oFactura()?.usuario?.apellido1 }} {{ oFactura()?.usuario?.apellido2 }}
               </div>
