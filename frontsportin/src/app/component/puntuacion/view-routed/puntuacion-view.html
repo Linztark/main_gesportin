@@ -69,7 +69,9 @@
               <div class="col-5 text-muted small text-uppercase">Noticia</div>
               <div class="col-7 fw-semibold small">
                 @if (oPuntuacion()?.noticia?.titulo) {
-                  {{ oPuntuacion()?.noticia?.titulo }} ({{ oPuntuacion()?.noticia?.id }})
+                  <a class="text-decoration-none" [routerLink]="['/noticia/view', oPuntuacion()?.noticia?.id]">
+                    {{ oPuntuacion()?.noticia?.titulo }} ({{ oPuntuacion()?.noticia?.id }})
+                  </a>
                 } @else {
                   Sin noticia
                 }
@@ -77,7 +79,9 @@
               <div class="col-5 text-muted small text-uppercase">Usuario</div>
               <div class="col-7 fw-semibold small">
                 @if (oPuntuacion()?.usuario?.nombre) {
-                  {{ oPuntuacion()?.usuario?.nombre }} {{ oPuntuacion()?.usuario?.apellido1 }} ({{ oPuntuacion()?.usuario?.id }})
+                  <a class="text-decoration-none" [routerLink]="['/usuario/view', oPuntuacion()?.usuario?.id]">
+                    {{ oPuntuacion()?.usuario?.nombre }} {{ oPuntuacion()?.usuario?.apellido1 }} ({{ oPuntuacion()?.usuario?.id }})
+                  </a>
                 } @else {
                   Sin usuario
                 }
@@ -166,7 +170,9 @@
                     <div class="text-muted small text-uppercase">Club</div>
                     <div class="fw-semibold">
                       @if (oPuntuacion()?.noticia?.club?.nombre) {
-                        {{ oPuntuacion()?.noticia?.club?.nombre }} ({{ oPuntuacion()?.noticia?.club?.id }})
+                        <a class="text-decoration-none" [routerLink]="['/club/view', oPuntuacion()?.noticia?.club?.id]">
+                          {{ oPuntuacion()?.noticia?.club?.nombre }} ({{ oPuntuacion()?.noticia?.club?.id }})
+                        </a>
                       } @else {
                         Sin club
                       }
