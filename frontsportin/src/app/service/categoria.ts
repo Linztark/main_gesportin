@@ -60,4 +60,12 @@ export class CategoriaService {
   delete(id: number): Observable<number> {
     return this.oHttp.delete<number>(serverURL + '/categoria/' + id);
   }
+  
+
+  // Actualizar una categoría existente
+  update(categoria: Partial<ICategoria>): Observable<ICategoria> {
+    return this.oHttp.put<ICategoria>(`${serverURL}/categoria`, categoria);
+  }
+
+
 }

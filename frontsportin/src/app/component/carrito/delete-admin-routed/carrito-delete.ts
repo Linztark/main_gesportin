@@ -3,21 +3,23 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../pipe/datetime-pipe';
+import { CarritoDetailAdminUnrouted } from "../detail-admin-unrouted/carrito-detail";
 import { CarritoService } from '../../../service/carrito';
 import { ICarrito } from '../../../model/carrito';
-import { CarritoDetailAdminUnrouted } from "../detail-admin-unrouted/carrito-detail";
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-carrito-view',
   imports: [CommonModule, CarritoDetailAdminUnrouted],
-  templateUrl: './view-admin-routed.html',
-  styleUrl: './view-admin-routed.css',
+  templateUrl: './carrito-delete.html',
+  styleUrl: './carrito-delete.css',
 })
-export class CarritoViewAdminRouted implements OnInit {
+
+export class CarritoDeleteAdminRouted implements OnInit {
 
   private route = inject(ActivatedRoute);  
-  //private snackBar = inject(MatSnackBar);
+  private oCarritoService = inject(CarritoService);
+  private snackBar = inject(MatSnackBar);
 
   oCarrito = signal<ICarrito | null>(null);
   loading = signal(true);
@@ -31,6 +33,29 @@ export class CarritoViewAdminRouted implements OnInit {
       this.error.set('ID no válido');
       this.loading.set(false);
       return;
-    }
+    }    
   }
+
+  doDelete() {
+    this.oCarritoService.delete(this.id_carrito()).subscribe({
+      next: (data: any) => {
+        this.snackBar.open('Carrito eliminado', 'Cerrar', { duration: 4000 });
+        console.log('Carrito eliminado');
+        window.history.back();
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error.set('Error eliminando el carrito');
+        this.snackBar.open('Error eliminando el carrito', 'Cerrar', { duration: 4000 });
+        console.error(err);
+      },
+    });
+  }
+  
+  doCancel() {    
+    window.history.back();
+  }
+
+
+
+
 }
