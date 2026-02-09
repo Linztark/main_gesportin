@@ -12,7 +12,7 @@ import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChang
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { debounceTimeSearch } from '../../../environment/environment';
-import { TipoarticuloPlistAdminUnrouted } from '../plist-admin-unrouted/tipoarticulo-plist-admin-unrouted/tipoarticulo-plist-admin-unrouted';
+import { TipoarticuloPlistAdminUnrouted } from '../plist-admin-unrouted/tipoarticulo-plist-admin-unrouted';
 
 @Component({
   selector: 'app-tipoarticulo-plist',

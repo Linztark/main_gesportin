@@ -1,14 +1,14 @@
 import { Component, computed, inject, Input, signal } from '@angular/core';
-import { IPage } from '../../../../model/plist';
-import { ITipoarticulo } from '../../../../model/tipoarticulo';
+import { IPage } from '../../../model/plist';
+import { ITipoarticulo } from '../../../model/tipoarticulo';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
-import { debounceTimeSearch } from '../../../../environment/environment';
-import { TipoarticuloService } from '../../../../service/tipoarticulo';
+import { debounceTimeSearch } from '../../../environment/environment';
+import { TipoarticuloService } from '../../../service/tipoarticulo';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BotoneraRpp } from "../../../shared/botonera-rpp/botonera-rpp";
-import { Paginacion } from "../../../shared/paginacion/paginacion";
+import { BotoneraRpp } from "../../shared/botonera-rpp/botonera-rpp";
+import { Paginacion } from "../../shared/paginacion/paginacion";
 import { RouterLink } from '@angular/router';
-import { TrimPipe } from "../../../../pipe/trim-pipe";
+import { TrimPipe } from "../../../pipe/trim-pipe";
 
 @Component({
   selector: 'app-tipoarticulo-plist-admin-unrouted',
