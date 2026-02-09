@@ -58,6 +58,7 @@ import { ClubEditAdminRouted } from './component/club/edit-admin-routed/club-edi
 import { CarritoDeleteAdminRouted } from './component/carrito/delete-admin-routed/carrito-delete';
 import { ComentarioartDeleteAdminRouted } from './component/comentarioart/delete-admin-routed/delete-admin-routed';
 import { FacturaDeleteAdminRouted } from './component/factura/delete-admin-routed/factura-delete';
+import { CuotaEditAdminRouted } from './component/cuota/edit-admin-routed/cuota-edit';
 
 
 export const routes: Routes = [
@@ -121,6 +122,7 @@ export const routes: Routes = [
     { path: 'cuota', component: CuotaPlistAdminRouted},
     { path: 'cuota/equipo/:id_equipo', component: CuotaPlistAdminRouted},
     { path: 'cuota/view/:id', component: CuotaViewAdminRouted},
+    { path: 'cuota/edit/:id', component: CuotaEditAdminRouted},    
     { path: 'tipousuario', component: TipousuarioPlistAdminRouted},
     { path: 'tipousuario/view/:id', component: TipousuarioViewAdminRouted },
     { path: 'equipo', component: PlistEquipo },
