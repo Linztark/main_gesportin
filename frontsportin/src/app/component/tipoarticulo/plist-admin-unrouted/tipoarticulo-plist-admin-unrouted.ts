@@ -5,20 +5,21 @@ import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs'
 import { debounceTimeSearch } from '../../../environment/environment';
 import { TipoarticuloService } from '../../../service/tipoarticulo';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BotoneraRpp } from "../../shared/botonera-rpp/botonera-rpp";
-import { Paginacion } from "../../shared/paginacion/paginacion";
+import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
+import { Paginacion } from '../../shared/paginacion/paginacion';
 import { RouterLink } from '@angular/router';
-import { TrimPipe } from "../../../pipe/trim-pipe";
+import { TrimPipe } from '../../../pipe/trim-pipe';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tipoarticulo-plist-admin-unrouted',
   imports: [BotoneraRpp, Paginacion, RouterLink, TrimPipe],
   templateUrl: './tipoarticulo-plist-admin-unrouted.html',
   styleUrl: './tipoarticulo-plist-admin-unrouted.css',
+  standalone: true,
 })
 
 export class TipoarticuloPlistAdminUnrouted {
-
   // variables que me pasan como atributos de la etiqueta
   // para poder filtrar por club
   @Input() club = signal<number>(0);
@@ -47,6 +48,7 @@ export class TipoarticuloPlistAdminUnrouted {
   private searchSubscription?: Subscription;
 
   oTipoarticuloService = inject(TipoarticuloService);
+  private dialogRef = inject(MatDialogRef<TipoarticuloPlistAdminUnrouted>, { optional: true });
 
   ngOnInit(): void {
     // Configurar el debounce para la búsqueda
@@ -109,6 +111,14 @@ export class TipoarticuloPlistAdminUnrouted {
     }
     this.numPage.set(0);
     this.getPage();
+  }
+
+  isDialogMode(): boolean {
+    return !!this.dialogRef;
+  }
+
+  onSelect(tipoarticulo: ITipoarticulo): void {
+    this.dialogRef?.close(tipoarticulo);
   }
 
   ngOnDestroy(): void {

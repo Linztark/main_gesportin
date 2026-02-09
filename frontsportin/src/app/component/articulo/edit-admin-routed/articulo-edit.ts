@@ -8,6 +8,9 @@ import { ArticuloService } from '../../../service/articulo';
 import { TipoarticuloService } from '../../../service/tipoarticulo';
 import { IArticulo } from '../../../model/articulo';
 import { ITipoarticulo } from '../../../model/tipoarticulo';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { TipoarticuloPlistAdminUnrouted } from '../../tipoarticulo/plist-admin-unrouted/tipoarticulo-plist-admin-unrouted';
 
 @Component({
   selector: 'app-articulo-edit-routed',
@@ -16,7 +19,6 @@ import { ITipoarticulo } from '../../../model/tipoarticulo';
   styleUrl: './articulo-edit.css',
 })
 export class ArticuloEditAdminRouted implements OnInit {
-
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
@@ -30,6 +32,8 @@ export class ArticuloEditAdminRouted implements OnInit {
   error = signal<string | null>(null);
   submitting = signal(false);
   tiposarticulo = signal<ITipoarticulo[]>([]);
+
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -60,7 +64,7 @@ export class ArticuloEditAdminRouted implements OnInit {
       descripcion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       precio: [0, [Validators.required, Validators.min(0)]],
       descuento: [0, [Validators.min(0), Validators.max(100)]],
-      id_tipoarticulo: [null, Validators.required]
+      id_tipoarticulo: [null, Validators.required],
     });
   }
 
@@ -72,7 +76,7 @@ export class ArticuloEditAdminRouted implements OnInit {
           descripcion: articulo.descripcion,
           precio: articulo.precio,
           descuento: articulo.descuento,
-          id_tipoarticulo: articulo.tipoarticulo?.id
+          id_tipoarticulo: articulo.tipoarticulo?.id,
         });
         this.loading.set(false);
       },
@@ -81,7 +85,7 @@ export class ArticuloEditAdminRouted implements OnInit {
         this.snackBar.open('Error cargando el artículo', 'Cerrar', { duration: 4000 });
         console.error(err);
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -94,7 +98,7 @@ export class ArticuloEditAdminRouted implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.snackBar.open('Error cargando tipos de artículo', 'Cerrar', { duration: 4000 });
         console.error(err);
-      }
+      },
     });
   }
 
@@ -117,12 +121,14 @@ export class ArticuloEditAdminRouted implements OnInit {
   limitDecimalPlaces(event: Event, fieldName: string, maxDecimals: number): void {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-    
+
     if (value.includes('.')) {
       const parts = value.split('.');
       if (parts[1] && parts[1].length > maxDecimals) {
         const truncatedValue = parseFloat(value).toFixed(maxDecimals);
-        this.articuloForm.get(fieldName)?.setValue(parseFloat(truncatedValue), { emitEvent: false });
+        this.articuloForm
+          .get(fieldName)
+          ?.setValue(parseFloat(truncatedValue), { emitEvent: false });
         input.value = truncatedValue;
       }
     }
@@ -130,7 +136,9 @@ export class ArticuloEditAdminRouted implements OnInit {
 
   onSubmit(): void {
     if (this.articuloForm.invalid) {
-      this.snackBar.open('Por favor, complete todos los campos correctamente', 'Cerrar', { duration: 4000 });
+      this.snackBar.open('Por favor, complete todos los campos correctamente', 'Cerrar', {
+        duration: 4000,
+      });
       return;
     }
 
@@ -141,7 +149,7 @@ export class ArticuloEditAdminRouted implements OnInit {
       descripcion: this.articuloForm.value.descripcion,
       precio: this.articuloForm.value.precio,
       descuento: this.articuloForm.value.descuento || 0,
-      tipoarticulo: { id: this.articuloForm.value.id_tipoarticulo }
+      tipoarticulo: { id: this.articuloForm.value.id_tipoarticulo },
     };
 
     this.oArticuloService.update(articuloData).subscribe({
@@ -155,7 +163,20 @@ export class ArticuloEditAdminRouted implements OnInit {
         this.snackBar.open('Error actualizando el artículo', 'Cerrar', { duration: 4000 });
         console.error(err);
         this.submitting.set(false);
-      }
+      },
+    });
+  }
+
+  openTipoarticuloFinderModal(): void {
+    const dialogRef = this.dialog.open(TipoarticuloPlistAdminUnrouted, {
+      height: '800px',
+      width: '1100px',
+      maxWidth: '95vw',
+      panelClass: 'tipoarticulo-dialog',
+      data: {
+        title: 'Aqui elegir tipoarticulo',
+        message: 'Plist finder para encontrar el tipoarticulo y asignarlo al articulo',
+      },
     });
   }
 }
