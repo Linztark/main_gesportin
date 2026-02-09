@@ -5,7 +5,7 @@ import { TemporadaDetailAdminUnrouted } from '../detail-admin-unrouted/temporada
 
 @Component({
   selector: 'app-temporada-view',
-  imports: [CommonModule, RouterLink, TemporadaDetailAdminUnrouted],
+  imports: [CommonModule, TemporadaDetailAdminUnrouted],
   templateUrl: './temporada-view.html',
   styleUrl: './temporada-view.css',
 })
