@@ -96,12 +96,12 @@
             <th scope="row" style="text-align: center">{{ oTipoarticulo.id }}</th>
             <td>{{ oTipoarticulo.descripcion }}</td>
             <td>
-              <a [routerLink]="['/club', '/view', oTipoarticulo.club.id]">
+              <a [routerLink]="['/club', 'view', oTipoarticulo.club.id]">
                 {{ oTipoarticulo.club.nombre | trim: 20 }} ({{ oTipoarticulo.club.id }})
               </a>
               <a
                 class="btn btn-warning btn-sm ms-2 float-end"
-                [routerLink]="['/tipoarticulo/club', oTipoarticulo.club.id]"
+                [routerLink]="['/tipoarticulo', 'club', oTipoarticulo.club.id]"
                 role="button"
                 title="filtrar por club"
                 ><i class="bi bi-funnel-fill" aria-hidden="true"></i
