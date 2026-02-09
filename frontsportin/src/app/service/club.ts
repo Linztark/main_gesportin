@@ -32,6 +32,9 @@ export class ClubService {
     return this.http.get<number>(`${this.url}/count`);
   }
 
+  delete(id: number): Observable<number> {
+    return this.http.delete<number>(`${this.url}/${id}`);
+  }
      update(club: Partial<IClub>): Observable<number> {
      return this.http.put<number>(serverURL + '/club', club);
    }

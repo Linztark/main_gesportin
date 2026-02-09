@@ -48,6 +48,7 @@ import { CategoriaEditAdminRouted } from './component/categoria/edit-admin-route
 import { LigaViewRouted } from './component/liga/view-routed/liga-view';
 import { ComentarioartViewRouted } from './component/comentarioart/view-routed/comentarioart-view';
 import { PagoDeleteAdminRouted } from './component/pago/delete-admin-routed/pago-delete';
+import { ClubDeleteAdminRouted } from './component/club/delete-admin-routed/club-delete';
 import { PuntuacionDeleteAdminRouted } from './component/puntuacion/delete-admin-routed/puntuacion-delete';
 import { RolusuarioEditAdminRouted } from './component/rolusuario/edit-admin-routed/rolusuario-edit';
 import { CategoriaDeleteAdminRouted } from './component/categoria/delete-admin-routed/categoria-delete';
@@ -111,6 +112,7 @@ export const routes: Routes = [
     { path: 'club/plist', component: ClubPlistAdminRouted},
     { path: 'club', component: ClubPlistAdminRouted},
     { path: 'club/view/:id', component: ClubViewAdminRouted},
+    { path: 'club/delete/:id', component: ClubDeleteAdminRouted},
     { path: 'club/edit/:id', component: ClubEditAdminRouted},
     { path: 'cuota', component: CuotaPlistAdminRouted},
     { path: 'cuota/equipo/:id_equipo', component: CuotaPlistAdminRouted},
