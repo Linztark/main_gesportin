@@ -49,6 +49,9 @@ export class LigaService {
     return this.oHttp.get<ILiga>(serverURL + `/liga/${id}`);
   }
 
+  delete(id: number): Observable<number> {
+    return this.oHttp.delete<number>(serverURL + '/liga/' + id);
+  }
   update(liga: Partial<ILiga>): Observable<number> {
     return this.oHttp.put<number>(serverURL + '/liga', liga);
   }
