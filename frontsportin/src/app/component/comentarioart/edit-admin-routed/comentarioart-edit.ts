@@ -12,10 +12,12 @@ import { ArticuloService } from '../../../service/articulo';
 import { ComentarioartService } from '../../../service/comentarioart';
 import { UsuarioService } from '../../../service/usuarioService';
 import { UsuarioPlistAdminUnrouted } from '../../usuario/plist-admin-unrouted/usuario-plist-admin-unrouted';
+import { Paginacion } from '../../shared/paginacion/paginacion';
+import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 
 @Component({
   selector: 'app-comentarioart-edit-admin-routed',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, Paginacion, BotoneraRpp],
   templateUrl: './comentarioart-edit.html',
   styleUrl: './comentarioart-edit.css',
 })
@@ -40,6 +42,9 @@ export class ComentarioartEditAdminRouted implements OnInit {
   selectedUsuario = signal<IUsuario | null>(null);
   displayIdUsuario = signal<number | null>(null);
   articuloSearch = signal<string>('');
+  articuloSortDirection = signal<'asc' | 'desc'>('asc');
+  articuloPage = signal<number>(0);
+  articuloRpp = signal<number>(10);
   filteredArticulos = computed(() => {
     const term = this.articuloSearch().toLowerCase().trim();
     const items = this.articulos();
@@ -51,6 +56,26 @@ export class ComentarioartEditAdminRouted implements OnInit {
       const idMatch = String(articulo.id).includes(term);
       return descripcion.includes(term) || idMatch;
     });
+  });
+  sortedArticulos = computed(() => {
+    const direction = this.articuloSortDirection();
+    return [...this.filteredArticulos()].sort((a, b) => {
+      if (direction === 'asc') {
+        return a.id - b.id;
+      }
+      return b.id - a.id;
+    });
+  });
+  articuloTotalPages = computed(() => {
+    const total = this.filteredArticulos().length;
+    const rpp = this.articuloRpp();
+    return Math.max(1, Math.ceil(total / rpp));
+  });
+  pagedArticulos = computed(() => {
+    const page = this.articuloPage();
+    const rpp = this.articuloRpp();
+    const start = page * rpp;
+    return this.sortedArticulos().slice(start, start + rpp);
   });
 
   @ViewChild('articuloDialog') articuloDialog?: TemplateRef<any>;
@@ -276,6 +301,20 @@ export class ComentarioartEditAdminRouted implements OnInit {
 
   onArticuloSearch(value: string): void {
     this.articuloSearch.set(value);
+    this.articuloPage.set(0);
+  }
+
+  toggleArticuloSort(): void {
+    this.articuloSortDirection.set(this.articuloSortDirection() === 'asc' ? 'desc' : 'asc');
+  }
+
+  onArticuloPageChange(page: number): void {
+    this.articuloPage.set(page);
+  }
+
+  onArticuloRppChange(rpp: number): void {
+    this.articuloRpp.set(rpp);
+    this.articuloPage.set(0);
   }
 
   selectArticulo(articulo: IArticulo, dialogRef: any): void {
