@@ -137,6 +137,9 @@ export class PagoEditAdminRouted implements OnInit {
   }
 
   onSubmit(): void {
+    // Marcar todos los campos como tocados para activar las validaciones
+    this.pagoForm.markAllAsTouched();
+    
     if (this.pagoForm.invalid) {
       this.snackBar.open('Por favor, complete todos los campos correctamente', 'Cerrar', {
         duration: 4000,
@@ -163,6 +166,8 @@ export class PagoEditAdminRouted implements OnInit {
       cuota: { id: this.pagoForm.value.id_cuota },
       jugador: { id: this.pagoForm.value.id_jugador },
     };
+
+    console.log('Datos a enviar al backend:', pagoData);
 
     this.oPagoService.update(pagoData).subscribe({
       next: (id: number) => {
