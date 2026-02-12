@@ -1,15 +1,15 @@
 import { Component, signal, computed, inject } from '@angular/core';
-import { IPage } from '../../model/plist';
+import { IPage } from '../../../model/plist';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Paginacion } from '../shared/paginacion/paginacion';
-import { BotoneraRpp } from '../shared/botonera-rpp/botonera-rpp';
-import { TrimPipe } from '../../pipe/trim-pipe';
+import { Paginacion } from '../../shared/paginacion/paginacion';
+import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
+import { TrimPipe } from '../../../pipe/trim-pipe';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { debounceTimeSearch } from '../../environment/environment';
-import { ComentarioartService } from '../../service/comentarioart';
-import { IComentarioart } from '../../model/comentarioart';
+import { debounceTimeSearch } from '../../../environment/environment';
+import { ComentarioartService } from '../../../service/comentarioart';
+import { IComentarioart } from '../../../model/comentarioart';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
