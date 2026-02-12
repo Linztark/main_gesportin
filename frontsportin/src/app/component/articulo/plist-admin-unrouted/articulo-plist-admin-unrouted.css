@@ -1,0 +1,8 @@
+/* estilos mínimos, puede extenderse si es necesario */
+.table td, .table th {
+  vertical-align: middle;
+}
+.header-inline {
+  display: inline-flex;
+  align-items: center;
+}
