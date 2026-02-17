@@ -1,0 +1,122 @@
+<div class="container py-3">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
+    <div>
+      <div class="text-uppercase small text-muted fw-semibold">Temporadas</div>
+      <div class="fw-bold">{{ title() }}</div>
+      <div class="text-muted small">Panel administrativo</div>
+    </div>
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" [routerLink]="['/temporada']">
+      <i class="bi bi-arrow-left"></i>
+      Volver
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="text-center py-3">
+          <div class="spinner-border text-secondary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="text-muted mt-2 mb-0">Cargando datos...</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (!loading()) {
+    <form [formGroup]="temporadaForm" (ngSubmit)="onSubmit()">
+      <div class="row g-3">
+        
+        <div class="col-lg-6">
+          <div class="card border h-100">
+            <div class="card-header bg-light small text-uppercase fw-semibold">Identificación</div>
+            <div class="card-body">
+              
+              @if (id() > 0) {
+                <div class="mb-3">
+                  <label for="id" class="form-label text-muted small text-uppercase">ID</label>
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light">#</span>
+                    <input type="text" class="form-control" id="id" formControlName="id" readonly>
+                  </div>
+                </div>
+              }
+
+              <div class="mb-3">
+                <label for="descripcion" class="form-label text-muted small text-uppercase">Descripción</label>
+                <input type="text" class="form-control" id="descripcion" formControlName="descripcion" 
+                       [class.is-invalid]="temporadaForm.get('descripcion')?.invalid && temporadaForm.get('descripcion')?.touched">
+                
+                @if (temporadaForm.get('descripcion')?.invalid && temporadaForm.get('descripcion')?.touched) {
+                  <div class="invalid-feedback">
+                    @if (temporadaForm.get('descripcion')?.errors?.['required']) { La descripción es obligatoria. }
+                    @if (temporadaForm.get('descripcion')?.errors?.['minlength']) { Mínimo 3 caracteres. }
+                  </div>
+                }
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card border h-100">
+            <div class="card-header bg-light small text-uppercase fw-semibold">Asignación de Club</div>
+            <div class="card-body">
+              
+              <label class="form-label text-muted small text-uppercase mb-2">Club Propietario</label>
+              
+              <div class="d-flex gap-2 align-items-center">
+                <button type="button" class="btn btn-primary" (click)="openClubFinderModal()">
+                  <i class="bi bi-search me-2"></i>Buscar
+                </button>
+
+                <div class="input-group" style="max-width: 150px;">
+                   <span class="input-group-text bg-light">ID</span>
+                   <input type="text" class="form-control" id="id_club" formControlName="id_club" readonly>
+                </div>
+
+                @if (selectedClub()) {
+                  <div class="flex-grow-1 border rounded p-2 bg-light text-muted text-truncate">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    <span class="fw-semibold">{{ selectedClub()?.nombre }}</span>
+                  </div>
+                } @else {
+                  <div class="flex-grow-1 border rounded p-2 bg-light text-muted fst-italic">
+                    Sin selección
+                  </div>
+                }
+              </div>
+
+              @if (temporadaForm.get('id_club')?.invalid && temporadaForm.get('id_club')?.touched) {
+                <div class="text-danger small mt-2">
+                  Es obligatorio seleccionar un club.
+                </div>
+              }
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 text-center mt-4">
+          <div class="d-flex justify-content-center gap-2">
+            <a [routerLink]="['/temporada']" class="btn btn-secondary">
+              <i class="bi bi-x-circle me-1"></i> Cancelar
+            </a>
+            
+            <button type="submit" class="btn btn-primary" [disabled]="temporadaForm.invalid || submitting()">
+              @if (submitting()) {
+                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              } @else {
+                <i class="bi bi-save me-1"></i>
+              }
+              {{ action() }} Temporada
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  }
+</div>
