@@ -69,7 +69,5 @@ export class TemporadaService {
     return this.oHttp.delete<number>(serverURL + '/temporada/' + id);
   }
 
-  create(temporada: Partial<ITemporada>): Observable<ITemporada> {
-    return this.oHttp.post<ITemporada>(`${serverURL}/temporada`, temporada);
-  }
+
 }
