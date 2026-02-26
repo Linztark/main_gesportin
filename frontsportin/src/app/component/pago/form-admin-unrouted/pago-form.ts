@@ -242,8 +242,17 @@ export class PagoFormAdminUnrouted implements OnInit {
     const pagoData: any = {
       abonado: this.pagoForm.value.abonado ? 1 : 0,
       fecha: fechaLocalDateTime,
-      cuota: { id: Number(selectedCuotaId) },
-      jugador: { id: Number(selectedJugadorId) },
+      cuota: {
+        id: Number(selectedCuotaId),
+        cantidad: 0,
+        pagos: 0,
+      },
+      jugador: {
+        id: Number(selectedJugadorId),
+        dorsal: 0,
+        capitan: false,
+        pagos: 0,
+      },
     };
 
     if (this.mode === 'edit' && this.pago?.id) {
