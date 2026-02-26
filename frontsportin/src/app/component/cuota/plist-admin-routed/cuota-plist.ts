@@ -1,10 +1,11 @@
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { CuotaPlistAdminUnrouted } from '../plist-admin-unrouted/cuota-plist-admin-unrouted';
 
 @Component({
   selector: 'app-cuota-plist',
-  imports: [CuotaPlistAdminUnrouted],
+  imports: [CommonModule, RouterModule, CuotaPlistAdminUnrouted],
   templateUrl: './cuota-plist.html',
   styleUrls: ['./cuota-plist.css'],
   standalone: true,

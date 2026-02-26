@@ -49,6 +49,9 @@ export class CuotaService {
   // create(cuota: Partial<ICuota>): Observable<number> {
   //   return this.oHttp.post<number>(serverURL + '/cuota', cuota);
   // }
+  create(cuota: Partial<ICuota>): Observable<number> {
+    return this.oHttp.post<number>(serverURL + '/cuota', cuota);
+  }
 
   update(cuota: Partial<ICuota>): Observable<number> {
     return this.oHttp.put<number>(serverURL + '/cuota', cuota);
