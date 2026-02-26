@@ -55,9 +55,14 @@ export class PagoService {
   count(): Observable<number> {
     return this.http.get<number>(serverURL + '/pago/count');
   }
+
+  create(pago: Partial<IPago>): Observable<number> {
+    return this.http.post<number>(`${serverURL}/pago`, pago);
+  }
+
   update(pago: Partial<IPago>): Observable<number> {
-  return this.http.put<number>(`${serverURL}/pago`, pago);
-}
+    return this.http.put<number>(`${serverURL}/pago`, pago);
+  }
 
   delete(id: number): Observable<number> {
     return this.http.delete<number>(serverURL + '/pago/' + id);
