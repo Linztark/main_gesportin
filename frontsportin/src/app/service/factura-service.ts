@@ -44,4 +44,8 @@ export class FacturaService {
   update(factura: Partial<IFactura>): Observable<number> {
     return this.oHttp.put<number>(serverURL + '/factura', factura);
   } 
+
+  create(factura: Partial<IFactura>): Observable<number> {
+    return this.oHttp.post<number>(serverURL + '/factura', factura);
+  }
 }
