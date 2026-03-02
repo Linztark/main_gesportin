@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { IPage } from '../model/plist';
 import { HttpClient } from '@angular/common/http';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ArticuloService {
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   getPage(
     page: number,
@@ -47,11 +48,13 @@ export class ArticuloService {
    }
 
   create(articulo: Partial<IArticulo>): Observable<number> {
-    return this.oHttp.post<number>(serverURL + '/articulo', articulo);
+    const body = this.sanitizer.sanitize(articulo, { nestedIdFields: ['tipoarticulo'], removeFields: ['comentarioarts', 'compras', 'carritos'] });
+    return this.oHttp.post<number>(serverURL + '/articulo', body);
   }
 
   update(articulo: Partial<IArticulo>): Observable<number> {
-    return this.oHttp.put<number>(serverURL + '/articulo', articulo);
+    const body = this.sanitizer.sanitize(articulo, { nestedIdFields: ['tipoarticulo'], removeFields: ['comentarioarts', 'compras', 'carritos'] });
+    return this.oHttp.put<number>(serverURL + '/articulo', body);
   }
 
   delete(id: number): Observable<number> {

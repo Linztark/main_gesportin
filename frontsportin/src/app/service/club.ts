@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { serverURL } from '../environment/environment';
 import { IClub } from '../model/club';
 import { IPage } from '../model/plist';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ import { IPage } from '../model/plist';
 export class ClubService {
 
   private http = inject(HttpClient);
+  private sanitizer = inject(PayloadSanitizerService);
   private url = `${serverURL}/club`;
 
   get(id: number): Observable<IClub> {
@@ -36,10 +38,12 @@ export class ClubService {
     return this.http.delete<number>(`${this.url}/${id}`);
   }
      update(club: Partial<IClub>): Observable<number> {
-     return this.http.put<number>(serverURL + '/club', club);
+     const body = this.sanitizer.sanitize(club);
+     return this.http.put<number>(serverURL + '/club', body);
    }
   // create
   create(club: IClub): Observable<number> {
-    return this.http.post<number>(serverURL + '/club', club);
+    const body = this.sanitizer.sanitize(club);
+    return this.http.post<number>(serverURL + '/club', body);
   }
 }

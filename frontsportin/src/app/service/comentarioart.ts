@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { IComentarioart } from '../model/comentarioart';
 import { IPage } from '../model/plist';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ComentarioartService {
 
-    constructor(private oHttp: HttpClient) {        
+    constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {        
     }
 
     getPage(
@@ -77,11 +78,13 @@ export class ComentarioartService {
     }
 
     update(comentarioart: Partial<IComentarioart>): Observable<number> {
-        return this.oHttp.put<number>(serverURL + '/comentarioart', comentarioart);
+        const body = this.sanitizer.sanitize(comentarioart, { nestedIdFields: ['articulo', 'usuario'] });
+        return this.oHttp.put<number>(serverURL + '/comentarioart', body);
     }
 
     create(comentarioart: Partial<IComentarioart>): Observable<number> {
-        return this.oHttp.post<number>(serverURL + '/comentarioart', comentarioart);
+        const body = this.sanitizer.sanitize(comentarioart, { nestedIdFields: ['articulo', 'usuario'] });
+        return this.oHttp.post<number>(serverURL + '/comentarioart', body);
     }
 
     delete(id: number): Observable<number> {

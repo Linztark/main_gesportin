@@ -4,12 +4,13 @@ import { IPage } from '../model/plist';
 import { Observable } from 'rxjs';
 import { ILiga } from '../model/liga';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LigaService {
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   getPage(
     page: number,
@@ -52,7 +53,14 @@ export class LigaService {
   delete(id: number): Observable<number> {
     return this.oHttp.delete<number>(serverURL + '/liga/' + id);
   }
+
+  create(liga: Partial<ILiga>): Observable<number> {
+    const body = this.sanitizer.sanitize(liga, { nestedIdFields: ['equipo'], removeFields: ['partidos'] });
+    return this.oHttp.post<number>(serverURL + '/liga', body);
+  }
+
   update(liga: Partial<ILiga>): Observable<number> {
-    return this.oHttp.put<number>(serverURL + '/liga', liga);
+    const body = this.sanitizer.sanitize(liga, { nestedIdFields: ['equipo'], removeFields: ['partidos'] });
+    return this.oHttp.put<number>(serverURL + '/liga', body);
   }
 }

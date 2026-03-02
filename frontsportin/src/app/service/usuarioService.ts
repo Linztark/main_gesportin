@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { serverURL } from '../environment/environment';
 import { IPage } from '../model/plist';
 import { IUsuario } from '../model/usuario';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  constructor(private oHttp: HttpClient) { }
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) { }
 
   getPage(
     page: number,
@@ -62,11 +63,19 @@ export class UsuarioService {
   }
 
   create(usuario: Partial<IUsuario>): Observable<number> {
-    return this.oHttp.post<number>(`${serverURL}/usuario`, usuario);
+    const body = this.sanitizer.sanitize(usuario, {
+      nestedIdFields: ['tipousuario', 'rolusuario', 'club'],
+      removeFields: ['comentarios', 'puntuaciones', 'comentarioarts', 'carritos', 'facturas', 'equiposentrenados', 'jugadores'],
+    });
+    return this.oHttp.post<number>(`${serverURL}/usuario`, body);
   }
 
   update(usuario: Partial<IUsuario>): Observable<IUsuario> {
-    return this.oHttp.put<IUsuario>(`${serverURL}/usuario`, usuario);
+    const body = this.sanitizer.sanitize(usuario, {
+      nestedIdFields: ['tipousuario', 'rolusuario', 'club'],
+      removeFields: ['comentarios', 'puntuaciones', 'comentarioarts', 'carritos', 'facturas', 'equiposentrenados', 'jugadores'],
+    });
+    return this.oHttp.put<IUsuario>(`${serverURL}/usuario`, body);
   }
 
   count(): Observable<number> {

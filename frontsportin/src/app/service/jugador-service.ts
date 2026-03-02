@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { serverURL } from '../environment/environment';
 import { IJugador } from '../model/jugador';
+import { PayloadSanitizerService } from './payload-sanitizer';
 import { IPage } from '../model/plist';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JugadorService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   getPage(
     page: number,
@@ -54,12 +55,18 @@ export class JugadorService {
     return this.http.get<IJugador>(serverURL + '/jugador/' + id);
   }
 
-  // create(jugador: Partial<IJugador>): Observable<number> {
-  //   return this.http.post<number>(serverURL + '/jugador', jugador);
-  // }
+  create(jugador: Partial<IJugador>): Observable<number> {
+    const body = this.sanitizer.sanitize(jugador, {
+      booleanFields: ['capitan'],
+      nestedIdFields: ['usuario', 'equipo'],
+      removeFields: ['pagos'],
+    });
+    return this.http.post<number>(serverURL + '/jugador', body);
+  }
 
   update(jugador: Partial<IJugador>): Observable<number> {
-    return this.http.put<number>(serverURL + '/jugador', jugador);
+    const body = this.sanitizer.sanitize(jugador, { booleanFields: ['capitan'], nestedIdFields: ['usuario', 'equipo'] });
+    return this.http.put<number>(serverURL + '/jugador', body);
   }
 
   delete(id: number): Observable<number> {

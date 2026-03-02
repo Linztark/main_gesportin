@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { IPage } from '../model/plist';
 import { ITipoarticulo } from '../model/tipoarticulo';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TipoarticuloService {
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   getPage(
     page: number,
@@ -51,11 +52,13 @@ export class TipoarticuloService {
   }
 
    update(tipoarticulo: Partial<ITipoarticulo>): Observable<number> {
-  return this.oHttp.put<number>(`${serverURL}/tipoarticulo`, tipoarticulo);
+  const body = this.sanitizer.sanitize(tipoarticulo, { nestedIdFields: ['club'], removeFields: ['articulos'] });
+  return this.oHttp.put<number>(`${serverURL}/tipoarticulo`, body);
 }
 
   create(tipoarticulo: Partial<ITipoarticulo>): Observable<number> {
-    return this.oHttp.post<number>(`${serverURL}/tipoarticulo`, tipoarticulo);
+    const body = this.sanitizer.sanitize(tipoarticulo, { nestedIdFields: ['club'], removeFields: ['articulos'] });
+    return this.oHttp.post<number>(`${serverURL}/tipoarticulo`, body);
   }
 
   delete(id: number): Observable<ITipoarticulo> {

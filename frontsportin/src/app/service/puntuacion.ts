@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { IPage } from '../model/plist';
 import { HttpClient } from '@angular/common/http';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PuntuacionService {
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   getPage(
     page: number,
@@ -51,11 +52,13 @@ export class PuntuacionService {
   }
 
   create(puntuacion: Partial<IPuntuacion>): Observable<number> {
-    return this.oHttp.post<number>(serverURL + '/puntuacion', puntuacion);
+    const body = this.sanitizer.sanitize(puntuacion, { nestedIdFields: ['noticia', 'usuario'] });
+    return this.oHttp.post<number>(serverURL + '/puntuacion', body);
   }
 
   update(puntuacion: Partial<IPuntuacion>): Observable<number> {
-    return this.oHttp.put<number>(serverURL + '/puntuacion', puntuacion);
+    const body = this.sanitizer.sanitize(puntuacion, { nestedIdFields: ['noticia', 'usuario'] });
+    return this.oHttp.put<number>(serverURL + '/puntuacion', body);
   }
 
   // delete(id: number): Observable<number> {

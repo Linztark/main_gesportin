@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { IPage } from '../model/plist';
 import { serverURL } from '../environment/environment';
 import { IFactura } from '../model/factura';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FacturaService {
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   getPage(page: number, rpp: number, order: string = '', direction: string = '', id_usuario: number = 0): Observable<IPage<IFactura>> {
     if (order === '') {
@@ -42,10 +43,12 @@ export class FacturaService {
   }
 
   update(factura: Partial<IFactura>): Observable<number> {
-    return this.oHttp.put<number>(serverURL + '/factura', factura);
+    const body = this.sanitizer.sanitize(factura, { nestedIdFields: ['usuario'], removeFields: ['compras'] });
+    return this.oHttp.put<number>(serverURL + '/factura', body);
   } 
 
   create(factura: Partial<IFactura>): Observable<number> {
-    return this.oHttp.post<number>(serverURL + '/factura', factura);
+    const body = this.sanitizer.sanitize(factura, { nestedIdFields: ['usuario'], removeFields: ['compras'] });
+    return this.oHttp.post<number>(serverURL + '/factura', body);
   }
 }

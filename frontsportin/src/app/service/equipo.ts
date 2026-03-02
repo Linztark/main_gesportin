@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { IPage } from '../model/plist';
 import { HttpClient } from '@angular/common/http';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EquipoService {
-  constructor(private oHttp: HttpClient) { }
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) { }
 
   getPage(
     page: number,
@@ -51,11 +52,19 @@ export class EquipoService {
   }
 
   create(equipo: Partial<IEquipo>): Observable<number> {
-    return this.oHttp.post<number>(serverURL + '/equipo', equipo);
+    const body = this.sanitizer.sanitize(equipo, {
+      nestedIdFields: ['categoria', 'entrenador'],
+      removeFields: ['jugadores', 'cuotas', 'ligas'],
+    });
+    return this.oHttp.post<number>(serverURL + '/equipo', body);
   }
 
   update(equipo: Partial<IEquipo>): Observable<number> {
-    return this.oHttp.put<number>(`${serverURL}/equipo`, equipo);
+    const body = this.sanitizer.sanitize(equipo, {
+      nestedIdFields: ['categoria', 'entrenador'],
+      removeFields: ['jugadores', 'cuotas', 'ligas'],
+    });
+    return this.oHttp.put<number>(`${serverURL}/equipo`, body);
   }
 
   delete(id: number): Observable<number> {

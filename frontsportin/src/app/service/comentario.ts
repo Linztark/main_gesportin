@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { serverURL } from '../environment/environment';
 import { IComentario } from '../model/comentario';
+import { PayloadSanitizerService } from './payload-sanitizer';
 import { IPage } from '../model/plist';
 
 @Injectable({
@@ -12,7 +13,7 @@ export class ComentarioService {
     
     private readonly URL = `${serverURL}/comentario`;
 
-    constructor(private oHttp: HttpClient) { }
+    constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) { }
 
     getPage(
         page: number,
@@ -56,10 +57,12 @@ export class ComentarioService {
     }
 
     update(comentario: Partial<IComentario>): Observable<number> {
-        return this.oHttp.put<number>(serverURL + '/comentario', comentario);
+        const body = this.sanitizer.sanitize(comentario, { nestedIdFields: ['noticia', 'usuario'] });
+        return this.oHttp.put<number>(serverURL + '/comentario', body);
     }
     create(comentario: Partial<IComentario>): Observable<number> {
-        return this.oHttp.post<number>(this.URL, comentario);
+        const body = this.sanitizer.sanitize(comentario, { nestedIdFields: ['noticia', 'usuario'] });
+        return this.oHttp.post<number>(this.URL, body);
     }
     delete(id: number): Observable<number> {
         return this.oHttp.delete<number>(`${this.URL}/${id}`);

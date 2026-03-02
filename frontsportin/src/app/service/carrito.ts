@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 import { IPage } from '../model/plist';
 import { ICarrito } from '../model/carrito';
 
@@ -9,7 +10,7 @@ import { ICarrito } from '../model/carrito';
   providedIn: 'root',
 })
 export class CarritoService {
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   getPage(
     page: number,
@@ -59,11 +60,13 @@ export class CarritoService {
   }
 
   update(carrito: Partial<ICarrito>): Observable<number> {
-    return this.oHttp.put<number>(this.carritoURL, carrito);
+    const body = this.sanitizer.sanitize(carrito, { nestedIdFields: ['articulo', 'usuario'] });
+    return this.oHttp.put<number>(this.carritoURL, body);
   }
 
   create(carrito: Partial<ICarrito>): Observable<number> {
-    return this.oHttp.post<number>(this.carritoURL, carrito);
+    const body = this.sanitizer.sanitize(carrito, { nestedIdFields: ['articulo', 'usuario'] });
+    return this.oHttp.post<number>(this.carritoURL, body);
   }
 
   delete(id: number) {

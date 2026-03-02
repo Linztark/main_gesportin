@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { IPage } from '../model/plist';
 import { HttpClient } from '@angular/common/http';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CuotaService {
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   getPage(
     page: number,
@@ -50,11 +51,13 @@ export class CuotaService {
   //   return this.oHttp.post<number>(serverURL + '/cuota', cuota);
   // }
   create(cuota: Partial<ICuota>): Observable<number> {
-    return this.oHttp.post<number>(serverURL + '/cuota', cuota);
+    const body = this.sanitizer.sanitize(cuota, { nestedIdFields: ['equipo'], removeFields: ['pagos'] });
+    return this.oHttp.post<number>(serverURL + '/cuota', body);
   }
 
   update(cuota: Partial<ICuota>): Observable<number> {
-    return this.oHttp.put<number>(serverURL + '/cuota', cuota);
+    const body = this.sanitizer.sanitize(cuota, { nestedIdFields: ['equipo'], removeFields: ['pagos'] });
+    return this.oHttp.put<number>(serverURL + '/cuota', body);
   }
 
   delete(id: number): Observable<number> {

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 import { IPage } from '../model/plist';
 import { Observable } from 'rxjs';
 import { INoticia } from '../model/noticia';
@@ -9,11 +10,12 @@ import { INoticia } from '../model/noticia';
   providedIn: 'root',
 })
 export class NoticiaService {
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
 
   update(noticia: any): Observable<number> {
-    return this.oHttp.put<number>(serverURL + '/noticia', noticia);
+    const body = this.sanitizer.sanitize(noticia, { nestedIdFields: ['club'], removeFields: ['comentarios', 'puntuaciones'] });
+    return this.oHttp.put<number>(serverURL + '/noticia', body);
   }
 
   getPage(
@@ -59,7 +61,8 @@ export class NoticiaService {
 
   //create
   create(noticia: INoticia): Observable<number> {
-    return this.oHttp.post<number>(serverURL + '/noticia', noticia);
+    const body = this.sanitizer.sanitize(noticia, { nestedIdFields: ['club'], removeFields: ['comentarios', 'puntuaciones'] });
+    return this.oHttp.post<number>(serverURL + '/noticia', body);
   }
 
   count(): Observable<number> {

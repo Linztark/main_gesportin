@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 import { IPage } from '../model/plist';
 import { IPartido } from '../model/partido';
 
@@ -10,7 +11,7 @@ import { IPartido } from '../model/partido';
 })
 export class PartidoService {
 
-  constructor(private oHttp: HttpClient) { }
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) { }
 
   getPage(
     page: number,
@@ -59,7 +60,8 @@ export class PartidoService {
   }
 
   update(partido: Partial<IPartido>): Observable<number> {
-    return this.oHttp.put<number>(serverURL + '/partido', partido);
+    const body = this.sanitizer.sanitize(partido, { booleanFields: ['local'], nestedIdFields: ['liga'] });
+    return this.oHttp.put<number>(serverURL + '/partido', body);
   }
 
   delete(id: number): Observable<number> {

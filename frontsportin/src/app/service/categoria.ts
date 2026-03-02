@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { IPage } from '../model/plist';
 import { HttpClient } from '@angular/common/http';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriaService {
-  constructor(private oHttp: HttpClient) { }
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) { }
 
   getPage(
     page: number,
@@ -64,11 +65,13 @@ export class CategoriaService {
 
   // Actualizar una categoría existente
   update(categoria: Partial<ICategoria>): Observable<ICategoria> {
-    return this.oHttp.put<ICategoria>(`${serverURL}/categoria`, categoria);
+    const body = this.sanitizer.sanitize(categoria, { nestedIdFields: ['temporada'], removeFields: ['equipos'] });
+    return this.oHttp.put<ICategoria>(`${serverURL}/categoria`, body);
   }
 
   create(categoria: Partial<ICategoria>): Observable<ICategoria> {
-    return this.oHttp.post<ICategoria>(`${serverURL}/categoria`, categoria);
+    const body = this.sanitizer.sanitize(categoria, { nestedIdFields: ['temporada'], removeFields: ['equipos'] });
+    return this.oHttp.post<ICategoria>(`${serverURL}/categoria`, body);
   }
 
 

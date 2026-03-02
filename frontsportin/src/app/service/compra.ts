@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { IPage } from '../model/plist';
 import { serverURL } from '../environment/environment';
 import { ICompra } from '../model/compra';
+import { PayloadSanitizerService } from './payload-sanitizer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CompraService {
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   getPage(
     page: number,
@@ -48,7 +49,8 @@ export class CompraService {
   }
 
   update(compra: Partial<ICompra>): Observable<number> {
-    return this.oHttp.put<number>(serverURL + '/compra', compra);
+    const body = this.sanitizer.sanitize(compra, { nestedIdFields: ['articulo', 'factura'] });
+    return this.oHttp.put<number>(serverURL + '/compra', body);
   }
 
 }

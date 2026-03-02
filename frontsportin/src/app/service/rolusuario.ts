@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { serverURL } from '../environment/environment';
 import { IRolusuario } from '../model/rolusuario';
+import { PayloadSanitizerService } from './payload-sanitizer';
 import { IPage } from '../model/plist';
 
 @Injectable({
@@ -10,7 +11,7 @@ import { IPage } from '../model/plist';
 })
 export class RolusuarioService {
 
-  constructor(private oHttp: HttpClient) { }
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) { }
 
   getPage(
     page: number,
@@ -60,10 +61,12 @@ export class RolusuarioService {
   }
 
   update(rolusuario: Partial<IRolusuario>): Observable<IRolusuario> {
-    return this.oHttp.put<IRolusuario>(serverURL + '/rolusuario', rolusuario);
+    const body = this.sanitizer.sanitize(rolusuario);
+    return this.oHttp.put<IRolusuario>(serverURL + '/rolusuario', body);
   }
 
   create(rolusuario: Partial<IRolusuario>): Observable<number> {
-    return this.oHttp.post<number>(serverURL + '/rolusuario', rolusuario);
+    const body = this.sanitizer.sanitize(rolusuario);
+    return this.oHttp.post<number>(serverURL + '/rolusuario', body);
   }
 }

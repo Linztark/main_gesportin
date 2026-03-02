@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { serverURL } from '../environment/environment';
 import { IPago } from '../model/pago';
+import { PayloadSanitizerService } from './payload-sanitizer';
 import { IPage } from '../model/plist';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PagoService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   getPage(
     page: number,
@@ -55,9 +56,22 @@ export class PagoService {
   count(): Observable<number> {
     return this.http.get<number>(serverURL + '/pago/count');
   }
+
+  create(pago: Partial<IPago>): Observable<number> {
+    const body = this.sanitizer.sanitize(pago, {
+      booleanFields: ['abonado'],
+      nestedIdFields: ['cuota', 'jugador'],
+    });
+    return this.http.post<number>(`${serverURL}/pago`, body);
+  }
+
   update(pago: Partial<IPago>): Observable<number> {
-  return this.http.put<number>(`${serverURL}/pago`, pago);
-}
+    const body = this.sanitizer.sanitize(pago, {
+      booleanFields: ['abonado'],
+      nestedIdFields: ['cuota', 'jugador'],
+    });
+    return this.http.put<number>(`${serverURL}/pago`, body);
+  }
 
   delete(id: number): Observable<number> {
     return this.http.delete<number>(serverURL + '/pago/' + id);

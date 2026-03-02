@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { ITemporada } from '../model/temporada';
 import { IPage } from '../model/plist';
 import { serverURL } from '../environment/environment';
+import { PayloadSanitizerService } from './payload-sanitizer';
 import { IClub } from '../model/club';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TemporadaService {
-  constructor(private oHttp: HttpClient) {}
+  constructor(private oHttp: HttpClient, private sanitizer: PayloadSanitizerService) {}
 
   get(id: number): Observable<ITemporada> {
     return this.oHttp.get<ITemporada>(`${serverURL}/temporada/${id}`);
@@ -53,11 +54,13 @@ export class TemporadaService {
   }
 
   update(temporada: Partial<ITemporada> & { club?: Partial<IClub> }): Observable<ITemporada> {
-    return this.oHttp.put<ITemporada>(`${serverURL}/temporada`, temporada);
+    const body = this.sanitizer.sanitize(temporada, { nestedIdFields: ['club'], removeFields: ['categorias'] });
+    return this.oHttp.put<ITemporada>(`${serverURL}/temporada`, body);
   }
 
   create(temporada: Partial<ITemporada> & { club?: Partial<IClub> }): Observable<ITemporada> {
-    return this.oHttp.post<ITemporada>(`${serverURL}/temporada`, temporada);
+    const body = this.sanitizer.sanitize(temporada, { nestedIdFields: ['club'], removeFields: ['categorias'] });
+    return this.oHttp.post<ITemporada>(`${serverURL}/temporada`, body);
   }
 
 
