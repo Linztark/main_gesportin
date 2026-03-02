@@ -33,7 +33,7 @@ public class JugadorEntity {
     private Long id;
 
     @NotNull
-    private int dorsal;
+    private Integer dorsal;
 
     @NotNull
     @Size(min = 3, max = 255)
