@@ -1,58 +1,47 @@
-/* Layout principal */
+/* Dashboard base layout */
 :host {
-  display: flex;
-  height: 100vh;
-}
-
-app-sidebar {
-  flex-shrink: 0;
-}
-
-.main-content {
-  flex: 1;
-  margin-left: 280px;
-  overflow-y: auto;
-  height: 100vh;
+  display: block;
+  min-height: 100vh;
   background-color: #f8f9fa;
 }
 
-/* Scrollbar */
-.main-content::-webkit-scrollbar {
-  width: 8px;
+.app-header {
+  height: 48px;
+  z-index: 1040;
 }
 
-.main-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.navbar-brand {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
-.main-content::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+.sidebar {
+  position: fixed;
+  top: 48px;
+  bottom: 0;
+  left: 0;
+  z-index: 1030;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
 }
 
-.main-content::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.main-content {
+  min-height: calc(100vh - 48px);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .main-content {
-    margin-left: 250px;
-  }
-}
-
-@media (max-width: 576px) {
-  :host {
-    flex-direction: column;
-  }
-
-  app-sidebar {
-    flex-shrink: 1;
+@media (max-width: 767.98px) {
+  .sidebar {
+    width: 100%;
+    max-width: 300px;
   }
 
   .main-content {
     margin-left: 0;
-    height: auto;
-    overflow-y: visible;
   }
 }

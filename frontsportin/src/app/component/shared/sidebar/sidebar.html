@@ -1,80 +1,82 @@
-<nav class="sidebar">
-  <div class="sidebar-header">
-    <h4 class="mb-0">
-      <i class="bi bi-layers-fill"></i>
-      <span class="ms-2">Gesportín</span>
-    </h4>
-  </div>
+<ul class="nav flex-column sidebar-nav px-2">
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <i class="bi bi-house-fill"></i>
+      <span>Inicio</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/club']" routerLinkActive="active">
+      <i class="bi bi-building"></i>
+      <span>Clubes</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/noticia']" routerLinkActive="active">
+      <i class="bi bi-newspaper"></i>
+      <span>Noticias</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/partido']" routerLinkActive="active">
+      <i class="bi bi-play-fill"></i>
+      <span>Partidos</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/equipo']" routerLinkActive="active">
+      <i class="bi bi-people-fill"></i>
+      <span>Equipos</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/liga']" routerLinkActive="active">
+      <i class="bi bi-trophy"></i>
+      <span>Ligas</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/jugador']" routerLinkActive="active">
+      <i class="bi bi-person-fill"></i>
+      <span>Jugadores</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/usuario']" routerLinkActive="active">
+      <i class="bi bi-people"></i>
+      <span>Usuarios</span>
+    </a>
+  </li>
 
-  <div class="sidebar-menu">
-    @for (item of menuItems(); track item.label) {
-      <div class="menu-item">
-        @if (item.children && item.children.length > 0) {
-          <button
-            class="menu-button"
-            (click)="toggleMenu(item)"
-            [class.expanded]="item.expanded"
-          >
-            <i [class]="'bi bi-' + item.icon"></i>
-            <span class="menu-label">{{ item.label }}</span>
-            <i class="bi bi-chevron-right menu-toggle ms-auto"></i>
-          </button>
+  <li class="nav-item mt-2">
+    <h6 class="sidebar-heading px-2">Gestión</h6>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/temporada']" routerLinkActive="active">
+      <i class="bi bi-calendar"></i>
+      <span>Temporadas</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/categoria']" routerLinkActive="active">
+      <i class="bi bi-tags"></i>
+      <span>Categorías</span>
+    </a>
+  </li>
 
-          @if (item.expanded) {
-            <div class="submenu">
-              @for (subitem of item.children; track subitem.label) {
-                <div class="submenu-item">
-                  @if (subitem.children && subitem.children.length > 0) {
-                    <button
-                      class="submenu-button"
-                      (click)="toggleMenu(subitem)"
-                      [class.expanded]="subitem.expanded"
-                    >
-                      <i [class]="'bi bi-' + subitem.icon"></i>
-                      <span class="menu-label">{{ subitem.label }}</span>
-                      <i class="bi bi-chevron-right menu-toggle ms-auto"></i>
-                    </button>
-
-                    @if (subitem.expanded) {
-                      <div class="subsubmenu">
-                        @for (subsubitem of subitem.children; track subsubitem.label) {
-                          <a
-                            [routerLink]="subsubitem.route"
-                            routerLinkActive="active"
-                            class="subsubmenu-link"
-                          >
-                            <i [class]="'bi bi-' + subsubitem.icon"></i>
-                            <span>{{ subsubitem.label }}</span>
-                          </a>
-                        }
-                      </div>
-                    }
-                  } @else {
-                    <a
-                      [routerLink]="subitem.route"
-                      routerLinkActive="active"
-                      class="submenu-link"
-                    >
-                      <i [class]="'bi bi-' + subitem.icon"></i>
-                      <span class="menu-label">{{ subitem.label }}</span>
-                    </a>
-                  }
-                </div>
-              }
-            </div>
-          }
-        } @else {
-          <a
-            [routerLink]="item.route"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: item.route === '/' }"
-            class="menu-button"
-          >
-            <i [class]="'bi bi-' + item.icon"></i>
-            <span class="menu-label">{{ item.label }}</span>
-          </a>
-        }
-      </div>
-    }
-  </div>
-</nav>
+  <li class="nav-item mt-2">
+    <h6 class="sidebar-heading px-2">Tienda</h6>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/articulo']" routerLinkActive="active">
+      <i class="bi bi-bag-fill"></i>
+      <span>Artículos</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [routerLink]="['/compra']" routerLinkActive="active">
+      <i class="bi bi-cart-fill"></i>
+      <span>Compras</span>
+    </a>
+  </li>
+</ul>

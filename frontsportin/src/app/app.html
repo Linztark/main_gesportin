@@ -1,16 +1,35 @@
-<app-sidebar></app-sidebar>
-<div class="main-content">
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow app-header">
+  <button
+    class="navbar-toggler d-md-none collapsed ms-2"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#sidebarMenu"
+    aria-controls="sidebarMenu"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/">Gesportín</a>
   <app-menu></app-menu>
-  <div class="container-fluid mt-4">
-    <div class="row mb-4">
-      <div class="col">
-        <router-outlet></router-outlet>
+</header>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3">
+        <app-sidebar></app-sidebar>
       </div>
-    </div>
-    <div class="row mt-4 text-muted" style="text-align: center;">
-      <hr />
-      <h5>Frontsportin, 2026 - MIT licensed</h5>
-      <h6>Rafael Aznar & DAW students</h6>
-    </div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-3 px-md-4 py-3 main-content">
+      <router-outlet></router-outlet>
+
+      <div class="mt-4 text-muted text-center border-top pt-3">
+        <h5 class="fs-6 mb-1">Frontsportin, 2026 - MIT licensed</h5>
+        <h6 class="small mb-0">Rafael Aznar & DAW students</h6>
+      </div>
+    </main>
   </div>
 </div>
