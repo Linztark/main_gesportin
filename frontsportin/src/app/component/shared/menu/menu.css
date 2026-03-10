@@ -1,0 +1,66 @@
+.top-actions .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+/* Asegurar icono y nombre en blanco sobre fondo negro */
+.top-actions {
+    background-color: #000;
+}
+.top-actions .username,
+.top-actions .user-info,
+.top-actions .user-info i,
+.top-actions .navbar-text,
+.top-actions .nav-login-btn,
+.top-actions .nav-login-btn i {
+    color: #fff !important;
+}
+.top-actions .user-info {
+    text-decoration: none;
+}
+.top-actions .user-info:hover {
+    color: #fff !important;
+}
+
+/* Asegurar legibilidad cuando se aplica la clase .active */
+.top-actions .nav-login-btn.active,
+.top-actions .nav-login-btn:active,
+.top-actions .nav-login-btn.active:hover {
+    color: #333333 !important;
+    background-color: rgb(194, 176, 176) !important;
+    border-color: rgb(255, 216, 216) !important;
+}
+.top-actions .nav-login-btn.active i,
+.top-actions .nav-login-btn:active i {
+    color: #fff !important;
+}
+
+/* For hover on login button ensure white text and transparent background */
+.top-actions .nav-login-btn:hover,
+.top-actions .nav-login-btn:hover i {
+    color: #fff !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
+
+.top-actions .nav-link:hover {
+    color: #fff !important;
+    background-color: rgb(255, 145, 145);
+}
+
+.top-actions .active-link {
+    color: #332f2f !important;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 575.98px) {
+    .top-actions .nav-link {
+        padding: 0.25rem;
+    }
+}

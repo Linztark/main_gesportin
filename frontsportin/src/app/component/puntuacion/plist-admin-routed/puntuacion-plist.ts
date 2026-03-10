@@ -1,4 +1,4 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { IPage } from '../../../model/plist';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -8,6 +8,7 @@ import { TrimPipe } from '../../../pipe/trim-pipe';
 import { IPuntuacion } from '../../../model/puntuacion';
 import { PuntuacionService } from '../../../service/puntuacion';
 import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-puntuacion-plist',
@@ -31,6 +32,8 @@ export class PuntuacionPlistAdminRouted {
   // Variables de filtro
   noticia = signal<number>(0);
   usuario = signal<number>(0);
+
+  private dialogRef = inject(MatDialogRef<PuntuacionPlistAdminRouted>, { optional: true });
 
   constructor(
     private oPuntuacionService: PuntuacionService,
@@ -99,5 +102,9 @@ export class PuntuacionPlistAdminRouted {
 
   getStars(rating: number): number[] {
     return Array(5).fill(0).map((_, i) => i + 1);
+  }
+
+  isDialogMode(): boolean {
+    return !!this.dialogRef;
   }
 }
