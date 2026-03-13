@@ -118,23 +118,66 @@ public class UsuarioService {
     }
 
     public UsuarioEntity create(UsuarioEntity oUsuarioEntity) {
-        // equipo admins are not allowed to create users
-        oSessionService.denyEquipoAdmin();
+        // equipo admins can create users of type "usuario" (tipousuario=3) but only in their own club
+        if (oSessionService.isEquipoAdmin()) {
+            Long myClub = oSessionService.getIdClub();
+            if (myClub == null) {
+                throw new UnauthorizedException("Acceso denegado: no tiene club asignado");
+            }
+            if (oUsuarioEntity.getClub() == null || oUsuarioEntity.getClub().getId() == null) {
+                throw new UnauthorizedException("Acceso denegado: debe especificar el club");
+            }
+            // Only allow creating users in own club
+            oSessionService.checkSameClub(oUsuarioEntity.getClub().getId());
+            // Only allow creating users with tipousuario "usuario" (id=3)
+            if (oUsuarioEntity.getTipousuario() == null || oUsuarioEntity.getTipousuario().getId() == null
+                    || oUsuarioEntity.getTipousuario().getId() != 3L) {
+                throw new UnauthorizedException("Acceso denegado: solo puede crear usuarios del tipo usuario");
+            }
+            // Force club to the admin's club
+            oUsuarioEntity.setClub(oClubService.get(myClub));
+        } else {
+            oUsuarioEntity.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
+        }
+
         oUsuarioEntity.setId(null);
         // Establecer la fecha de alta al momento de la creación
         oUsuarioEntity.setFechaAlta(LocalDateTime.now());
         oUsuarioEntity.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
-        oUsuarioEntity.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
         oUsuarioEntity.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
         return oUsuarioRepository.save(oUsuarioEntity);
     }
 
     public UsuarioEntity update(UsuarioEntity oUsuarioEntity) {
-        // equipo admins are not allowed to modify users
-        oSessionService.denyEquipoAdmin();
         UsuarioEntity oUsuarioExistente = oUsuarioRepository.findById(oUsuarioEntity.getId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Usuario no encontrado con id: " + oUsuarioEntity.getId()));
+
+        // equipo admins can only modify "usuario" users belonging to their own club and cannot change their club
+        if (oSessionService.isEquipoAdmin()) {
+            Long myClub = oSessionService.getIdClub();
+            if (myClub == null) {
+                throw new UnauthorizedException("Acceso denegado: no tiene club asignado");
+            }
+            // only allow updating users of type "usuario"
+            if (oUsuarioExistente.getTipousuario() == null || oUsuarioExistente.getTipousuario().getId() != 3L) {
+                throw new UnauthorizedException("Acceso denegado: solo puede modificar usuarios del tipo usuario");
+            }
+            // must be in same club
+            oSessionService.checkSameClub(oUsuarioExistente.getClub() != null ? oUsuarioExistente.getClub().getId() : null);
+            // cannot change club
+            if (oUsuarioEntity.getClub() != null && oUsuarioEntity.getClub().getId() != null
+                    && !oUsuarioEntity.getClub().getId().equals(oUsuarioExistente.getClub().getId())) {
+                throw new UnauthorizedException("Acceso denegado: no puede cambiar el club del usuario");
+            }
+            // must remain tipousuario "usuario"
+            if (oUsuarioEntity.getTipousuario() == null || oUsuarioEntity.getTipousuario().getId() != 3L) {
+                throw new UnauthorizedException("Acceso denegado: solo puede modificar usuarios del tipo usuario");
+            }
+
+            // ensure club remains the same
+            oUsuarioEntity.setClub(oUsuarioExistente.getClub());
+        }
 
         oUsuarioExistente.setNombre(oUsuarioEntity.getNombre());
         oUsuarioExistente.setApellido1(oUsuarioEntity.getApellido1());
@@ -150,10 +193,21 @@ public class UsuarioService {
     }
 
     public Long delete(Long id) {
-        // equipo admins are not allowed to delete users
-        oSessionService.denyEquipoAdmin();
         UsuarioEntity oUsuario = oUsuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
+
+        // equipo admins can only delete "usuario" users in their own club
+        if (oSessionService.isEquipoAdmin()) {
+            Long myClub = oSessionService.getIdClub();
+            if (myClub == null) {
+                throw new UnauthorizedException("Acceso denegado: no tiene club asignado");
+            }
+            if (oUsuario.getTipousuario() == null || oUsuario.getTipousuario().getId() != 3L) {
+                throw new UnauthorizedException("Acceso denegado: solo puede eliminar usuarios del tipo usuario");
+            }
+            oSessionService.checkSameClub(oUsuario.getClub() != null ? oUsuario.getClub().getId() : null);
+        }
+
         oUsuarioRepository.delete(oUsuario);
         return id;
     }

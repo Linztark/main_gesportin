@@ -79,23 +79,40 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void create_whenEquipoAdmin_shouldDeny() {
-        doThrow(new UnauthorizedException("nope")).when(sessionService).denyEquipoAdmin();
+    void create_whenEquipoAdmin_withoutClub_shouldDeny() {
+        when(sessionService.isEquipoAdmin()).thenReturn(true);
+        when(sessionService.getIdClub()).thenReturn(42L);
         UsuarioEntity nuevo = new UsuarioEntity();
+        // club is null, should be rejected for equipo admin
         assertThrows(UnauthorizedException.class, () -> usuarioService.create(nuevo));
     }
 
     @Test
-    void update_whenEquipoAdmin_shouldDeny() {
-        doThrow(new UnauthorizedException("nope")).when(sessionService).denyEquipoAdmin();
-        UsuarioEntity existente = new UsuarioEntity();
-        existente.setId(1L);
-        assertThrows(UnauthorizedException.class, () -> usuarioService.update(existente));
+    void update_whenEquipoAdmin_nonUsuarioType_shouldDeny() {
+        when(sessionService.isEquipoAdmin()).thenReturn(true);
+        when(sessionService.getIdClub()).thenReturn(42L);
+
+        // existing user is not of type "usuario" (tipousuario id != 3)
+        exampleUsuario.setTipousuario(new net.ausiasmarch.gesportin.entity.TipousuarioEntity());
+        exampleUsuario.getTipousuario().setId(2L);
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(exampleUsuario));
+
+        UsuarioEntity updateRequest = new UsuarioEntity();
+        updateRequest.setId(1L);
+
+        assertThrows(UnauthorizedException.class, () -> usuarioService.update(updateRequest));
     }
 
     @Test
-    void delete_whenEquipoAdmin_shouldDeny() {
-        doThrow(new UnauthorizedException("nope")).when(sessionService).denyEquipoAdmin();
+    void delete_whenEquipoAdmin_nonUsuarioType_shouldDeny() {
+        when(sessionService.isEquipoAdmin()).thenReturn(true);
+        when(sessionService.getIdClub()).thenReturn(42L);
+
+        // user to delete is not of type "usuario" (tipousuario id != 3)
+        exampleUsuario.setTipousuario(new net.ausiasmarch.gesportin.entity.TipousuarioEntity());
+        exampleUsuario.getTipousuario().setId(2L);
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(exampleUsuario));
+
         assertThrows(UnauthorizedException.class, () -> usuarioService.delete(1L));
     }
 
