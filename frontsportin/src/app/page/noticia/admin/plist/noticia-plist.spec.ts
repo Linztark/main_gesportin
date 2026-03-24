@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NoticiaPlistAdminRouted } from './noticia-plist';
+import { NoticiaAdminPlistPage } from './plist';
 
-describe('NoticiaPlist', () => {
-  let component: NoticiaPlistAdminRouted;
-  let fixture: ComponentFixture<NoticiaPlistAdminRouted>;
+describe('NoticiaAdminPlistPage', () => {
+  let component: NoticiaAdminPlistPage;
+  let fixture: ComponentFixture<NoticiaAdminPlistPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NoticiaPlistAdminRouted]
+      imports: [NoticiaAdminPlistPage]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NoticiaPlistAdminRouted);
+    fixture = TestBed.createComponent(NoticiaAdminPlistPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

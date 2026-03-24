@@ -1,0 +1,251 @@
+<div class="container py-3">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
+        <div>
+            <div class="text-uppercase small text-muted fw-semibold">Noticias</div>
+            <div class="fw-bold">Detalle de noticia</div>
+            <div class="text-muted small">Panel administrativo</div>
+        </div>
+        <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/noticia">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </a>
+    </div>
+
+    @if (loading()) {
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center py-3">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">Cargando detalle...</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (error()) {
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>{{ error() }}</span>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!loading() && !error() && oNoticia()) {
+        <div class="row g-3">
+            <div class="col-lg-8">
+                <div class="card border h-100">
+                    <div class="card-header bg-light small text-uppercase fw-semibold">Identificación</div>
+                    <div class="card-body p-2">
+                        <div class="fw-bold">
+                            {{ oNoticia()?.titulo }}
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-1">
+                            <span class="badge bg-secondary-subtle text-secondary">ID {{ oNoticia()?.id }}</span>
+                        </div>
+                        <div class="mt-2">
+                            <div class="row g-1">
+                                <div class="col-5 text-muted small text-uppercase">Contenido</div>
+                                <div class="col-7 fw-semibold small">{{ oNoticia()?.contenido }}</div>
+                                <div class="col-5 text-muted small text-uppercase">Fecha</div>
+                                <div class="col-7 fw-semibold small">{{ oNoticia()?.fecha }}</div>
+                                <div class="col-5 text-muted small text-uppercase">Imagen</div>
+                                <div class="col-7 fw-semibold small">{{ oNoticia()?.imagen }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="card border">
+                            <div class="card-header bg-light small text-uppercase fw-semibold">Relaciones</div>
+                            <div class="card-body p-2">
+                                <div class="row g-1">
+                                    <div class="col-5 text-muted small text-uppercase">Club</div>
+                                    <div class="col-7 fw-semibold small">
+                                        @if (oNoticia()?.club?.nombre) {
+                                            <a [routerLink]="['/club/view', oNoticia()?.club?.id]">
+                                                {{ oNoticia()?.club?.nombre }} ({{ oNoticia()?.club?.id }})
+                                            </a>
+                                        } @else {
+                                            Sin club
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card border">
+                            <div class="card-header bg-light small text-uppercase fw-semibold">Actividad</div>
+                            <div class="card-body p-2">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <div class="border rounded p-2 bg-white">
+                                        <div class="text-muted small text-uppercase">Comentarios</div>
+                                            <div class="fw-bold">
+                                                @if (oNoticia()?.comentarios === 0) {
+                                                    0
+                                                } @else {
+                                                    <a
+                                                        [routerLink]="['/comentario', 'usuario', oNoticia()?.id]"
+                                                        class="text-decoration-underline text-reset d-inline-block"
+                                                        title="Ver comentarios del usuario"
+                                                    >
+                                                        {{ oNoticia()?.comentarios }}
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="border rounded p-2 bg-white">
+                                        <div class="text-muted small text-uppercase">Puntuaciones</div>
+                                            <div class="fw-bold">
+                                                @if (oNoticia()?.puntuaciones === 0) {
+                                                    0
+                                                } @else {
+                                                    <a
+                                                        [routerLink]="['/puntuacion', 'usuario', oNoticia()?.id]"
+                                                        class="text-decoration-underline text-reset d-inline-block"
+                                                        title="Ver puntuaciones del usuario"
+                                                    >
+                                                        {{ oNoticia()?.puntuaciones }}
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card border">
+                    <div class="card-header bg-light small text-uppercase fw-semibold">Club (detalle)</div>
+                    <div class="card-body p-2">
+                        @if (oNoticia()?.club) {
+                            <div class="row g-2">
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="border rounded p-2 bg-white">
+                                        <div class="text-muted small text-uppercase">Nombre</div>
+                                        <a
+                                            [routerLink]="['/club/view', oNoticia()?.club?.id]"
+                                            class="fw-semibold text-decoration-underline d-inline-block"
+                                            title="Ver club"
+                                        >
+                                            {{ oNoticia()?.club?.nombre }}
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="border rounded p-2 bg-white">
+                                        <div class="text-muted small text-uppercase">Dirección</div>
+                                        {{ oNoticia()?.club?.direccion }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="border rounded p-2 bg-white">
+                                        <div class="text-muted small text-uppercase">Teléfono</div>
+                                        {{ oNoticia()?.club?.telefono }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="border rounded p-2 bg-white">
+                                        <div class="text-muted small text-uppercase">Fecha alta</div>
+                                        {{ oNoticia()?.club?.fechaAlta | datetime }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="border rounded p-2 bg-white">
+                                        <div class="text-muted small text-uppercase">Temporadas</div>
+                                        <div class="fw-semibold">
+                                            @if (oNoticia()?.club?.temporadas === 0) {
+                                                0
+                                            } @else {
+                                                <a
+                                                    [routerLink]="['/temporada/', oNoticia()?.club?.id]"
+                                                    class="text-decoration-underline d-inline-block"
+                                                    title="Ver usuarios del club"
+                                                >
+                                                    {{ oNoticia()?.club?.temporadas }}
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="border rounded p-2 bg-white">
+                                        <div class="text-muted small text-uppercase">Usuarios</div>
+                                        <div class="fw-semibold">
+                                            @if (oNoticia()?.club?.usuarios === 0) {
+                                                0
+                                            } @else {
+                                                <a
+                                                    [routerLink]="['/usuario', oNoticia()?.club?.id]"
+                                                    class="text-decoration-underline d-inline-block"
+                                                    title="Ver temporadas del club"
+                                                >
+                                                    {{ oNoticia()?.club?.usuarios }}
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="border rounded p-2 bg-white">
+                                        <div class="text-muted small text-uppercase">Noticias</div>
+                                        <div class="fw-semibold">
+                                            @if (oNoticia()?.club?.noticias === 0) {
+                                                0
+                                            } @else {
+                                                <a
+                                                    [routerLink]="['/noticia/', oNoticia()?.club?.id]"
+                                                    class="text-decoration-underline d-inline-block"
+                                                    title="Ver noticias del club"
+                                                >
+                                                    {{ oNoticia()?.club?.noticias }}
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="border rounded p-2 bg-white">
+                                        <div class="text-muted small text-uppercase">Tipos artículos</div>
+                                        <div class="fw-semibold">
+                                            @if (oNoticia()?.club?.tipoarticulos === 0) {
+                                                0
+                                            } @else {
+                                                <a
+                                                    [routerLink]="['/tipoarticulo/', oNoticia()?.club?.id]"
+                                                    class="text-decoration-underline d-inline-block"
+                                                    title="Ver tipos de artículos del club"
+                                                >
+                                                    {{ oNoticia()?.club?.tipoarticulos }}
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        } @else {
+                            <div class="text-muted">Sin club asignado.</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
