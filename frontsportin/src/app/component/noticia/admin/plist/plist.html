@@ -46,8 +46,7 @@
     <div class="w-100 d-flex justify-content-center">
       @if (!isDialogMode()) {
         <a class="btn btn-primary new-btn" [routerLink]="['/noticia/new']" role="button">
-          <i class="bi bi-plus-circle" aria-hidden="true"></i>
-          <span class="d-none d-sm-inline">Nueva noticia</span>
+          <i class="bi bi-plus-circle me-2" aria-hidden="true"></i><span class="d-none d-sm-inline">Nueva noticia</span>
         </a>
       }
     </div>
@@ -79,65 +78,86 @@
       <thead>
         <tr>
           <th scope="col" (click)="onOrder('id')" style="cursor: pointer; width: 5%">
-            <span class="header-inline"
-              >ID
-              @if (orderField() === 'id') {
-                @if (orderDirection() === 'asc') {
-                  <i class="bi bi-caret-up-fill ms-1" aria-hidden="true"></i>
+            <div class="header-stacked">
+              <div class="header-top">
+                <i class="bi bi-hash" aria-hidden="true"></i>
+                @if (orderField() === 'id') {
+                  @if (orderDirection() === 'asc') {
+                    <i class="bi bi-caret-up-fill" aria-hidden="true"></i>
+                  }
+                  @if (orderDirection() === 'desc') {
+                    <i class="bi bi-caret-down-fill" aria-hidden="true"></i>
+                  }
                 }
-                @if (orderDirection() === 'desc') {
-                  <i class="bi bi-caret-down-fill ms-1" aria-hidden="true"></i>
-                }
-              }
-            </span>
+              </div>
+              <span>ID</span>
+            </div>
           </th>
           <th scope="col" (click)="onOrder('titulo')" style="cursor: pointer; width: 20%">
-            <span class="header-inline"
-              >Título
-              @if (orderField() === 'titulo') {
-                @if (orderDirection() === 'asc') {
-                  <i class="bi bi-caret-up-fill ms-1" aria-hidden="true"></i>
+            <div class="header-stacked">
+              <div class="header-top">
+                <i class="bi bi-card-heading" aria-hidden="true"></i>
+                @if (orderField() === 'titulo') {
+                  @if (orderDirection() === 'asc') {
+                    <i class="bi bi-caret-up-fill" aria-hidden="true"></i>
+                  }
+                  @if (orderDirection() === 'desc') {
+                    <i class="bi bi-caret-down-fill" aria-hidden="true"></i>
+                  }
                 }
-                @if (orderDirection() === 'desc') {
-                  <i class="bi bi-caret-down-fill ms-1" aria-hidden="true"></i>
-                }
-              }
-            </span>
+              </div>
+              <span>Título</span>
+            </div>
           </th>
           <th scope="col" (click)="onOrder('fecha')" style="cursor: pointer; width: 12%" class="d-none d-md-table-cell">
-            <span class="header-inline"
-              >Fecha
-              @if (orderField() === 'fecha') {
-                @if (orderDirection() === 'asc') {
-                  <i class="bi bi-caret-up-fill ms-1" aria-hidden="true"></i>
+            <div class="header-stacked">
+              <div class="header-top">
+                <i class="bi bi-calendar-event" aria-hidden="true"></i>
+                @if (orderField() === 'fecha') {
+                  @if (orderDirection() === 'asc') {
+                    <i class="bi bi-caret-up-fill" aria-hidden="true"></i>
+                  }
+                  @if (orderDirection() === 'desc') {
+                    <i class="bi bi-caret-down-fill" aria-hidden="true"></i>
+                  }
                 }
-                @if (orderDirection() === 'desc') {
-                  <i class="bi bi-caret-down-fill ms-1" aria-hidden="true"></i>
-                }
-              }
-            </span>
+              </div>
+              <span>Fecha</span>
+            </div>
           </th>
           <th scope="col" (click)="onOrder('club')" style="cursor: pointer; width: 22%" class="d-none d-md-table-cell">
-            <span class="header-inline">
-              <i class="bi bi-building me-1" aria-hidden="true"></i>Club
-              @if (orderField() === 'club') {
-                @if (orderDirection() === 'asc') {
-                  <i class="bi bi-caret-up-fill ms-1" aria-hidden="true"></i>
+            <div class="header-stacked">
+              <div class="header-top">
+                <i class="bi bi-building" aria-hidden="true"></i>
+                @if (orderField() === 'club') {
+                  @if (orderDirection() === 'asc') {
+                    <i class="bi bi-caret-up-fill" aria-hidden="true"></i>
+                  }
+                  @if (orderDirection() === 'desc') {
+                    <i class="bi bi-caret-down-fill" aria-hidden="true"></i>
+                  }
                 }
-                @if (orderDirection() === 'desc') {
-                  <i class="bi bi-caret-down-fill ms-1" aria-hidden="true"></i>
-                }
-              }
-            </span>
+              </div>
+              <span>Club</span>
+            </div>
           </th>
           <th scope="col" style="width: 8%" class="d-none d-md-table-cell">
-            <span class="header-inline"><i class="bi bi-chat-left-text me-1"></i>Comentarios</span>
+            <div class="header-stacked">
+              <div class="header-top"><i class="bi bi-chat-left-text" aria-hidden="true"></i></div>
+              <span>Comentarios</span>
+            </div>
           </th>
           <th scope="col" style="width: 8%" class="d-none d-md-table-cell">
-            <span class="header-inline"><i class="bi bi-star-fill me-1"></i>Puntuación</span>
+            <div class="header-stacked">
+              <div class="header-top"><i class="bi bi-star-fill" aria-hidden="true"></i></div>
+              <span>Puntuación</span>
+            </div>
           </th>
           <th scope="col" style="width: 7%">
-            <span class="header-inline">Acciones</span>
+            <div class="header-stacked">
+              <div class="header-top"><i class="bi bi-gear" aria-hidden="true"></i></div>
+              <span>Acciones</span>
+            </div>
           </th>
         </tr>
       </thead>
