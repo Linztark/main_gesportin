@@ -129,12 +129,14 @@ public class ComentarioartService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oComentarioartRepository.deleteAll();
         oComentarioartRepository.flush();
         return 0L;
     }
 
     public Long fill(Long numComentarios) {
+        oSessionService.requireAdmin();
         for (long j = 0; j < numComentarios; j++) {
             ComentarioartEntity oComentarioartEntity = new ComentarioartEntity();
 

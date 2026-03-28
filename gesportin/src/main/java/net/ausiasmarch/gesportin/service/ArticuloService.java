@@ -134,12 +134,14 @@ public class ArticuloService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oArticuloRepository.deleteAll();
         oArticuloRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (int i = 0; i < cantidad; i++) {
             ArticuloEntity oArticulo = new ArticuloEntity();
             oArticulo.setDescripcion(descripciones[random.nextInt(descripciones.length)] + " "

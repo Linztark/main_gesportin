@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.TipousuarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
+import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.TipousuarioRepository;
 
 @Service
@@ -14,6 +15,9 @@ public class TipousuarioService {
 
     @Autowired
     TipousuarioRepository tipousuarioRepository;
+
+    @Autowired
+    SessionService oSessionService;
 
     private static final String[] TIPOS = {
         "Administrador", "Administrador de equipo", "Usuario"
@@ -29,6 +33,7 @@ public class TipousuarioService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         tipousuarioRepository.deleteAll();
         tipousuarioRepository.flush();
         return 0L;
@@ -39,6 +44,7 @@ public class TipousuarioService {
     }
 
     public Long fill() {
+        oSessionService.requireAdmin();
         for (int i = 0; i < TIPOS.length; i++) {
             TipousuarioEntity oTipousuario = new TipousuarioEntity();
             oTipousuario.setDescripcion(TIPOS[i % TIPOS.length]);

@@ -147,9 +147,7 @@ public class CarritoService {
     }
 
     public Long empty() {
-        if (oSessionService.isEquipoAdmin()) {
-            throw new UnauthorizedException("Acceso denegado: no puede gestionar carritos");
-        }
+        oSessionService.requireAdmin();
         oCarritoRepository.deleteAll();
         oCarritoRepository.flush();
         return 0L;
@@ -160,9 +158,7 @@ public class CarritoService {
     }
 
     public Long fill(Long cantidad) {
-        if (oSessionService.isEquipoAdmin()) {
-            throw new UnauthorizedException("Acceso denegado: no puede gestionar carritos");
-        }
+        oSessionService.requireAdmin();
         for (long i = 0L; i < cantidad; i++) {
             CarritoEntity carrito = new CarritoEntity();
             carrito.setCantidad(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));

@@ -122,12 +122,14 @@ public class TemporadaService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oTemporadaRepository.deleteAll();
         oTemporadaRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (long i = 0; i < cantidad; i++) {
             TemporadaEntity oTemporada = new TemporadaEntity();
             String nombre = "Temporada " + categorias[(int) (Math.random() * categorias.length)] + " de " +

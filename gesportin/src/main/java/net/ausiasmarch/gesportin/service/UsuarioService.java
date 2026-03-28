@@ -224,12 +224,14 @@ public class UsuarioService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oUsuarioRepository.deleteAll();
         oUsuarioRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         // generar un admin
         UsuarioEntity oUsuario = new UsuarioEntity();
         oUsuario.setNombre("Jose");

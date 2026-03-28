@@ -130,12 +130,14 @@ public class PagoService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oPagoRepository.deleteAll();
         oPagoRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (int i = 0; i < cantidad; i++) {
             PagoEntity oPagoNuevo = new PagoEntity();
             // la cuota y el jugador deben ser del mismo club -> pte

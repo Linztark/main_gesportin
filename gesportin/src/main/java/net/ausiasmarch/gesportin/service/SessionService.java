@@ -128,4 +128,14 @@ public class SessionService {
         }
     }
 
+    /**
+     * Throws UnauthorizedException unless the requester is an admin (tipousuario id=1).
+     * Use for fill/empty operations that only admins may perform.
+     */
+    public void requireAdmin() {
+        if (!isAdmin()) {
+            throw new UnauthorizedException("Acceso denegado: esta operación requiere permisos de administrador");
+        }
+    }
+
 }

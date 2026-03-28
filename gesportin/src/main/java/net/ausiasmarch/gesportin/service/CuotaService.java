@@ -114,12 +114,14 @@ public class CuotaService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oCuotaRepository.deleteAll();
         oCuotaRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
 
         Random random = new Random();
 

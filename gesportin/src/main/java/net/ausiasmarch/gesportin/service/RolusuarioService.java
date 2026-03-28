@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import net.ausiasmarch.gesportin.entity.RolusuarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
+import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.RolusuarioRepository;
 
 @Service
@@ -15,6 +16,9 @@ public class RolusuarioService {
 
     @Autowired
     private RolusuarioRepository oRolusuarioRepository;
+
+    @Autowired
+    private SessionService oSessionService;
 
     // private final Random random = new Random();
     private final String[] descripciones = {
@@ -79,12 +83,14 @@ public class RolusuarioService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oRolusuarioRepository.deleteAll();
         oRolusuarioRepository.flush();
         return 0L;
     }
 
     public Long fill() {
+        oSessionService.requireAdmin();
         for (int i = 0; i < descripciones.length; i++) {
             RolusuarioEntity oRolusuario = new RolusuarioEntity();
             oRolusuario.setDescripcion(descripciones[i % descripciones.length]);

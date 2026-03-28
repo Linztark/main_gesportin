@@ -105,12 +105,14 @@ public class TipoarticuloService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oTipoarticuloRepository.deleteAll();
         oTipoarticuloRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (int i = 0; i < cantidad; i++) {
             TipoarticuloEntity oTipoarticulo = new TipoarticuloEntity();
             oTipoarticulo.setDescripcion(descripciones[i % descripciones.length]);

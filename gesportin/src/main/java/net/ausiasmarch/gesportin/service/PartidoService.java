@@ -105,12 +105,14 @@ public class PartidoService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oPartidoRepository.deleteAll();
         oPartidoRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (long j = 0; j < cantidad; j++) {
             PartidoEntity oPartido = new PartidoEntity();            
             oPartido.setRival(oAleatorioService.generarNombreEquipoAleatorio());

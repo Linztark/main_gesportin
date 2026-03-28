@@ -115,12 +115,14 @@ public class LigaService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oLigaRepository.deleteAll();
         oLigaRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (int i = 0; i < cantidad; i++) {
             LigaEntity oLiga = new LigaEntity();
             String nombre = nombres[(int) (Math.random() * nombres.length)] + " " +

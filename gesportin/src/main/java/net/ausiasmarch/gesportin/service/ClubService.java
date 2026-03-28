@@ -118,16 +118,14 @@ public class ClubService {
     }
 
     public Long empty() {
-        // equipo admins cannot clear the club table
-        oSessionService.denyEquipoAdmin();
+        oSessionService.requireAdmin();
         oClubRepository.deleteAll();
         oClubRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
-        // equipo admins cannot populate clubs
-        oSessionService.denyEquipoAdmin();
+        oSessionService.requireAdmin();
         for (int i = 0; i < cantidad; i++) {
             ClubEntity oClub = new ClubEntity();
             String nombre = descripciones1[random.nextInt(descripciones1.length)] + " de " +

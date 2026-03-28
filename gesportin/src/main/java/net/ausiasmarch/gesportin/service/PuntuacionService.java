@@ -132,12 +132,14 @@ public class PuntuacionService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oPuntuacionRepository.deleteAll();
         oPuntuacionRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (int i = 0; i < cantidad; i++) {
             PuntuacionEntity oPuntuacion = new PuntuacionEntity();
             oPuntuacion.setPuntuacion(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 5));

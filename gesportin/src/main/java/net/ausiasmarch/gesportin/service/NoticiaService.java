@@ -124,12 +124,14 @@ public class NoticiaService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oNoticiaRepository.deleteAll();
         oNoticiaRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (long j = 0; j < cantidad; j++) {
             NoticiaEntity oNoticia = new NoticiaEntity();
             oNoticia.setTitulo(

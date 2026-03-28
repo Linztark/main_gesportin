@@ -130,12 +130,14 @@ public class FacturaService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oFacturaRepository.deleteAll();
         oFacturaRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (int i = 0; i < cantidad; i++) {
             FacturaEntity oFactura = new FacturaEntity();
             // escoger una fecha de factura aleatoria en los ultimos 5 años

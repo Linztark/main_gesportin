@@ -175,12 +175,14 @@ public class JugadorService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oJugadorRepository.deleteAll();
         oJugadorRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (long j = 0; j < cantidad; j++) {
             JugadorEntity oJugador = new JugadorEntity();
             oJugador.setDorsal(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 99));

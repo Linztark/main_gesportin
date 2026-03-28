@@ -122,12 +122,14 @@ public class EquipoService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oEquipoRepository.deleteAll();
         oEquipoRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (int i = 0; i < cantidad; i++) {
             EquipoEntity oEquipo = new EquipoEntity();
             oEquipo.setNombre(oAleatorioService.generarNombreEquipoAleatorio());

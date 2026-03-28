@@ -94,12 +94,14 @@ public class CategoriaService {
     }
 
     public Long empty() {
+        oSessionService.requireAdmin();
         oCategoriaRepository.deleteAll();
         oCategoriaRepository.flush();
         return 0L;
     }
 
     public Long fill(Long cantidad) {
+        oSessionService.requireAdmin();
         for (long j = 0; j < cantidad; j++) {
             CategoriaEntity oCategoria = new CategoriaEntity();
             oCategoria.setNombre(CATEGORIAS[oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, CATEGORIAS.length - 1)]);
