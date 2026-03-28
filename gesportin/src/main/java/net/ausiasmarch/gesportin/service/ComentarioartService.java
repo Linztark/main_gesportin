@@ -148,6 +148,7 @@ public class ComentarioartService {
             if (!currentUserId.equals(oComentarioart.getUsuario().getId())) {
                 throw new UnauthorizedException("Acceso denegado: solo puede eliminar sus propios comentarios");
             }
+            oSessionService.checkSameClub(oComentarioart.getArticulo().getTipoarticulo().getClub().getId());
         }
         oComentarioartRepository.delete(oComentarioart);
         return id;

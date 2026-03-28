@@ -11,5 +11,7 @@ public interface TemporadaRepository extends JpaRepository<TemporadaEntity, Long
     Page<TemporadaEntity> findByClubId(Long id_club, Pageable pageable);
 
     Page<TemporadaEntity> findByDescripcionContainingIgnoreCase(String descripcion, Pageable pageable);
+
+    Page<TemporadaEntity> findByDescripcionContainingIgnoreCaseAndClubId(String descripcion, Long clubId, Pageable pageable);
 }
 

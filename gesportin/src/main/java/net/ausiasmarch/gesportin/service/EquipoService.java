@@ -59,8 +59,10 @@ public class EquipoService {
             if (descripcion == null || descripcion.isEmpty()) {
                 // force club filter when no other filter provided
                 return oEquipoRepository.findByCategoriaTemporadaClubId(myClub, pageable);
+            } else {
+                // description filter must be scoped to own club
+                return oEquipoRepository.findByNombreContainingIgnoreCaseAndCategoriaTemporadaClubId(descripcion, myClub, pageable);
             }
-            // otherwise fall through to normal queries but will match extra results maybe
         }
         if (descripcion != null && !descripcion.isEmpty()) {
             return oEquipoRepository.findByNombreContainingIgnoreCase(descripcion, pageable);

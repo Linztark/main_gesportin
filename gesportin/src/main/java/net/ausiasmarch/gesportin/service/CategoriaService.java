@@ -85,6 +85,9 @@ public class CategoriaService {
         oSessionService.denyUsuario();
         CategoriaEntity oCategoria = oCategoriaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrado con id: " + id));
+        if (oSessionService.isEquipoAdmin()) {
+            oSessionService.checkSameClub(oCategoria.getTemporada().getClub().getId());
+        }
         oCategoriaRepository.delete(oCategoria);
         return id;
     }

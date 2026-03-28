@@ -47,16 +47,18 @@ public class JWTService {
                 return null; // asunto no válido
             }
 
-            // extraer el nombre de usuario del token
+            // extraer el id y nombre de usuario del token
+            Long userid = jws.getBody().get("userid", Long.class);
             String username = jws.getBody().get("username", String.class);
             return username;
         }
     }
 
-    public String generateJWT(String username, Long usertype, Long id_club) {
+    public String generateJWT(String username, Long userid, Long usertype, Long id_club) {
         return Jwts.builder()
                 .setIssuer(ISSUER)
                 .setSubject(SUBJECT)
+                .claim("userid", userid)
                 .claim("username", username)
                 .claim("usertype", usertype)
                 .claim("club", id_club)

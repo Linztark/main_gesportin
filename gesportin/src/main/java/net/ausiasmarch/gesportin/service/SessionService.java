@@ -21,10 +21,12 @@ public class SessionService {
     private UsuarioRepository oUsuarioRepository;
 
     public TokenBean login(SessionBean oSessionBean) {
-        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findByUsernameAndPassword(oSessionBean.getUsername(), oSessionBean.getPassword()).orElseThrow(() -> {
-            throw new UnauthorizedException("Usuario o contraseña incorrectos");
-        });
-        return (new TokenBean(oJwtService.generateJWT(oSessionBean.getUsername(), oUsuarioEntity.getTipousuario().getId(), oUsuarioEntity.getClub().getId())));
+        UsuarioEntity oUsuarioEntity = oUsuarioRepository
+                .findByUsernameAndPassword(oSessionBean.getUsername(), oSessionBean.getPassword()).orElseThrow(() -> {
+                    throw new UnauthorizedException("Usuario o contraseña incorrectos");
+                });
+        return (new TokenBean(oJwtService.generateJWT(oSessionBean.getUsername(), oUsuarioEntity.getId(),
+                oUsuarioEntity.getTipousuario().getId(), oUsuarioEntity.getClub().getId())));
     }
 
     public boolean isSessionActive() {
@@ -82,7 +84,8 @@ public class SessionService {
     }
 
     /**
-     * Return the club id of the currently logged user (null if no session or no club).
+     * Return the club id of the currently logged user (null if no session or no
+     * club).
      */
     public Long getIdClub() {
         String username = getUsername();
@@ -97,7 +100,8 @@ public class SessionService {
     }
 
     /**
-     * Helper that throws an exception if the current user is an equipo admin or a regular user and the
+     * Helper that throws an exception if the current user is an equipo admin or a
+     * regular user and the
      * provided club id does not match their club.
      */
     public void checkSameClub(Long clubId) {
@@ -111,7 +115,8 @@ public class SessionService {
 
     /**
      * Throws UnauthorizedException when the requester is an equipo admin. Use for
-     * operations that this role is not allowed to perform at all (invoices, cart, etc.)
+     * operations that this role is not allowed to perform at all (invoices, cart,
+     * etc.)
      */
     public void denyEquipoAdmin() {
         if (isEquipoAdmin()) {
@@ -129,7 +134,8 @@ public class SessionService {
     }
 
     /**
-     * Throws UnauthorizedException unless the requester is an admin (tipousuario id=1).
+     * Throws UnauthorizedException unless the requester is an admin (tipousuario
+     * id=1).
      * Use for fill/empty operations that only admins may perform.
      */
     public void requireAdmin() {

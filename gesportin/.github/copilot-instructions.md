@@ -66,7 +66,7 @@ En gesportin, los perfiles y permisos se gestionan a través de roles. Cada rol 
   * sólo sus puntuaciones de sus noticias de su club.
   * sólo sus comentarios de artículos sólo de los tipos de articulos de su club.
 * Puede introducir, borrar o modificar productos de su club en su carrito de la compra, lo que equivale a que tiene que poder escribir, borrar o modificar productos de su club en la tabla de carrito de la compra.
-* Puede comprar productos de su carrito de la compra. Para comprar se debe ejeutar el siguiente proceso:
+* Puede comprar productos de su carrito de la compra. Para comprar se debe ejecutar el siguiente proceso:
   1 El sistema comprueba que el usuario tiene productos en su carrito de la compra.
   2 Si el usuario no tiene productos en su carrito de la compra, se emite una excepción  indicando que no se pueden realizar compras sin productos en el carrito.
   3 Si el usuario tiene productos en su carrito de la compra, se procede a realizar la compra.

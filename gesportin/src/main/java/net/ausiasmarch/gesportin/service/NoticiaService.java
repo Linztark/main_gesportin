@@ -68,6 +68,9 @@ public class NoticiaService {
             idClub = myClub;
         }
         if (contenido != null && !contenido.isEmpty()) {
+            if (idClub != null) {
+                return oNoticiaRepository.findByClubIdAndTextoContainingIgnoreCase(idClub, contenido, oPageable);
+            }
             return oNoticiaRepository.findByTituloContainingIgnoreCaseOrContenidoContainingIgnoreCase(contenido, contenido, oPageable);
         } else if (idClub != null) {
             return oNoticiaRepository.findByClubId(idClub, oPageable);

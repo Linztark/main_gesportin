@@ -9,6 +9,8 @@ import net.ausiasmarch.gesportin.entity.TipoarticuloEntity;
 public interface TipoarticuloRepository extends JpaRepository<TipoarticuloEntity, Long> {
 
     Page<TipoarticuloEntity> findByDescripcionContainingIgnoreCase(String descripcion, Pageable oPageable);
-    
+
     Page<TipoarticuloEntity> findByClubId(Long idClub, Pageable oPageable);
+
+    Page<TipoarticuloEntity> findByDescripcionContainingIgnoreCaseAndClubId(String descripcion, Long clubId, Pageable oPageable);
 }

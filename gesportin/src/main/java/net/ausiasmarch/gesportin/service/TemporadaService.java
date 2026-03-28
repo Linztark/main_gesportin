@@ -70,6 +70,9 @@ public class TemporadaService {
             id_club = myClub;
         }
         if (descripcion != null && !descripcion.isEmpty()) {
+            if (id_club != null) {
+                return oTemporadaRepository.findByDescripcionContainingIgnoreCaseAndClubId(descripcion, id_club, pageable);
+            }
             return oTemporadaRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable);
         } else if (id_club != null) {
             return oTemporadaRepository.findByClubId(id_club, pageable);

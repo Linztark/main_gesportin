@@ -13,6 +13,8 @@ public interface EquipoRepository extends JpaRepository<EquipoEntity, Long> {
 
     Page<EquipoEntity> findByNombreContainingIgnoreCase(String nombre, Pageable pageable);
 
+    Page<EquipoEntity> findByNombreContainingIgnoreCaseAndCategoriaTemporadaClubId(String nombre, Long clubId, Pageable pageable);
+
     Page<EquipoEntity> findByCategoriaId(Long idCategoria, Pageable pageable);
 
     Page<EquipoEntity> findByEntrenadorId(Long idEntrenador, Pageable pageable);
