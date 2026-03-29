@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject } from '@angular/core';
+import { Component, signal, computed, inject, Input } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
@@ -17,6 +17,8 @@ import { TrimPipe } from '../../../../pipe/trim-pipe';
   styleUrl: './plist.css',
 })
 export class NoticiaTeamadminPlist {
+  @Input() id_club?: number;
+
   oPage = signal<IPage<INoticia> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(5);
@@ -53,7 +55,14 @@ export class NoticiaTeamadminPlist {
 
   getPage() {
     this.oNoticiaService
-      .getPage(this.numPage(), this.numRpp(), this.orderField(), this.orderDirection())
+      .getPage(
+        this.numPage(),
+        this.numRpp(),
+        this.orderField(),
+        this.orderDirection(),
+        '',
+        this.id_club ?? 0,
+      )
       .subscribe({
         next: (data: IPage<INoticia>) => {
           this.oPage.set(data);

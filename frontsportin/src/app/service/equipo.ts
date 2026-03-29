@@ -5,8 +5,6 @@ import { IPage } from '../model/plist';
 import { HttpClient } from '@angular/common/http';
 import { serverURL } from '../environment/environment';
 import { PayloadSanitizerService } from './payload-sanitizer';
-import { SecurityService } from './security.service';
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +13,6 @@ export class EquipoService {
   constructor(
     private oHttp: HttpClient,
     private sanitizer: PayloadSanitizerService,
-    private security: SecurityService,
   ) { }
 
   getPage(
@@ -51,19 +48,6 @@ export class EquipoService {
     }
 
     const request$ = this.oHttp.get<IPage<IEquipo>>(url);
-    if (this.security.isClubAdmin()) {
-      const clubId = this.security.getClubId();
-      if (clubId != null) {
-        return request$.pipe(
-          map((pageData) => {
-            const filtered = pageData.content.filter(
-              (e) => e.categoria?.temporada?.club?.id === clubId,
-            );
-            return { ...pageData, content: filtered, totalElements: filtered.length } as IPage<IEquipo>;
-          }),
-        );
-      }
-    }
     return request$;
   }
 

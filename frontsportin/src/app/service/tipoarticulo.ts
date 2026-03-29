@@ -5,7 +5,6 @@ import { ITipoarticulo } from '../model/tipoarticulo';
 import { serverURL } from '../environment/environment';
 import { PayloadSanitizerService } from './payload-sanitizer';
 import { Observable } from 'rxjs';
-import { SecurityService } from './security.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +13,6 @@ export class TipoarticuloService {
   constructor(
     private oHttp: HttpClient,
     private sanitizer: PayloadSanitizerService,
-    private security: SecurityService,
   ) {}
 
   getPage(
@@ -25,7 +23,6 @@ export class TipoarticuloService {
     descripcion: string = '',
     id_club: number = 0,
   ): Observable<IPage<ITipoarticulo>> {
-    id_club = this.security.clubFilter(id_club);
     if (order === '') {
       order = 'id';
     }
@@ -57,26 +54,12 @@ export class TipoarticuloService {
     return this.oHttp.get<number>(serverURL + '/tipoarticulo/count');
   }
 
-   update(tipoarticulo: Partial<ITipoarticulo>): Observable<number> {
-    if (this.security.isClubAdmin()) {
-      const myClubId = this.security.getClubId();
-      tipoarticulo.club = { id: myClubId } as any;
-      this.security.ensureClubOwnership(myClubId);
-    } else {
-      this.security.ensureClubOwnership(tipoarticulo.club?.id);
-    }
+  update(tipoarticulo: Partial<ITipoarticulo>): Observable<number> {
     const body = this.sanitizer.sanitize(tipoarticulo, { nestedIdFields: ['club'], removeFields: ['articulos'] });
     return this.oHttp.put<number>(`${serverURL}/tipoarticulo`, body);
-}
+  }
 
   create(tipoarticulo: Partial<ITipoarticulo>): Observable<number> {
-    if (this.security.isClubAdmin()) {
-      const myClubId = this.security.getClubId();
-      tipoarticulo.club = { id: myClubId } as any;
-      this.security.ensureClubOwnership(myClubId);
-    } else {
-      this.security.ensureClubOwnership(tipoarticulo.club?.id);
-    }
     const body = this.sanitizer.sanitize(tipoarticulo, { nestedIdFields: ['club'], removeFields: ['articulos'] });
     return this.oHttp.post<number>(`${serverURL}/tipoarticulo`, body);
   }

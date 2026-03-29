@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { serverURL } from '../environment/environment';
 import { IJugador } from '../model/jugador';
 import { PayloadSanitizerService } from './payload-sanitizer';
 import { IPage } from '../model/plist';
-import { SecurityService } from './security.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +13,6 @@ export class JugadorService {
   constructor(
     private http: HttpClient,
     private sanitizer: PayloadSanitizerService,
-    private security: SecurityService,
   ) {}
 
   getPage(
@@ -54,20 +51,7 @@ export class JugadorService {
     
     url = serverURL + `/jugador?page=${page}&size=${rpp}&sort=${order},${direction}`;
     console.log('URL sin filtros:', url);
-    return this.http.get<IPage<IJugador>>(url).pipe(
-      map((pageData) => {
-        if (this.security.isClubAdmin()) {
-          const clubId = this.security.getClubId();
-          if (clubId != null) {
-            const filtered = pageData.content.filter(
-              (j) => j.equipo?.categoria?.temporada?.club?.id === clubId,
-            );
-            return { ...pageData, content: filtered, totalElements: filtered.length } as IPage<IJugador>;
-          }
-        }
-        return pageData;
-      }),
-    );
+    return this.http.get<IPage<IJugador>>(url);
   }
 
   getById(id: number): Observable<IJugador> {
@@ -75,10 +59,6 @@ export class JugadorService {
   }
 
   create(jugador: Partial<IJugador>): Observable<number> {
-    if (this.security.isClubAdmin()) {
-      const clubId = jugador.equipo?.categoria?.temporada?.club?.id;
-      this.security.ensureClubOwnership(clubId ?? null);
-    }
     const body = this.sanitizer.sanitize(jugador, {
       booleanFields: ['capitan'],
       nestedIdFields: ['usuario', 'equipo'],
@@ -88,10 +68,6 @@ export class JugadorService {
   }
 
   update(jugador: Partial<IJugador>): Observable<number> {
-    if (this.security.isClubAdmin()) {
-      const clubId = jugador.equipo?.categoria?.temporada?.club?.id;
-      this.security.ensureClubOwnership(clubId ?? null);
-    }
     const body = this.sanitizer.sanitize(jugador, { booleanFields: ['capitan'], nestedIdFields: ['usuario', 'equipo'] });
     return this.http.put<number>(serverURL + '/jugador', body);
   }

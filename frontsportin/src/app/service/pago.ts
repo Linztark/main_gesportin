@@ -5,7 +5,6 @@ import { serverURL } from '../environment/environment';
 import { IPago } from '../model/pago';
 import { PayloadSanitizerService } from './payload-sanitizer';
 import { IPage } from '../model/plist';
-import { SecurityService } from './security.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +13,6 @@ export class PagoService {
   constructor(
     private http: HttpClient,
     private sanitizer: PayloadSanitizerService,
-    private security: SecurityService,
   ) {}
 
   getPage(
@@ -63,11 +61,6 @@ export class PagoService {
   }
 
   create(pago: Partial<IPago>): Observable<number> {
-    // club admin may create payments provided they belong to his club
-    if (this.security.isClubAdmin()) {
-      const clubId = pago.jugador?.equipo?.categoria?.temporada?.club?.id;
-      this.security.ensureClubOwnership(clubId ?? null);
-    }
     const body = this.sanitizer.sanitize(pago, {
       booleanFields: ['abonado'],
       nestedIdFields: ['cuota', 'jugador'],
@@ -76,10 +69,6 @@ export class PagoService {
   }
 
   update(pago: Partial<IPago>): Observable<number> {
-    if (this.security.isClubAdmin()) {
-      const clubId = pago.jugador?.equipo?.categoria?.temporada?.club?.id;
-      this.security.ensureClubOwnership(clubId ?? null);
-    }
     const body = this.sanitizer.sanitize(pago, {
       booleanFields: ['abonado'],
       nestedIdFields: ['cuota', 'jugador'],

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, Input, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -21,6 +21,8 @@ import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/bot
   styleUrl: './plist.css',
 })
 export class UsuarioTeamadminPlist {
+  @Input() id_club?: number;
+
   oPage = signal<IPage<IUsuario> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(10);
@@ -64,7 +66,7 @@ export class UsuarioTeamadminPlist {
         this.nombre(),
         0,
         0,
-        0,
+        this.id_club ?? 0,
       )
       .subscribe({
         next: (data) => {

@@ -5,7 +5,6 @@ import { IPage } from '../model/plist';
 import { HttpClient } from '@angular/common/http';
 import { serverURL } from '../environment/environment';
 import { PayloadSanitizerService } from './payload-sanitizer';
-import { SecurityService } from './security.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +13,6 @@ export class CuotaService {
   constructor(
     private oHttp: HttpClient,
     private sanitizer: PayloadSanitizerService,
-    private security: SecurityService,
   ) {}
 
   getPage(
@@ -57,19 +55,11 @@ export class CuotaService {
   //   return this.oHttp.post<number>(serverURL + '/cuota', cuota);
   // }
   create(cuota: Partial<ICuota>): Observable<number> {
-    if (this.security.isClubAdmin()) {
-      const clubId = cuota.equipo?.categoria?.temporada?.club?.id;
-      this.security.ensureClubOwnership(clubId ?? null);
-    }
     const body = this.sanitizer.sanitize(cuota, { nestedIdFields: ['equipo'], removeFields: ['pagos'] });
     return this.oHttp.post<number>(serverURL + '/cuota', body);
   }
 
   update(cuota: Partial<ICuota>): Observable<number> {
-    if (this.security.isClubAdmin()) {
-      const clubId = cuota.equipo?.categoria?.temporada?.club?.id;
-      this.security.ensureClubOwnership(clubId ?? null);
-    }
     const body = this.sanitizer.sanitize(cuota, { nestedIdFields: ['equipo'], removeFields: ['pagos'] });
     return this.oHttp.put<number>(serverURL + '/cuota', body);
   }

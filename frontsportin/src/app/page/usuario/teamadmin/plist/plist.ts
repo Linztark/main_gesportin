@@ -9,5 +9,14 @@ import { UsuarioTeamadminPlist } from '../../../../component/usuario/teamadmin/p
   styleUrl: './plist.css',
 })
 export class UsuarioTeamadminPlistPage {
+  id_club = signal<number>(0);
+
   constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id_club');
+    if (idParam) {
+      this.id_club.set(Number(idParam));
+    }
+  }
 }

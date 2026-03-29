@@ -5,7 +5,6 @@ import { IPage } from '../model/plist';
 import { serverURL } from '../environment/environment';
 import { IFactura } from '../model/factura';
 import { PayloadSanitizerService } from './payload-sanitizer';
-import { SecurityService } from './security.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,14 +13,9 @@ export class FacturaService {
   constructor(
     private oHttp: HttpClient,
     private sanitizer: PayloadSanitizerService,
-    private security: SecurityService,
   ) {}
 
   getPage(page: number, rpp: number, order: string = '', direction: string = '', id_usuario: number = 0): Observable<IPage<IFactura>> {
-    // club admin may only see invoices of their club: this assumes backend supports id_usuario filter
-    if (this.security.isClubAdmin()) {
-      // TODO: convert user ids to those belonging club? front-end can't know; rely on backend
-    }
     if (order === '') {
       order = 'id';
     }
@@ -44,8 +38,6 @@ export class FacturaService {
   }
 
   delete(id: number): Observable<number> {
-    // club admins cannot delete invoices
-    this.security.forbidClubAdminActions();
     return this.oHttp.delete<number>(serverURL + '/factura/' + id);
   }
 

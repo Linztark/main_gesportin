@@ -5,7 +5,6 @@ import { IPage } from '../model/plist';
 import { HttpClient } from '@angular/common/http';
 import { serverURL } from '../environment/environment';
 import { PayloadSanitizerService } from './payload-sanitizer';
-import { SecurityService } from './security.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +13,6 @@ export class CategoriaService {
   constructor(
     private oHttp: HttpClient,
     private sanitizer: PayloadSanitizerService,
-    private security: SecurityService,
   ) { }
 
   getPage(
@@ -71,17 +69,11 @@ export class CategoriaService {
 
   // Actualizar una categoría existente
   update(categoria: Partial<ICategoria>): Observable<ICategoria> {
-    // only allow if temporada belongs to same club
-    this.security.ensureClubOwnership(categoria.temporada?.club?.id);
     const body = this.sanitizer.sanitize(categoria, { nestedIdFields: ['temporada'], removeFields: ['equipos'] });
     return this.oHttp.put<ICategoria>(`${serverURL}/categoria`, body);
   }
 
   create(categoria: Partial<ICategoria>): Observable<ICategoria> {
-    if (this.security.isClubAdmin()) {
-      // force temporada club via payload if needed
-      // not simple; backend should validate
-    }
     const body = this.sanitizer.sanitize(categoria, { nestedIdFields: ['temporada'], removeFields: ['equipos'] });
     return this.oHttp.post<ICategoria>(`${serverURL}/categoria`, body);
   }

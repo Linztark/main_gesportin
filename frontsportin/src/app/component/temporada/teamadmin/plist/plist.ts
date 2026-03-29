@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, Input, signal } from '@angular/core';
 import { IPage } from '../../../../model/plist';
 import { ITemporada } from '../../../../model/temporada';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
@@ -19,6 +19,8 @@ import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/bot
   styleUrl: './plist.css',
 })
 export class TemporadaTeamadminPlist {
+  @Input() id_club?: number;
+
   oPage = signal<IPage<ITemporada> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(5);
@@ -55,7 +57,7 @@ export class TemporadaTeamadminPlist {
 
   getPage(): void {
     this.oTemporadaService
-      .getPage(this.numPage(), this.numRpp(), this.orderField(), this.orderDirection(), this.descripcion())
+      .getPage(this.numPage(), this.numRpp(), this.orderField(), this.orderDirection(), this.descripcion(), this.id_club ?? 0)
       .subscribe({
         next: (data: IPage<ITemporada>) => {
           this.oPage.set(data);

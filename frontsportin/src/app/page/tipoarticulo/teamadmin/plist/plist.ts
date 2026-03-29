@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TipoarticuloTeamadminPlist } from '../../../../component/tipoarticulo/teamadmin/plist/plist';
 
 @Component({
@@ -7,4 +8,15 @@ import { TipoarticuloTeamadminPlist } from '../../../../component/tipoarticulo/t
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
-export class TipoarticuloTeamadminPlistPage {}
+export class TipoarticuloTeamadminPlistPage {
+  id_club = signal<number>(0);
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id_club');
+    if (idParam) {
+      this.id_club.set(Number(idParam));
+    }
+  }
+}
