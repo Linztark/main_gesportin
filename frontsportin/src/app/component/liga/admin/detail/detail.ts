@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { LigaService } from '../../../../service/liga';
 import { ILiga } from '../../../../model/liga';
+import { SessionService } from '../../../../service/session';
 
 @Component({
   standalone: true,
@@ -16,6 +17,7 @@ export class LigaAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private oLigaService = inject(LigaService);
+  session = inject(SessionService);
 
   oLiga = signal<ILiga | null>(null);
   loading = signal(true);

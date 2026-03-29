@@ -19,13 +19,64 @@
   }
 
   @if (!loading() && !error() && oPartido()) {
-    <div class="card border">
-      <div class="card-body">
-        <div><strong>ID:</strong> {{ oPartido()?.id }}</div>
-        <div><strong>Rival:</strong> {{ oPartido()?.rival }}</div>
-        <div><strong>Local:</strong> {{ oPartido()?.local ? 'Sí' : 'No' }}</div>
-        <div><strong>Resultado:</strong> {{ oPartido()?.resultado }}</div>
-        <div><strong>Liga:</strong> <a [routerLink]="['/liga/view', oPartido()?.liga?.id]">{{ oPartido()?.liga?.nombre }}</a></div>
+    <div class="row g-3">
+      <div class="col-lg-5">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Identificación</div>
+          <div class="card-body p-2">
+            <div class="fw-bold">vs {{ oPartido()?.rival }}</div>
+            <div class="d-flex flex-wrap gap-2 mt-1">
+              <span class="badge bg-secondary-subtle text-secondary">ID {{ oPartido()?.id }}</span>
+              @if (oPartido()?.local) {
+                <span class="badge bg-success">Local</span>
+              } @else {
+                <span class="badge bg-info text-dark">Visitante</span>
+              }
+            </div>
+            <div class="mt-2">
+              <div class="row g-1">
+                <div class="col-5 text-muted small text-uppercase">Rival</div>
+                <div class="col-7 fw-semibold small">{{ oPartido()?.rival }}</div>
+                <div class="col-5 text-muted small text-uppercase">Local</div>
+                <div class="col-7 fw-semibold small">
+                  @if (oPartido()?.local) {
+                    <span class="badge bg-success">Sí</span>
+                  } @else {
+                    <span class="badge bg-secondary">No</span>
+                  }
+                </div>
+                <div class="col-5 text-muted small text-uppercase">Resultado</div>
+                <div class="col-7 fw-semibold small">{{ oPartido()?.resultado || '-' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Relaciones</div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">Liga</div>
+              <div class="col-7 fw-semibold small">
+                @if (oPartido()?.liga?.id) {
+                  <a [routerLink]="['/liga/view', oPartido()?.liga?.id]" class="text-decoration-none">
+                    {{ oPartido()?.liga?.nombre }} ({{ oPartido()?.liga?.id }})
+                  </a>
+                } @else { Sin liga }
+              </div>
+              <div class="col-5 text-muted small text-uppercase">Equipo</div>
+              <div class="col-7 fw-semibold small">
+                @if (oPartido()?.liga?.equipo?.id) {
+                  <a [routerLink]="['/equipo/view', oPartido()?.liga?.equipo?.id]" class="text-decoration-none">
+                    {{ oPartido()?.liga?.equipo?.nombre }} ({{ oPartido()?.liga?.equipo?.id }})
+                  </a>
+                } @else { - }
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   }

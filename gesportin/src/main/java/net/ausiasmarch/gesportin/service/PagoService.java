@@ -142,9 +142,15 @@ public class PagoService {
         oSessionService.requireAdmin();
         for (int i = 0; i < cantidad; i++) {
             PagoEntity oPagoNuevo = new PagoEntity();
-            // la cuota y el jugador deben ser del mismo club -> pte
-            oPagoNuevo.setCuota(oCuotaService.getOneRandom());
-            oPagoNuevo.setJugador(oJugadorService.getOneRandom());
+            // La cuota y el jugador deben pertenecer al mismo equipo
+            net.ausiasmarch.gesportin.entity.CuotaEntity cuota = oCuotaService.getOneRandom();
+            Long equipoId = cuota.getEquipo().getId();
+            net.ausiasmarch.gesportin.entity.JugadorEntity jugador = oJugadorService.getOneRandomFromEquipo(equipoId);
+            if (jugador == null) {
+                continue;
+            }
+            oPagoNuevo.setCuota(cuota);
+            oPagoNuevo.setJugador(jugador);
             oPagoNuevo.setAbonado(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
             oPagoNuevo.setFecha(LocalDateTime.now());
             oPagoRepository.save(oPagoNuevo);

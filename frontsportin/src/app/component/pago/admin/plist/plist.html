@@ -133,7 +133,7 @@
                             {{ oPago.cuota.descripcion || 'N/A' }}
                           } @else {
                             <a [routerLink]="['/cuota/view', oPago.cuota.id]">{{ oPago.cuota.descripcion || 'N/A' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/pago/cuota', oPago.cuota.id]" role="button" title="Filtrar por cuota"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/pago/teamadmin/cuota' : '/pago/cuota', oPago.cuota.id]" role="button" title="Filtrar por cuota"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                           }
                         </td>
                         <td>
@@ -141,7 +141,7 @@
                             {{ oPago.jugador.usuario.nombre || 'N/A' }}
                           } @else {
                             <a [routerLink]="['/jugador/view', oPago.jugador.id]">{{ oPago.jugador.usuario.nombre || 'N/A' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/pago/jugador', oPago.jugador.id]" role="button" title="Filtrar por jugador"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/pago/teamadmin/jugador' : '/pago/jugador', oPago.jugador.id]" role="button" title="Filtrar por jugador"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                           }
                         </td>
                         <td class="text-end">{{ oPago.abonado }}</td>

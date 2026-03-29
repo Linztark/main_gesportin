@@ -29,3 +29,7 @@ Load the detailed guidance based on on context:
 ## Estructura frontend
 * Reference: [references/frontend.md](references/frontend.md)
 * Load When: Siempre que tengas que desarrollar o modificar código en el frontend.
+
+## Restricciones de integridad referencial para datos
+* Reference: [references/integridad.md](references/integridad.md)
+* Load When: Siempre que tengas que llenar o corregir datos en la base de datos o crear o modificar código que involucre estas restricciones, especialmente para asegurar la integridad referencial.

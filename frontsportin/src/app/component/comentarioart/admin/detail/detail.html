@@ -19,12 +19,48 @@
   }
 
   @if (!loading() && !error() && oComentarioart()) {
-    <div class="card border">
-      <div class="card-body">
-        <div><strong>ID:</strong> {{ oComentarioart()?.id }}</div>
-        <div><strong>Contenido:</strong> {{ oComentarioart()?.contenido }}</div>
-        <div><strong>Artículo:</strong> <a [routerLink]="['/articulo/view', oComentarioart()?.articulo?.id]">{{ oComentarioart()?.articulo?.descripcion }}</a></div>
-        <div><strong>Usuario:</strong> <a [routerLink]="['/usuario/view', oComentarioart()?.usuario?.id]">{{ oComentarioart()?.usuario?.nombre }}</a></div>
+    <div class="row g-3">
+      <div class="col-lg-5">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Información</div>
+          <div class="card-body p-2">
+            <div class="d-flex flex-wrap gap-2 mt-1">
+              <span class="badge bg-secondary-subtle text-secondary">ID {{ oComentarioart()?.id }}</span>
+            </div>
+            <div class="mt-2">
+              <div class="row g-1">
+                <div class="col-5 text-muted small text-uppercase">Contenido</div>
+                <div class="col-7 fw-semibold small">{{ oComentarioart()?.contenido }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Relaciones</div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">Artículo</div>
+              <div class="col-7 fw-semibold small">
+                @if (oComentarioart()?.articulo?.id) {
+                  <a [routerLink]="['/articulo/view', oComentarioart()?.articulo?.id]" class="text-decoration-none">
+                    {{ oComentarioart()?.articulo?.descripcion }} ({{ oComentarioart()?.articulo?.id }})
+                  </a>
+                } @else { Sin artículo }
+              </div>
+              <div class="col-5 text-muted small text-uppercase">Usuario</div>
+              <div class="col-7 fw-semibold small">
+                @if (oComentarioart()?.usuario?.id) {
+                  <a [routerLink]="['/usuario/view', oComentarioart()?.usuario?.id]" class="text-decoration-none">
+                    ({{ oComentarioart()?.usuario?.id }}) {{ oComentarioart()?.usuario?.nombre }} {{ oComentarioart()?.usuario?.apellido1 }} {{ oComentarioart()?.usuario?.apellido2 }}
+                  </a>
+                } @else { Sin usuario }
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   }

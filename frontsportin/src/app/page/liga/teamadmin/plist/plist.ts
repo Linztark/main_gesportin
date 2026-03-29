@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { LigaTeamadminPlist } from '../../../../component/liga/teamadmin/plist/plist';
 
 @Component({
@@ -7,4 +8,15 @@ import { LigaTeamadminPlist } from '../../../../component/liga/teamadmin/plist/p
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
-export class LigaTeamadminPlistPage {}
+export class LigaTeamadminPlistPage {
+  id_equipo = signal<number | undefined>(undefined);
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id_equipo');
+    if (idParam) {
+      this.id_equipo.set(Number(idParam));
+    }
+  }
+}

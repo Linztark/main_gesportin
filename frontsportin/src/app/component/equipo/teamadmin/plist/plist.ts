@@ -19,8 +19,8 @@ import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/bot
   standalone: true,
 })
 export class EquipoTeamadminPlist {
-  @Input() categoria = signal<number>(0);
-  @Input() usuario = signal<number>(0);
+  @Input() categoria: number = 0;
+  @Input() usuario: number = 0;
 
   oPage = signal<IPage<IEquipo> | null>(null);
   numPage = signal<number>(0);
@@ -56,8 +56,8 @@ export class EquipoTeamadminPlist {
         this.orderField(),
         this.orderDirection(),
         this.nombre(),
-        this.categoria(),
-        this.usuario(),
+        this.categoria,
+        this.usuario,
       )
       .subscribe({
         next: (data: IPage<IEquipo>) => {

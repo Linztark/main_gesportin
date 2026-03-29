@@ -5,7 +5,8 @@
       <div class="fw-bold">Detalle de equipo</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
-    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/equipo">
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+       [routerLink]="session.isClubAdmin() ? '/equipo/teamadmin' : '/equipo'">
       <i class="bi bi-arrow-left"></i>
       Volver
     </a>
@@ -111,7 +112,7 @@
                   @if (oEquipo()?.jugadores === 0) {
                   0
                   } @else {
-                  <a [routerLink]="['/jugador/equipo', oEquipo()?.id]">
+                  <a [routerLink]="[session.isClubAdmin() ? '/jugador/teamadmin/equipo' : '/jugador/equipo', oEquipo()?.id]">
                     {{ oEquipo()?.jugadores ?? 0 }}
                   </a>
                   }
@@ -125,7 +126,7 @@
                   @if (oEquipo()?.cuotas === 0) {
                   0
                   } @else {
-                  <a [routerLink]="['/cuota/equipo', oEquipo()?.id]">
+                  <a [routerLink]="[session.isClubAdmin() ? '/cuota/teamadmin/equipo' : '/cuota/equipo', oEquipo()?.id]">
                     {{ oEquipo()?.cuotas ?? 0 }}
                   </a>
                   }
@@ -139,7 +140,7 @@
                   @if (oEquipo()?.ligas === 0) {
                   0
                   } @else {
-                  <a [routerLink]="['/liga/equipo', oEquipo()?.id]">
+                  <a [routerLink]="[session.isClubAdmin() ? '/liga/teamadmin/equipo' : '/liga/equipo', oEquipo()?.id]">
                     {{ oEquipo()?.ligas ?? 0 }}
                   </a>
                   }
@@ -190,7 +191,7 @@
                   @if (oEquipo()?.categoria?.equipos === 0) {
                   0
                   } @else {
-                  <a [routerLink]="['/equipo/categoria', oEquipo()?.categoria?.id]">
+                  <a [routerLink]="[session.isClubAdmin() ? '/equipo/teamadmin/categoria' : '/equipo/categoria', oEquipo()?.categoria?.id]">
                     {{ oEquipo()?.categoria?.equipos ?? 0 }}
                   </a>
                   }

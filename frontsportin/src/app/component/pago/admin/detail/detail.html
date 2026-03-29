@@ -19,13 +19,59 @@
   }
 
   @if (!loading() && !error() && oPago()) {
-    <div class="card border">
-      <div class="card-body">
-        <div><strong>ID:</strong> {{ oPago()?.id }}</div>
-        <div><strong>Cuota:</strong> {{ oPago()?.cuota?.descripcion }}</div>
-        <div><strong>Jugador:</strong> <a [routerLink]="['/jugador/view', oPago()?.jugador?.id]">{{ oPago()?.jugador?.usuario?.nombre }}</a></div>
-        <div><strong>Abonado:</strong> {{ oPago()?.abonado }}</div>
-        <div><strong>Fecha:</strong> {{ oPago()?.fecha }}</div>
+    <div class="row g-3">
+      <div class="col-lg-5">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Identificación</div>
+          <div class="card-body p-2">
+            <div class="fw-bold">Pago ID {{ oPago()?.id }}</div>
+            <div class="d-flex flex-wrap gap-2 mt-1">
+              <span class="badge bg-secondary-subtle text-secondary">ID {{ oPago()?.id }}</span>
+            </div>
+            <div class="mt-2">
+              <div class="row g-1">
+                <div class="col-5 text-muted small text-uppercase">Abonado</div>
+                <div class="col-7 fw-semibold small">{{ oPago()?.abonado }}</div>
+                <div class="col-5 text-muted small text-uppercase">Fecha</div>
+                <div class="col-7 fw-semibold small">{{ oPago()?.fecha }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Relaciones</div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">Cuota</div>
+              <div class="col-7 fw-semibold small">
+                @if (oPago()?.cuota?.id) {
+                  <a [routerLink]="['/cuota/view', oPago()?.cuota?.id]" class="text-decoration-none">
+                    {{ oPago()?.cuota?.descripcion }} ({{ oPago()?.cuota?.id }})
+                  </a>
+                } @else { Sin cuota }
+              </div>
+              <div class="col-5 text-muted small text-uppercase">Jugador</div>
+              <div class="col-7 fw-semibold small">
+                @if (oPago()?.jugador?.id) {
+                  <a [routerLink]="['/jugador/view', oPago()?.jugador?.id]" class="text-decoration-none">
+                    ({{ oPago()?.jugador?.id }}) {{ oPago()?.jugador?.usuario?.nombre }} {{ oPago()?.jugador?.usuario?.apellido1 }} {{ oPago()?.jugador?.usuario?.apellido2 }}
+                  </a>
+                } @else { Sin jugador }
+              </div>
+              <div class="col-5 text-muted small text-uppercase">Equipo</div>
+              <div class="col-7 fw-semibold small">
+                @if (oPago()?.jugador?.equipo?.id) {
+                  <a [routerLink]="['/equipo/view', oPago()?.jugador?.equipo?.id]" class="text-decoration-none">
+                    {{ oPago()?.jugador?.equipo?.nombre }} ({{ oPago()?.jugador?.equipo?.id }})
+                  </a>
+                } @else { - }
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   }

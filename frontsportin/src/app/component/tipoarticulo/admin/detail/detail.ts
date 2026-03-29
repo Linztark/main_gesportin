@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { TipoarticuloService } from '../../../../service/tipoarticulo';
 import { ITipoarticulo } from '../../../../model/tipoarticulo';
+import { SessionService } from '../../../../service/session';
 
 @Component({
   standalone: true,
@@ -16,6 +17,7 @@ export class TipoarticuloAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private tipoarticuloService = inject(TipoarticuloService);
+  session = inject(SessionService);
 
   oTipoarticulo = signal<ITipoarticulo | null>(null);
   loading = signal(true);

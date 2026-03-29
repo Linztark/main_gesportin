@@ -18,7 +18,7 @@
     @if (id_tipoarticulo && id_tipoarticulo > 0) {
       <small class="text-muted ms-3">Filtro: id de tipo de artículo = {{ id_tipoarticulo }}</small>
       @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="['/articulo']" role="button" title="Quitar filtro">
+        <a class="ms-2" [routerLink]="session.isClubAdmin() ? '/articulo/teamadmin' : '/articulo'" role="button" title="Quitar filtro">
           <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
         </a>
       }
@@ -152,7 +152,7 @@
                             {{ oArticulo.tipoarticulo.descripcion || 'N/A' }}
                           } @else {
                             <a [routerLink]="['/tipoarticulo/view', oArticulo.tipoarticulo.id]">{{ oArticulo.tipoarticulo.descripcion || 'N/A' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/articulo/tipoarticulo', oArticulo.tipoarticulo.id]" role="button" title="Filtrar por tipo artículo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/articulo/teamadmin/tipoarticulo' : '/articulo/tipoarticulo', oArticulo.tipoarticulo.id]" role="button" title="Filtrar por tipo artículo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                           }
                         </td>
                         <td class="text-center d-none d-md-table-cell">

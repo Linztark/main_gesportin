@@ -211,4 +211,14 @@ public class JugadorService {
         int index = (int) (Math.random() * count);
         return oJugadorRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
     }
+
+    public JugadorEntity getOneRandomFromEquipo(Long equipoId) {
+        long count = oJugadorRepository.findByEquipoId(equipoId, Pageable.ofSize(1)).getTotalElements();
+        if (count == 0) {
+            return null;
+        }
+        int index = (int) (Math.random() * count);
+        var page = oJugadorRepository.findByEquipoId(equipoId, Pageable.ofSize(1).withPage(index));
+        return page.hasContent() ? page.getContent().get(0) : null;
+    }
 }

@@ -13,9 +13,9 @@
 
   <div class="d-flex justify-content-center my-1">
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
-    @if (temporada() > 0) {
-      <small class="text-muted ms-3">Filtro: id de temporada = {{ temporada() }}</small>
-      <a class="ms-2" [routerLink]="['/categoria']" role="button" title="Quitar filtro">
+    @if (temporada > 0) {
+      <small class="text-muted ms-3">Filtro: id de temporada = {{ temporada }}</small>
+      <a class="ms-2" [routerLink]="['/categoria/teamadmin']" role="button" title="Quitar filtro">
         <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
       </a>
     }
@@ -78,7 +78,7 @@
                 </span>
               } @else {
                 <a
-                  [routerLink]="['/equipo/categoria', oCategoria.id]"
+                  [routerLink]="['/equipo/teamadmin/categoria', oCategoria.id]"
                   class="badge bg-primary text-decoration-none"
                   title="Ver equipos"
                 >

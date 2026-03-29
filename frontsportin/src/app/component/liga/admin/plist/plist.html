@@ -25,8 +25,13 @@
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
     @if (equipo && equipo > 0) {
       <small class="text-muted ms-3">Filtro: id de equipo = {{ equipo }}</small>
-      @if (!isDialogMode()) {
+      @if (!session.isClubAdmin() && !isDialogMode()) {
         <a class="ms-2" [routerLink]="['/liga']" role="button" title="Quitar filtro">
+          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+        </a>
+      }
+      @if (session.isClubAdmin() && !isDialogMode()) {
+        <a class="ms-2" [routerLink]="['/liga/teamadmin']" role="button" title="Quitar filtro">
           <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
         </a>
       }
@@ -122,7 +127,7 @@
                               {{ liga.equipo.nombre }}
                             } @else {
                               <a [routerLink]="['/equipo/view', liga.equipo.id]">{{ liga.equipo.nombre }}</a>
-                              <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/liga/equipo', liga.equipo.id]" role="button" title="Filtrar por equipo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                              <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/liga/teamadmin/equipo' : '/liga/equipo', liga.equipo.id]" role="button" title="Filtrar por equipo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                             }
                           </td>
                           <td class="text-center d-none d-md-table-cell">
@@ -132,7 +137,7 @@
                               @if (!liga.partidos || liga.partidos === 0) {
                                 <i class="bi bi-ban" aria-hidden="true"></i>
                               } @else {
-                                <a [routerLink]="['/partido/liga', liga.id]">{{ liga.partidos }}</a>
+                                <a [routerLink]="[session.isClubAdmin() ? '/partido/teamadmin/liga' : '/partido/liga', liga.id]">{{ liga.partidos }}</a>
                               }
                             }
                           </td>

@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ITemporada } from '../../../../model/temporada';
 import { TemporadaService } from '../../../../service/temporada';
+import { SessionService } from '../../../../service/session';
 
 @Component({
   selector: 'app-temporada-admin-detail',
@@ -15,6 +16,7 @@ export class TemporadaAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private oTemporadaService = inject(TemporadaService);
+  session = inject(SessionService);
 
   oTemporada = signal<ITemporada | null>(null);
   loading = signal(true);

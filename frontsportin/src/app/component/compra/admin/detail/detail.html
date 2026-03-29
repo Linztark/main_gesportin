@@ -19,13 +19,61 @@
   }
 
   @if (!loading() && !error() && oCompra()) {
-    <div class="card border">
-      <div class="card-body">
-        <div><strong>ID:</strong> {{ oCompra()?.id }}</div>
-        <div><strong>Cantidad:</strong> {{ oCompra()?.cantidad }}</div>
-        <div><strong>Precio:</strong> {{ oCompra()?.precio }}</div>
-        <div><strong>Artículo:</strong> {{ oCompra()?.articulo?.descripcion }}</div>
-        <div><strong>Factura:</strong> <a [routerLink]="['/factura/view', oCompra()?.factura?.id]">Factura {{ oCompra()?.factura?.id }}</a></div>
+    <div class="row g-3">
+      <div class="col-lg-5">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Identificación</div>
+          <div class="card-body p-2">
+            <div class="fw-bold">Compra #{{ oCompra()?.id }}</div>
+            <div class="d-flex flex-wrap gap-2 mt-1">
+              <span class="badge bg-secondary-subtle text-secondary">ID {{ oCompra()?.id }}</span>
+            </div>
+            <div class="mt-2">
+              <div class="row g-1">
+                <div class="col-5 text-muted small text-uppercase">Cantidad</div>
+                <div class="col-7 fw-semibold small">{{ oCompra()?.cantidad }}</div>
+                <div class="col-5 text-muted small text-uppercase">Precio unidad</div>
+                <div class="col-7 fw-semibold small">{{ oCompra()?.precio }} €</div>
+                <div class="col-5 text-muted small text-uppercase">Total</div>
+                <div class="col-7 fw-semibold small">{{ (oCompra()?.cantidad ?? 0) * (oCompra()?.precio ?? 0) | number:'1.2-2' }} €</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Relaciones</div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">Artículo</div>
+              <div class="col-7 fw-semibold small">
+                @if (oCompra()?.articulo?.id) {
+                  <a [routerLink]="['/articulo/view', oCompra()?.articulo?.id]" class="text-decoration-none">
+                    {{ oCompra()?.articulo?.descripcion }} ({{ oCompra()?.articulo?.id }})
+                  </a>
+                } @else { Sin artículo }
+              </div>
+              <div class="col-5 text-muted small text-uppercase">Factura</div>
+              <div class="col-7 fw-semibold small">
+                @if (oCompra()?.factura?.id) {
+                  <a [routerLink]="['/factura/view', oCompra()?.factura?.id]" class="text-decoration-none">
+                    Factura #{{ oCompra()?.factura?.id }}
+                  </a>
+                } @else { Sin factura }
+              </div>
+              <div class="col-5 text-muted small text-uppercase">Usuario</div>
+              <div class="col-7 fw-semibold small">
+                @if (oCompra()?.factura?.usuario?.id) {
+                  <a [routerLink]="['/usuario/view', oCompra()?.factura?.usuario?.id]" class="text-decoration-none">
+                    {{ oCompra()?.factura?.usuario?.nombre }} {{ oCompra()?.factura?.usuario?.apellido1 }} ({{ oCompra()?.factura?.usuario?.id }})
+                  </a>
+                } @else { - }
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   }

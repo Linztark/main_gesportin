@@ -4,11 +4,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { JugadorService } from '../../../../service/jugador-service';
 import { IJugador } from '../../../../model/jugador';
+import { SessionService } from '../../../../service/session';
+import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 
 @Component({
   standalone: true,
   selector: 'app-jugador-admin-detail',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DatetimePipe],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })
@@ -16,6 +18,7 @@ export class JugadorAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private jugadorService = inject(JugadorService);
+  session = inject(SessionService);
 
   oJugador = signal<IJugador | null>(null);
   loading = signal(true);

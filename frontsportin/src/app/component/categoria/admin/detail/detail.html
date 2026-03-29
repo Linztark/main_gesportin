@@ -5,7 +5,8 @@
       <div class="fw-bold">Detalle de categoría</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
-    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/categoria">
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+       [routerLink]="session.isClubAdmin() ? '/categoria/teamadmin' : '/categoria'">
       <i class="bi bi-arrow-left"></i>
       Volver
     </a>
@@ -59,7 +60,7 @@
                   @if (oCategoria()?.equipos === 0) {
                     <span class="text-muted">0</span>
                   } @else {
-                    <a [routerLink]="['/equipo/categoria', oCategoria()?.id]"
+                    <a [routerLink]="[session.isClubAdmin() ? '/equipo/teamadmin/categoria' : '/equipo/categoria', oCategoria()?.id]"
                        class="text-decoration-none">
                       {{ oCategoria()?.equipos }}
                     </a>
@@ -214,7 +215,7 @@
                     @if (oCategoria()?.temporada?.club?.tipoarticulos === 0) {
                       <div class="fw-semibold">0</div>
                     } @else {
-                      <a [routerLink]="['/tipoarticulo/club', oCategoria()?.temporada?.club?.id]"
+                      <a [routerLink]="[session.isClubAdmin() ? '/tipoarticulo/teamadmin/club' : '/tipoarticulo/club', oCategoria()?.temporada?.club?.id]"
                          class="text-decoration-none">
                         <div class="fw-semibold">{{ oCategoria()?.temporada?.club?.tipoarticulos }}</div>
                       </a>

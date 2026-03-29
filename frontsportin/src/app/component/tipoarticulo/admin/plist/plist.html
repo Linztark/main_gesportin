@@ -18,7 +18,7 @@
     @if (id_club && id_club > 0) {
       <small class="text-muted ms-3">Filtro: id de club = {{ id_club }}</small>
       @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="['/tipoarticulo']" role="button" title="Quitar filtro">
+        <a class="ms-2" [routerLink]="session.isClubAdmin() ? '/tipoarticulo/teamadmin' : '/tipoarticulo'" role="button" title="Quitar filtro">
           <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
         </a>
       }
@@ -114,7 +114,7 @@
                             {{ oTipoarticulo.club.nombre || 'N/A' }}
                           } @else {
                             <a [routerLink]="['/club/view', oTipoarticulo.club.id]">{{ oTipoarticulo.club.nombre || 'N/A' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/tipoarticulo/club', oTipoarticulo.club.id]" role="button" title="Filtrar por club"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/tipoarticulo/teamadmin/club' : '/tipoarticulo/club', oTipoarticulo.club.id]" role="button" title="Filtrar por club"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                           }
                         </td>
                         <td class="text-center">
@@ -124,7 +124,7 @@
                             @if (!oTipoarticulo.articulos || oTipoarticulo.articulos === 0) {
                               <i class="bi bi-ban" aria-hidden="true"></i>
                             } @else {
-                              <a [routerLink]="['/articulo/tipoarticulo', oTipoarticulo.id]">{{ oTipoarticulo.articulos }}</a>
+                              <a [routerLink]="[session.isClubAdmin() ? '/articulo/teamadmin/tipoarticulo' : '/articulo/tipoarticulo', oTipoarticulo.id]">{{ oTipoarticulo.articulos }}</a>
                             }
                           }
                         </td>

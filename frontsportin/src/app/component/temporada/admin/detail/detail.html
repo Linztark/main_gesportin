@@ -5,7 +5,8 @@
       <div class="fw-bold">Detalle de temporada</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
-    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/temporada">
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+       [routerLink]="session.isClubAdmin() ? '/temporada/teamadmin' : '/temporada'">
       <i class="bi bi-arrow-left"></i>
       Volver
     </a>
@@ -53,7 +54,7 @@
                   @if (oTemporada()?.categorias === 0) {
                     0
                   } @else {
-                    <a [routerLink]="['/categoria/temporada', oTemporada()?.id]">
+                    <a [routerLink]="[session.isClubAdmin() ? '/categoria/teamadmin/temporada' : '/categoria/temporada', oTemporada()?.id]">
                       {{ oTemporada()?.categorias }}
                     </a>
                   }
@@ -157,7 +158,7 @@
                               @if (oTemporada()?.club?.tipoarticulos === 0) {
                                 0
                               } @else {
-                                <a class="text-decoration-none" [routerLink]="['/tipoarticulo/club', oTemporada()?.club?.id]">
+                                <a class="text-decoration-none" [routerLink]="[session.isClubAdmin() ? '/tipoarticulo/teamadmin/club' : '/tipoarticulo/club', oTemporada()?.club?.id]">
                                   {{ oTemporada()?.club?.tipoarticulos }}
                                 </a>
                               }

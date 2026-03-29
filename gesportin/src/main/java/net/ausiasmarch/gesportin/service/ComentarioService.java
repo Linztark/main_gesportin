@@ -180,8 +180,14 @@ public class ComentarioService {
                         .get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alComentarios.size() - 1)) + " ";
             }
             oComentariosEntity.setContenido(contenidoGenerado.trim());
-            oComentariosEntity.setUsuario(oUsuarioService.getOneRandom());
-            oComentariosEntity.setNoticia(oNoticaService.getOneRandom());
+            // El usuario debe pertenecer al mismo club que la noticia
+            net.ausiasmarch.gesportin.entity.NoticiaEntity noticia = oNoticaService.getOneRandom();
+            net.ausiasmarch.gesportin.entity.UsuarioEntity usuario = oUsuarioService.getOneRandomFromClub(noticia.getClub().getId());
+            if (usuario == null) {
+                continue;
+            }
+            oComentariosEntity.setNoticia(noticia);
+            oComentariosEntity.setUsuario(usuario);
             oComentariosRepository.save(oComentariosEntity);
         }
         return oComentariosRepository.count();

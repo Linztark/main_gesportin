@@ -161,24 +161,20 @@ public class CompraService {
         for (long j = 0; j < cantidad; j++) {
             CompraEntity oCompra = new CompraEntity();
             oCompra.setCantidad(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
-            oCompra.setPrecio(oAleatorioService.generarNumeroAleatorioDecimalEnRango(5, 500));
-            Long totalArticulos = oArticuloRepository.count();
-            if (totalArticulos > 0) {
-                // List<ArticuloEntity> articulos = oArticuloRepository.findAll();
-                // ArticuloEntity articulo =
-                // articulos.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0,
-                // articulos.size() - 1));
-                oCompra.setArticulo(oArticuloService.getOneRandom());
-                // oCompra.setPrecio(articulo.getPrecio());
-            }
+            // El artículo debe pertenecer al mismo club que el usuario de la factura
             Long totalFacturas = oFacturaRepository.count();
-            if (totalFacturas > 0) {
-                // List<FacturaEntity> facturas = oFacturaRepository.findAll();
-                // FacturaEntity factura =
-                // facturas.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0,
-                // facturas.size() - 1));
-                oCompra.setFactura(oFacturaService.getOneRandom());
+            if (totalFacturas == 0) {
+                continue;
             }
+            net.ausiasmarch.gesportin.entity.FacturaEntity factura = oFacturaService.getOneRandom();
+            Long clubId = factura.getUsuario().getClub().getId();
+            net.ausiasmarch.gesportin.entity.ArticuloEntity articulo = oArticuloService.getOneRandomFromClub(clubId);
+            if (articulo == null) {
+                continue;
+            }
+            oCompra.setFactura(factura);
+            oCompra.setArticulo(articulo);
+            oCompra.setPrecio(articulo.getPrecio().doubleValue());
             oCompraRepository.save(oCompra);
         }
         return cantidad;

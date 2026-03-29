@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { CategoriaService } from '../../../../service/categoria';
 import { ICategoria } from '../../../../model/categoria';
+import { SessionService } from '../../../../service/session';
 
 @Component({
   selector: 'app-categoria-admin-detail',
@@ -16,6 +17,7 @@ export class CategoriaAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private oCategoriaService = inject(CategoriaService);
+  session = inject(SessionService);
 
   oCategoria = signal<ICategoria | null>(null);
   loading = signal(true);

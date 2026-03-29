@@ -68,7 +68,7 @@
                 </span>
               } @else {
                 <a
-                  [routerLink]="['/categoria/temporada', oTemporada.id]"
+                  [routerLink]="['/categoria/teamadmin/temporada', oTemporada.id]"
                   class="badge bg-primary text-decoration-none"
                   title="Ver categorías de temporada"
                 >
@@ -78,7 +78,7 @@
             </div>
           </div>
           <div class="card-footer d-flex justify-content-between">
-            <a [routerLink]="['/categoria/temporada', oTemporada.id]" class="btn btn-sm btn-outline-secondary">
+            <a [routerLink]="['/categoria/teamadmin/temporada', oTemporada.id]" class="btn btn-sm btn-outline-secondary">
               Ver categorías
             </a>
             <app-botonera-actions-plist [id]="oTemporada.id" strEntity="temporada"></app-botonera-actions-plist>

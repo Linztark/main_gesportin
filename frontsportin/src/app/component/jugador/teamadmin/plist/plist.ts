@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { JugadorAdminPlist } from '../../../jugador/admin/plist/plist';
 
 @Component({
@@ -8,4 +8,6 @@ import { JugadorAdminPlist } from '../../../jugador/admin/plist/plist';
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
-export class JugadorTeamadminPlist {}
+export class JugadorTeamadminPlist {
+  @Input() id_equipo?: number;
+}

@@ -5,7 +5,8 @@
       <div class="fw-bold">Detalle de cuota</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
-    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/cuota">
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+       [routerLink]="session.isClubAdmin() ? '/cuota/teamadmin' : '/cuota'">
       <i class="bi bi-arrow-left"></i>Volver
     </a>
   </div>
@@ -19,13 +20,61 @@
   }
 
   @if (!loading() && !error() && oCuota()) {
-    <div class="card border">
-      <div class="card-body">
-        <div><strong>ID:</strong> {{ oCuota()?.id }}</div>
-        <div><strong>Descripción:</strong> {{ oCuota()?.descripcion }}</div>
-        <div><strong>Cantidad:</strong> {{ oCuota()?.cantidad }}</div>
-        <div><strong>Fecha:</strong> {{ oCuota()?.fecha }}</div>
-        <div><strong>Equipo:</strong> <a [routerLink]="['/equipo/view', oCuota()?.equipo?.id]">{{ oCuota()?.equipo?.nombre }}</a></div>
+    <div class="row g-3">
+      <div class="col-lg-5">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Identificación</div>
+          <div class="card-body p-2">
+            <div class="fw-bold">{{ oCuota()?.descripcion }}</div>
+            <div class="d-flex flex-wrap gap-2 mt-1">
+              <span class="badge bg-secondary-subtle text-secondary">ID {{ oCuota()?.id }}</span>
+            </div>
+            <div class="mt-2">
+              <div class="row g-1">
+                <div class="col-5 text-muted small text-uppercase">Descripción</div>
+                <div class="col-7 fw-semibold small">{{ oCuota()?.descripcion }}</div>
+                <div class="col-5 text-muted small text-uppercase">Cantidad</div>
+                <div class="col-7 fw-semibold small">{{ oCuota()?.cantidad }}</div>
+                <div class="col-5 text-muted small text-uppercase">Fecha</div>
+                <div class="col-7 fw-semibold small">{{ oCuota()?.fecha }}</div>
+                <div class="col-5 text-muted small text-uppercase">Pagos</div>
+                <div class="col-7 fw-semibold small">
+                  @if (oCuota()?.pagos === 0) {
+                    <span class="text-muted">0</span>
+                  } @else {
+                    <a [routerLink]="[session.isClubAdmin() ? '/pago/teamadmin/cuota' : '/pago/cuota', oCuota()?.id]" class="text-decoration-none">{{ oCuota()?.pagos }}</a>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Relaciones</div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">Equipo</div>
+              <div class="col-7 fw-semibold small">
+                @if (oCuota()?.equipo?.id) {
+                  <a [routerLink]="['/equipo/view', oCuota()?.equipo?.id]" class="text-decoration-none">
+                    {{ oCuota()?.equipo?.nombre }} ({{ oCuota()?.equipo?.id }})
+                  </a>
+                } @else { Sin equipo }
+              </div>
+              <div class="col-5 text-muted small text-uppercase">Categoría</div>
+              <div class="col-7 fw-semibold small">
+                @if (oCuota()?.equipo?.categoria?.id) {
+                  <a [routerLink]="['/categoria/view', oCuota()?.equipo?.categoria?.id]" class="text-decoration-none">
+                    {{ oCuota()?.equipo?.categoria?.nombre }} ({{ oCuota()?.equipo?.categoria?.id }})
+                  </a>
+                } @else { - }
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   }

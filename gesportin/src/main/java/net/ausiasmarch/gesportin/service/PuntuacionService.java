@@ -143,8 +143,14 @@ public class PuntuacionService {
         for (int i = 0; i < cantidad; i++) {
             PuntuacionEntity oPuntuacion = new PuntuacionEntity();
             oPuntuacion.setPuntuacion(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 5));
-            oPuntuacion.setNoticia(oNoticiaService.getOneRandom());
-            oPuntuacion.setUsuario(oUsuarioService.getOneRandom());
+            // El usuario debe pertenecer al mismo club que la noticia
+            net.ausiasmarch.gesportin.entity.NoticiaEntity noticia = oNoticiaService.getOneRandom();
+            net.ausiasmarch.gesportin.entity.UsuarioEntity usuario = oUsuarioService.getOneRandomFromClub(noticia.getClub().getId());
+            if (usuario == null) {
+                continue;
+            }
+            oPuntuacion.setNoticia(noticia);
+            oPuntuacion.setUsuario(usuario);
             oPuntuacionRepository.save(oPuntuacion);
         }
         return cantidad;

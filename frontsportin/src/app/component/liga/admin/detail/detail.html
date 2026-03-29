@@ -5,29 +5,159 @@
       <div class="fw-bold">Detalle de liga</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
-    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/liga">
-      <i class="bi bi-arrow-left"></i>Volver
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+       [routerLink]="session.isClubAdmin() ? '/liga/teamadmin' : '/liga'">
+      <i class="bi bi-arrow-left"></i> Volver
     </a>
   </div>
 
   @if (loading()) {
     <div class="row justify-content-center">
-      <div class="col-lg-8 text-center py-3">
-        <div class="spinner-border text-secondary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <div class="col-lg-8">
+        <div class="text-center py-3">
+          <div class="spinner-border text-secondary" role="status"><span class="visually-hidden">Cargando...</span></div>
+          <p class="text-muted mt-2 mb-0">Cargando detalle...</p>
+        </div>
       </div>
     </div>
   }
 
   @if (error()) {
-    <div class="alert alert-danger">{{ error() }}</div>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ error() }}</span>
+        </div>
+      </div>
+    </div>
   }
 
   @if (!loading() && !error() && oLiga()) {
-    <div class="card border">
-      <div class="card-body">
-        <div><strong>ID:</strong> {{ oLiga()?.id }}</div>
-        <div><strong>Nombre:</strong> {{ oLiga()?.nombre }}</div>
-        <div><strong>Equipo:</strong> <a [routerLink]="['/equipo/view', oLiga()?.equipo?.id]">{{ oLiga()?.equipo?.nombre }}</a></div>
+    <div class="row g-3">
+      <div class="col-lg-5">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Identificación</div>
+          <div class="card-body p-2">
+            <div class="fw-bold">{{ oLiga()?.nombre }}</div>
+            <div class="d-flex flex-wrap gap-2 mt-1">
+              <span class="badge bg-secondary-subtle text-secondary">ID {{ oLiga()?.id }}</span>
+            </div>
+            <div class="mt-2">
+              <div class="row g-1">
+                <div class="col-5 text-muted small text-uppercase">Nombre</div>
+                <div class="col-7 fw-semibold small">{{ oLiga()?.nombre }}</div>
+                <div class="col-5 text-muted small text-uppercase">Partidos</div>
+                <div class="col-7 fw-semibold small">
+                  @if (oLiga()?.partidos === 0) {
+                    <span class="text-muted">0</span>
+                  } @else {
+                    <a [routerLink]="[session.isClubAdmin() ? '/partido/teamadmin/liga' : '/partido/liga', oLiga()?.id]" class="text-decoration-none">{{ oLiga()?.partidos }}</a>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="card border h-100">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Relaciones</div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">Equipo</div>
+              <div class="col-7 fw-semibold small">
+                @if (oLiga()?.equipo?.id) {
+                  <a [routerLink]="['/equipo/view', oLiga()?.equipo?.id]" class="text-decoration-none">
+                    {{ oLiga()?.equipo?.nombre }} ({{ oLiga()?.equipo?.id }})
+                  </a>
+                } @else { Sin equipo }
+              </div>
+              <div class="col-5 text-muted small text-uppercase">Categoría</div>
+              <div class="col-7 fw-semibold small">
+                @if (oLiga()?.equipo?.categoria?.id) {
+                  <a [routerLink]="['/categoria/view', oLiga()?.equipo?.categoria?.id]" class="text-decoration-none">
+                    {{ oLiga()?.equipo?.categoria?.nombre }} ({{ oLiga()?.equipo?.categoria?.id }})
+                  </a>
+                } @else { - }
+              </div>
+              <div class="col-5 text-muted small text-uppercase">Club</div>
+              <div class="col-7 fw-semibold small">
+                @if (oLiga()?.equipo?.categoria?.temporada?.club?.id) {
+                  <a [routerLink]="['/club/view', oLiga()?.equipo?.categoria?.temporada?.club?.id]" class="text-decoration-none">
+                    {{ oLiga()?.equipo?.categoria?.temporada?.club?.nombre }} ({{ oLiga()?.equipo?.categoria?.temporada?.club?.id }})
+                  </a>
+                } @else { - }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card border">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Equipo (detalle)</div>
+          <div class="card-body p-2">
+            @if (oLiga()?.equipo) {
+              <div class="row g-2">
+                <div class="col-sm-6 col-lg-4">
+                  <div class="border rounded p-2 bg-white">
+                    <div class="text-muted small text-uppercase">Nombre</div>
+                    <a [routerLink]="['/equipo/view', oLiga()?.equipo?.id]" class="text-decoration-none fw-semibold">{{ oLiga()?.equipo?.nombre }}</a>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                  <div class="border rounded p-2 bg-white">
+                    <div class="text-muted small text-uppercase">Categoría</div>
+                    @if (oLiga()?.equipo?.categoria?.id) {
+                      <a [routerLink]="['/categoria/view', oLiga()?.equipo?.categoria?.id]" class="text-decoration-none fw-semibold">{{ oLiga()?.equipo?.categoria?.nombre }}</a>
+                    } @else { <span class="fw-semibold">-</span> }
+                  </div>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                  <div class="border rounded p-2 bg-white">
+                    <div class="text-muted small text-uppercase">Entrenador</div>
+                    @if (oLiga()?.equipo?.entrenador?.id) {
+                      <a [routerLink]="['/usuario/view', oLiga()?.equipo?.entrenador?.id]" class="text-decoration-none fw-semibold">
+                        {{ oLiga()?.equipo?.entrenador?.nombre }} {{ oLiga()?.equipo?.entrenador?.apellido1 }}
+                      </a>
+                    } @else { <span class="fw-semibold">-</span> }
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="border rounded p-2 bg-white">
+                    <div class="text-muted small text-uppercase">Jugadores</div>
+                    <div class="fw-bold">
+                      @if (oLiga()?.equipo?.jugadores === 0) { 0 }
+                      @else { <a [routerLink]="[session.isClubAdmin() ? '/jugador/teamadmin/equipo' : '/jugador/equipo', oLiga()?.equipo?.id]" class="text-decoration-none">{{ oLiga()?.equipo?.jugadores }}</a> }
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="border rounded p-2 bg-white">
+                    <div class="text-muted small text-uppercase">Cuotas</div>
+                    <div class="fw-bold">
+                      @if (oLiga()?.equipo?.cuotas === 0) { 0 }
+                      @else { <a [routerLink]="[session.isClubAdmin() ? '/cuota/teamadmin/equipo' : '/cuota/equipo', oLiga()?.equipo?.id]" class="text-decoration-none">{{ oLiga()?.equipo?.cuotas }}</a> }
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="border rounded p-2 bg-white">
+                    <div class="text-muted small text-uppercase">Ligas</div>
+                    <div class="fw-bold">
+                      @if (oLiga()?.equipo?.ligas === 0) { 0 }
+                      @else { <a [routerLink]="[session.isClubAdmin() ? '/liga/teamadmin/equipo' : '/liga/equipo', oLiga()?.equipo?.id]" class="text-decoration-none">{{ oLiga()?.equipo?.ligas }}</a> }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="text-muted">Sin equipo asignado.</div>
+            }
+          </div>
+        </div>
       </div>
     </div>
   }

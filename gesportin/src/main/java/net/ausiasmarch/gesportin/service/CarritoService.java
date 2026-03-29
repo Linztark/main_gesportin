@@ -205,8 +205,15 @@ public class CarritoService {
         for (long i = 0L; i < cantidad; i++) {
             CarritoEntity carrito = new CarritoEntity();
             carrito.setCantidad(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
-            carrito.setArticulo(oArticuloService.getOneRandom());
-            carrito.setUsuario(oUsuarioService.getOneRandom());
+            // El usuario debe pertenecer al mismo club que el artículo
+            net.ausiasmarch.gesportin.entity.ArticuloEntity articulo = oArticuloService.getOneRandom();
+            Long clubId = articulo.getTipoarticulo().getClub().getId();
+            net.ausiasmarch.gesportin.entity.UsuarioEntity usuario = oUsuarioService.getOneRandomFromClub(clubId);
+            if (usuario == null) {
+                continue;
+            }
+            carrito.setArticulo(articulo);
+            carrito.setUsuario(usuario);
             oCarritoRepository.save(carrito);
         }
         return cantidad;

@@ -178,8 +178,15 @@ public class ComentarioartService {
                         .get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alComentarios.size() - 1)) + " ";
             }
             oComentarioartEntity.setContenido(contenidoGenerado.trim());
-            oComentarioartEntity.setArticulo(oArticuloService.getOneRandom());
-            oComentarioartEntity.setUsuario(oUsuarioService.getOneRandom());
+            // El usuario debe pertenecer al mismo club que el artículo
+            net.ausiasmarch.gesportin.entity.ArticuloEntity articulo = oArticuloService.getOneRandom();
+            Long clubId = articulo.getTipoarticulo().getClub().getId();
+            net.ausiasmarch.gesportin.entity.UsuarioEntity usuario = oUsuarioService.getOneRandomFromClub(clubId);
+            if (usuario == null) {
+                continue;
+            }
+            oComentarioartEntity.setArticulo(articulo);
+            oComentarioartEntity.setUsuario(usuario);
             oComentarioartRepository.save(oComentarioartEntity);
         }
         return oComentarioartRepository.count();

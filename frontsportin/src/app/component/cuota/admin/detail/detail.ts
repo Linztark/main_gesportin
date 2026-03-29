@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { CuotaService } from '../../../../service/cuota';
 import { ICuota } from '../../../../model/cuota';
+import { SessionService } from '../../../../service/session';
 
 @Component({
   standalone: true,
@@ -16,6 +17,7 @@ export class CuotaAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private cuotaService = inject(CuotaService);
+  session = inject(SessionService);
 
   oCuota = signal<ICuota | null>(null);
   loading = signal(true);

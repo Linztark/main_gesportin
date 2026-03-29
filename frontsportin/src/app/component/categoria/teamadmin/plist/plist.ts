@@ -3,7 +3,6 @@ import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
-import { SecurityService } from '../../../../service/security.service';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { ICategoria } from '../../../../model/categoria';
 import { IPage } from '../../../../model/plist';
@@ -20,18 +19,13 @@ import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/bot
   standalone: true,
 })
 export class CategoriaTeamadminPlist {
-  @Input() temporada = signal<number>(0);
+  @Input() temporada: number = 0;
 
   oPage = signal<IPage<ICategoria> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(5);
 
-  totalRecords = computed(() => {
-    const page = this.oPage();
-    if (!page) return 0;
-    if (this.nombre().length > 0 || this.temporada() > 0) return page.content.length;
-    return page.totalElements ?? 0;
-  });
+  totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
 
   orderField = signal<string>('id');
   orderDirection = signal<'asc' | 'desc'>('asc');
@@ -42,7 +36,6 @@ export class CategoriaTeamadminPlist {
 
   private oCategoriaService = inject(CategoriaService);
   private dialogRef = inject(MatDialogRef<CategoriaTeamadminPlist>, { optional: true });
-  private security = inject(SecurityService);
 
   ngOnInit(): void {
     this.searchSubscription = this.searchSubject
@@ -64,18 +57,15 @@ export class CategoriaTeamadminPlist {
         this.orderField(),
         this.orderDirection(),
         this.nombre(),
-        this.temporada(),
+        this.temporada,
       )
       .subscribe({
         next: (data: IPage<ICategoria>) => {
-          let filtered = data.content;
-          if (this.security.isClubAdmin()) {
-            const clubId = this.security.getClubId();
-            if (clubId != null) {
-              filtered = filtered.filter((cat) => cat.temporada?.club?.id === clubId);
-            }
+          this.oPage.set(data);
+          if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
+            this.numPage.set(data.totalPages - 1);
+            this.getPage();
           }
-          this.oPage.set({ ...data, content: filtered });
         },
         error: (error: HttpErrorResponse) => {
           console.error(error);

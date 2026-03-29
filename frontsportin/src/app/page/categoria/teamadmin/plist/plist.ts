@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CategoriaTeamadminPlist } from '../../../../component/categoria/teamadmin/plist/plist';
 
@@ -9,7 +9,14 @@ import { CategoriaTeamadminPlist } from '../../../../component/categoria/teamadm
   styleUrl: './plist.css',
 })
 export class CategoriaTeamadminPlistPage {
+  id_temporada = signal<number>(0);
+
   constructor(private route: ActivatedRoute) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id_temporada');
+    if (idParam) {
+      this.id_temporada.set(Number(idParam));
+    }
+  }
 }

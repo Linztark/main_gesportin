@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { IClub } from '../../../../model/club';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { ClubService } from '../../../../service/club';
+import { SessionService } from '../../../../service/session';
 
 @Component({
   selector: 'app-club-admin-detail',
@@ -15,6 +16,7 @@ export class ClubAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private oClubService = inject(ClubService);
+  session = inject(SessionService);
   //private snackBar = inject(MatSnackBar);
 
   oClub = signal<IClub | null>(null);

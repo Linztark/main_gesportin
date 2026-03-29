@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CuotaAdminPlist } from '../../../cuota/admin/plist/plist';
 
 @Component({
@@ -8,4 +8,6 @@ import { CuotaAdminPlist } from '../../../cuota/admin/plist/plist';
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
-export class CuotaTeamadminPlist {}
+export class CuotaTeamadminPlist {
+  @Input() id_equipo?: number;
+}

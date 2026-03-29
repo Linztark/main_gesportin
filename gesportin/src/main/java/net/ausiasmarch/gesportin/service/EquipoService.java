@@ -57,6 +57,10 @@ public class EquipoService {
                 }
             }
             if (descripcion == null || descripcion.isEmpty()) {
+                if (id_categoria != null) {
+                    // id_categoria already validated to belong to same club above
+                    return oEquipoRepository.findByCategoriaId(id_categoria, pageable);
+                }
                 // force club filter when no other filter provided
                 return oEquipoRepository.findByCategoriaTemporadaClubId(myClub, pageable);
             } else {
@@ -135,8 +139,15 @@ public class EquipoService {
         for (int i = 0; i < cantidad; i++) {
             EquipoEntity oEquipo = new EquipoEntity();
             oEquipo.setNombre(oAleatorioService.generarNombreEquipoAleatorio());
-            oEquipo.setEntrenador(oUsuarioService.getOneRandom());
-            oEquipo.setCategoria(oCategoriaService.getOneRandom());
+            // El entrenador debe pertenecer al mismo club que la categoría
+            net.ausiasmarch.gesportin.entity.CategoriaEntity categoria = oCategoriaService.getOneRandom();
+            Long clubId = categoria.getTemporada().getClub().getId();
+            net.ausiasmarch.gesportin.entity.UsuarioEntity entrenador = oUsuarioService.getOneRandomFromClub(clubId);
+            if (entrenador == null) {
+                entrenador = oUsuarioService.getOneRandom();
+            }
+            oEquipo.setCategoria(categoria);
+            oEquipo.setEntrenador(entrenador);
             oEquipoRepository.save(oEquipo);
         }
         return cantidad;

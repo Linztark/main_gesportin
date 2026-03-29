@@ -170,4 +170,14 @@ public class ArticuloService {
         return oArticuloRepository.findAll(Pageable.ofSize(1).withPage(index)).getContent().get(0);
     }
 
+    public ArticuloEntity getOneRandomFromClub(Long clubId) {
+        long count = oArticuloRepository.findByTipoarticuloClubId(clubId, Pageable.ofSize(1)).getTotalElements();
+        if (count == 0) {
+            return null;
+        }
+        int index = random.nextInt((int) count);
+        var page = oArticuloRepository.findByTipoarticuloClubId(clubId, Pageable.ofSize(1).withPage(index));
+        return page.hasContent() ? page.getContent().get(0) : null;
+    }
+
 }

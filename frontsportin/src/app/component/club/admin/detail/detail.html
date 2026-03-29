@@ -5,7 +5,8 @@
       <div class="fw-bold">Detalle de club</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
-    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/club">
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+       [routerLink]="session.isClubAdmin() ? '/club/teamadmin' : '/club'">
       <i class="bi bi-arrow-left"></i>
       Volver
     </a>
@@ -112,7 +113,7 @@
                     @if (oClub()?.tipoarticulos === 0) {
                       0
                     } @else {
-                      <a class="text-decoration-none" [routerLink]="['/tipoarticulo/club', oClub()?.id]">
+                      <a class="text-decoration-none" [routerLink]="[session.isClubAdmin() ? '/tipoarticulo/teamadmin/club' : '/tipoarticulo/club', oClub()?.id]">
                         {{ oClub()?.tipoarticulos }}
                       </a>
                     }

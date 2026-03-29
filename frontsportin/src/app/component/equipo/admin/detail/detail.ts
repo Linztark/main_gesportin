@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { EquipoService } from '../../../../service/equipo';
 import { IEquipo } from '../../../../model/equipo';
+import { SessionService } from '../../../../service/session';
 
 @Component({
   selector: 'app-equipo-admin-detail',
@@ -17,6 +18,7 @@ export class EquipoAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private oEquipoService = inject(EquipoService);
+  session = inject(SessionService);
 
   oEquipo = signal<IEquipo | null>(null);
   loading = signal(true);
