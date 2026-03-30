@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { CuotaService } from '../../../../service/cuota';
 import { EquipoService } from '../../../../service/equipo';
 import { ICuota } from '../../../../model/cuota';
@@ -14,7 +14,7 @@ import { EquipoAdminPlist } from '../../../equipo/admin/plist/plist';
 @Component({
   selector: 'app-cuota-admin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, EquipoAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -28,7 +28,7 @@ export class CuotaAdminForm implements OnInit {
   private snackBar = inject(MatSnackBar);
   private oCuotaService = inject(CuotaService);
   private oEquipoService = inject(EquipoService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
 
   cuotaForm!: FormGroup;
@@ -98,12 +98,8 @@ export class CuotaAdminForm implements OnInit {
   }
 
   openEquipoFinderModal(): void {
-    const dialogRef = this.dialog.open(EquipoAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((equipo: IEquipo | null) => {
+    const ref = this.modalService.open<unknown, IEquipo | null>(EquipoAdminPlist);
+    ref.afterClosed$.subscribe((equipo: IEquipo | null) => {
       if (equipo?.id != null) {
         this.cuotaForm.patchValue({ id_equipo: equipo.id });
         this.selectedEquipo.set(equipo);

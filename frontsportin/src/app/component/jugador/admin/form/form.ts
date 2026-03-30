@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { JugadorService } from '../../../../service/jugador-service';
 import { EquipoService } from '../../../../service/equipo';
 import { UsuarioService } from '../../../../service/usuarioService';
@@ -17,7 +17,7 @@ import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
 @Component({
   selector: 'app-jugador-admin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, EquipoAdminPlist, UsuarioAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -32,7 +32,7 @@ export class JugadorAdminForm implements OnInit {
   private oJugadorService = inject(JugadorService);
   private oEquipoService = inject(EquipoService);
   private oUsuarioService = inject(UsuarioService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
 
   jugadorForm!: FormGroup;
@@ -117,12 +117,8 @@ export class JugadorAdminForm implements OnInit {
   }
 
   openEquipoFinderModal(): void {
-    const dialogRef = this.dialog.open(EquipoAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((equipo: IEquipo | null) => {
+    const ref = this.modalService.open<unknown, IEquipo | null>(EquipoAdminPlist);
+    ref.afterClosed$.subscribe((equipo: IEquipo | null) => {
       if (equipo?.id != null) {
         this.jugadorForm.patchValue({ id_equipo: equipo.id });
         this.selectedEquipo.set(equipo);
@@ -132,12 +128,8 @@ export class JugadorAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const dialogRef = this.dialog.open(UsuarioAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((usuario: IUsuario | null) => {
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.jugadorForm.patchValue({ id_usuario: usuario.id });
         this.selectedUsuario.set(usuario);

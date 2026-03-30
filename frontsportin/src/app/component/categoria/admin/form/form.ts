@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { CategoriaService } from '../../../../service/categoria';
 import { TemporadaService } from '../../../../service/temporada';
 import { SessionService } from '../../../../service/session';
@@ -27,7 +27,7 @@ export class CategoriaAdminForm implements OnInit {
   private snackBar = inject(MatSnackBar);
   private oCategoriaService = inject(CategoriaService);
   private oTemporadaService = inject(TemporadaService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private session = inject(SessionService);
 
   categoriaForm!: FormGroup;
@@ -99,15 +99,9 @@ export class CategoriaAdminForm implements OnInit {
   }
 
   openTemporadaFinderModal(): void {
-    const dialogRef = this.dialog.open(TemporadaAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-      panelClass: 'temporada-dialog',
-      data: { title: 'Elige una temporada', message: 'Selecciona la temporada para la categoría' }
-    });
+    const ref = this.modalService.open<unknown, ITemporada | null>(TemporadaAdminPlist);
 
-    dialogRef.afterClosed().subscribe((temporada: ITemporada | null) => {
+    ref.afterClosed$.subscribe((temporada: ITemporada | null) => {
       if (temporada) {
         this.categoriaForm.patchValue({ id_temporada: temporada.id });
         this.syncTemporada(temporada.id);

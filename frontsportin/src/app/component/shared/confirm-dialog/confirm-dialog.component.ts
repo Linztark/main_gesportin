@@ -1,33 +1,56 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, inject } from '@angular/core';
+import { ModalRef } from '../modal/modal-ref';
+import { MODAL_DATA, MODAL_REF } from '../modal/modal.tokens';
+
+export interface ConfirmDialogData {
+  title?: string;
+  message?: string;
+}
 
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [],
   template: `
-    <h2 mat-dialog-title>{{ data.title || 'Confirmar' }}</h2>
-    <mat-dialog-content>
-      <p>{{ data.message || '¿Confirmar la acción?' }}</p>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancelar</button>
-      <button mat-button color="warn" (click)="onConfirm()">Borrar</button>
-    </mat-dialog-actions>
+    <div class="confirm-dialog">
+      <h2 class="confirm-dialog__title">{{ data.title || 'Confirmar' }}</h2>
+      <p class="confirm-dialog__message">{{ data.message || '¿Confirmar la acción?' }}</p>
+      <div class="confirm-dialog__actions">
+        <button class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+        <button class="btn btn-danger" (click)="onConfirm()">Borrar</button>
+      </div>
+    </div>
   `,
+  styles: [`
+    .confirm-dialog {
+      padding: 1.5rem;
+      min-width: 320px;
+    }
+    .confirm-dialog__title {
+      margin: 0 0 0.75rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    .confirm-dialog__message {
+      margin: 0 0 1.5rem;
+      color: #555;
+    }
+    .confirm-dialog__actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+  `],
 })
 export class ConfirmDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title?: string; message?: string }
-  ) {}
+  protected readonly data = inject(MODAL_DATA) as ConfirmDialogData;
+  private readonly modalRef = inject(MODAL_REF) as ModalRef<ConfirmDialogData, boolean>;
 
-  onConfirm() {
-    this.dialogRef.close(true);
+  onConfirm(): void {
+    this.modalRef.close(true);
   }
 
-  onCancel() {
-    this.dialogRef.close(false);
+  onCancel(): void {
+    this.modalRef.close(false);
   }
 }

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { FacturaService } from '../../../../service/factura-service';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
@@ -14,7 +14,7 @@ import { SessionService } from '../../../../service/session';
 @Component({
   selector: 'app-factura-admin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UsuarioAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -28,7 +28,7 @@ export class FacturaAdminForm implements OnInit {
   private snackBar = inject(MatSnackBar);
   private oFacturaService = inject(FacturaService);
   private oUsuarioService = inject(UsuarioService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
 
   facturaForm!: FormGroup;
@@ -80,8 +80,8 @@ export class FacturaAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const dialogRef = this.dialog.open(UsuarioAdminPlist, { height: '800px', width: '1100px', maxWidth: '95vw' });
-    dialogRef.afterClosed().subscribe((usuario: IUsuario | null) => {
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.facturaForm.patchValue({ id_usuario: usuario.id });
         this.selectedUsuario.set(usuario);

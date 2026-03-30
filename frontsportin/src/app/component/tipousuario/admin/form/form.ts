@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { TipousuarioService } from '../../../../service/tipousuario';
 import { ITipousuario } from '../../../../model/tipousuario';
 
@@ -23,7 +23,7 @@ export class TipousuarioAdminForm implements OnInit {
   private fb = inject(FormBuilder);
   private snackBar = inject(MatSnackBar);
   private oTipousuarioService = inject(TipousuarioService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
 
   tipousuarioForm!: FormGroup;
   error = signal<string | null>(null);

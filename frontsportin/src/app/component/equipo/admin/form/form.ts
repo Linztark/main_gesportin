@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { EquipoService } from '../../../../service/equipo';
 import { CategoriaService } from '../../../../service/categoria';
 import { UsuarioService } from '../../../../service/usuarioService';
@@ -31,7 +31,7 @@ export class EquipoAdminForm implements OnInit {
   private oEquipoService = inject(EquipoService);
   private oCategoriaService = inject(CategoriaService);
   private oUsuarioService = inject(UsuarioService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
 
   equipoForm!: FormGroup;
   loading = signal(false);
@@ -122,18 +122,9 @@ export class EquipoAdminForm implements OnInit {
   }
 
   openCategoriaFinderModal(): void {
-    const dialogRef = this.dialog.open(CategoriaAdminPlist, {
-      height: '800px',
-      width: '1000px',
-      maxWidth: '95vw',
-      panelClass: 'categoria-dialog',
-      data: {
-        title: 'Elegir categoría',
-        message: 'Selecciona la categoría para el equipo',
-      },
-    });
+    const ref = this.modalService.open<unknown, ICategoria | null>(CategoriaAdminPlist);
 
-    dialogRef.afterClosed().subscribe((categoria: ICategoria | null) => {
+    ref.afterClosed$.subscribe((categoria: ICategoria | null) => {
       if (categoria) {
         this.equipoForm.patchValue({
           id_categoria: categoria.id,
@@ -147,18 +138,9 @@ export class EquipoAdminForm implements OnInit {
   }
 
   openEntrenadorFinderModal(): void {
-    const dialogRef = this.dialog.open(UsuarioAdminPlist, {
-      height: '800px',
-      width: '1300px',
-      maxWidth: '95vw',
-      panelClass: 'usuario-dialog',
-      data: {
-        title: 'Elegir entrenador',
-        message: 'Selecciona el entrenador para el equipo',
-      },
-    });
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
 
-    dialogRef.afterClosed().subscribe((entrenador: IUsuario | null) => {
+    ref.afterClosed$.subscribe((entrenador: IUsuario | null) => {
       if (entrenador) {
         this.equipoForm.patchValue({
           id_entrenador: entrenador.id,

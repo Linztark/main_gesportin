@@ -10,7 +10,8 @@ import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TrimPipe } from '../../../../pipe/trim-pipe';
-import { MatDialogRef } from '@angular/material/dialog';
+import { ModalRef } from '../../../shared/modal/modal-ref';
+import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
@@ -40,7 +41,7 @@ export class TemporadaAdminPlist {
   oTemporadaService = inject(TemporadaService);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
-  private dialogRef = inject(MatDialogRef<TemporadaAdminPlist>, { optional: true });
+  private modalRef = inject(MODAL_REF, { optional: true });
 
   ngOnInit(): void {
     if (this.id_club) {
@@ -117,10 +118,10 @@ export class TemporadaAdminPlist {
   }
 
   isDialogMode(): boolean {
-    return !!this.dialogRef;
+    return !!this.modalRef;
   }
 
   onSelect(temporada: ITemporada): void {
-    this.dialogRef?.close(temporada);
+    this.modalRef?.close(temporada);
   }
 }

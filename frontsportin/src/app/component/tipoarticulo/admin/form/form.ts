@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { TipoarticuloService } from '../../../../service/tipoarticulo';
 import { ClubService } from '../../../../service/club';
 import { ClubAdminPlist } from '../../../club/admin/plist/plist';
@@ -14,7 +14,7 @@ import { SessionService } from '../../../../service/session';
 @Component({
   selector: 'app-tipoarticulo-admin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ClubAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -28,7 +28,7 @@ export class TipoarticuloAdminForm implements OnInit {
   private snackBar = inject(MatSnackBar);
   private oTipoarticuloService = inject(TipoarticuloService);
   private oClubService = inject(ClubService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
 
   tipoarticuloForm!: FormGroup;
@@ -80,8 +80,8 @@ export class TipoarticuloAdminForm implements OnInit {
   }
 
   openClubFinderModal(): void {
-    const dialogRef = this.dialog.open(ClubAdminPlist, { height: '800px', width: '1100px', maxWidth: '95vw' });
-    dialogRef.afterClosed().subscribe((club: IClub | null) => {
+    const ref = this.modalService.open<unknown, IClub | null>(ClubAdminPlist);
+    ref.afterClosed$.subscribe((club: IClub | null) => {
       if (club?.id != null) {
         this.tipoarticuloForm.patchValue({ id_club: club.id });
         this.selectedClub.set(club);

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { ClubService } from '../../../../service/club';
 import { TipousuarioService } from '../../../../service/tipousuario';
@@ -20,7 +20,7 @@ import { RolusuarioAdminPlist } from '../../../rolusuario/admin/plist/plist';
 @Component({
   selector: 'app-usuario-admin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ClubAdminPlist, TipousuarioAdminPlist, RolusuarioAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -36,7 +36,7 @@ export class UsuarioAdminForm implements OnInit {
   private oClubService = inject(ClubService);
   private oTipousuarioService = inject(TipousuarioService);
   private oRolusuarioService = inject(RolusuarioService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
 
   usuarioForm!: FormGroup;
@@ -154,12 +154,8 @@ export class UsuarioAdminForm implements OnInit {
   }
 
   openTipousuarioFinderModal(): void {
-    const dialogRef = this.dialog.open(TipousuarioAdminPlist, {
-      height: '600px',
-      width: '800px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((tipo: ITipousuario | null) => {
+    const ref = this.modalService.open<unknown, ITipousuario | null>(TipousuarioAdminPlist);
+    ref.afterClosed$.subscribe((tipo: ITipousuario | null) => {
       if (tipo?.id != null) {
         this.usuarioForm.patchValue({ id_tipousuario: tipo.id });
         this.selectedTipousuario.set(tipo);
@@ -169,12 +165,8 @@ export class UsuarioAdminForm implements OnInit {
   }
 
   openRolusuarioFinderModal(): void {
-    const dialogRef = this.dialog.open(RolusuarioAdminPlist, {
-      height: '600px',
-      width: '800px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((rol: IRolusuario | null) => {
+    const ref = this.modalService.open<unknown, IRolusuario | null>(RolusuarioAdminPlist);
+    ref.afterClosed$.subscribe((rol: IRolusuario | null) => {
       if (rol?.id != null) {
         this.usuarioForm.patchValue({ id_rolusuario: rol.id });
         this.selectedRolusuario.set(rol);
@@ -184,12 +176,8 @@ export class UsuarioAdminForm implements OnInit {
   }
 
   openClubFinderModal(): void {
-    const dialogRef = this.dialog.open(ClubAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((club: IClub | null) => {
+    const ref = this.modalService.open<unknown, IClub | null>(ClubAdminPlist);
+    ref.afterClosed$.subscribe((club: IClub | null) => {
       if (club?.id != null) {
         this.usuarioForm.patchValue({ id_club: club.id });
         this.selectedClub.set(club);

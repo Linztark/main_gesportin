@@ -8,7 +8,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { RouterLink } from '@angular/router';
-import { MatDialogRef } from '@angular/material/dialog';
+import { ModalRef } from '../../../shared/modal/modal-ref';
+import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
@@ -34,7 +35,7 @@ export class EquipoTeamadminPlist {
   private searchSubscription?: Subscription;
 
   oEquipoService = inject(EquipoService);
-  private dialogRef = inject(MatDialogRef<EquipoTeamadminPlist>, { optional: true });
+  private modalRef = inject(MODAL_REF, { optional: true });
 
   ngOnInit(): void {
     this.searchSubscription = this.searchSubject
@@ -100,11 +101,11 @@ export class EquipoTeamadminPlist {
   }
 
   isDialogMode(): boolean {
-    return !!this.dialogRef;
+    return !!this.modalRef;
   }
 
   onSelect(equipo: IEquipo): void {
-    this.dialogRef?.close(equipo);
+    this.modalRef?.close(equipo);
   }
 
   ngOnDestroy(): void {

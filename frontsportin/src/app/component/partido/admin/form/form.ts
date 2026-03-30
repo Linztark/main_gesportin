@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { PartidoService } from '../../../../service/partido';
 import { LigaService } from '../../../../service/liga';
 import { IPartido } from '../../../../model/partido';
@@ -14,7 +14,7 @@ import { LigaAdminPlist } from '../../../liga/admin/plist/plist';
 @Component({
   selector: 'app-partido-admin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LigaAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -28,7 +28,7 @@ export class PartidoAdminForm implements OnInit {
   private snackBar = inject(MatSnackBar);
   private oPartidoService = inject(PartidoService);
   private oLigaService = inject(LigaService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
 
   partidoForm!: FormGroup;
@@ -98,12 +98,8 @@ export class PartidoAdminForm implements OnInit {
   }
 
   openLigaFinderModal(): void {
-    const dialogRef = this.dialog.open(LigaAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((liga: ILiga | null) => {
+    const ref = this.modalService.open<unknown, ILiga | null>(LigaAdminPlist);
+    ref.afterClosed$.subscribe((liga: ILiga | null) => {
       if (liga?.id != null) {
         this.partidoForm.patchValue({ id_liga: liga.id });
         this.selectedLiga.set(liga);

@@ -9,7 +9,8 @@ import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { RouterLink } from '@angular/router';
 import { TrimPipe } from '../../../../pipe/trim-pipe';
-import { MatDialogRef } from '@angular/material/dialog';
+import { ModalRef } from '../../../shared/modal/modal-ref';
+import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 
 @Component({
   selector: 'app-equipo-admin-plist',
@@ -36,7 +37,7 @@ export class EquipoAdminPlist {
   private searchSubscription?: Subscription;
 
   oEquipoService = inject(EquipoService);
-  private dialogRef = inject(MatDialogRef<EquipoAdminPlist>, { optional: true });
+  private modalRef = inject(MODAL_REF, { optional: true });
 
   ngOnInit(): void {
     this.searchSubscription = this.searchSubject
@@ -101,11 +102,11 @@ export class EquipoAdminPlist {
   }
 
   isDialogMode(): boolean {
-    return !!this.dialogRef;
+    return !!this.modalRef;
   }
 
   onSelect(equipo: IEquipo): void {
-    this.dialogRef?.close(equipo);
+    this.modalRef?.close(equipo);
   }
 
   ngOnDestroy(): void {

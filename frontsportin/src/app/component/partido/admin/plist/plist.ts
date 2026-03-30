@@ -2,7 +2,8 @@ import { Component, computed, inject, Input, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
-import { MatDialogRef } from '@angular/material/dialog';
+import { ModalRef } from '../../../shared/modal/modal-ref';
+import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { SessionService } from '../../../../service/session';
 import { IPartido } from '../../../../model/partido';
@@ -34,7 +35,7 @@ export class PartidoAdminPlist {
 
   private partidoService = inject(PartidoService);
   private route = inject(ActivatedRoute);
-  private dialogRef = inject(MatDialogRef<PartidoAdminPlist>, { optional: true });
+  private modalRef = inject(MODAL_REF, { optional: true });
   session = inject(SessionService);
 
   ngOnInit() {
@@ -118,10 +119,10 @@ export class PartidoAdminPlist {
   }
 
   isDialogMode(): boolean {
-    return !!this.dialogRef;
+    return !!this.modalRef;
   }
 
   onSelect(partido: IPartido): void {
-    this.dialogRef?.close(partido);
+    this.modalRef?.close(partido);
   }
 }

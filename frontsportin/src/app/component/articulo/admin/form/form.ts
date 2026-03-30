@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { ArticuloService } from '../../../../service/articulo';
 import { TipoarticuloService } from '../../../../service/tipoarticulo';
 import { IArticulo } from '../../../../model/articulo';
@@ -14,7 +14,7 @@ import { TipoarticuloAdminPlist } from '../../../tipoarticulo/admin/plist/plist'
 @Component({
   selector: 'app-articulo-admin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TipoarticuloAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -28,7 +28,7 @@ export class ArticuloAdminForm implements OnInit {
   private snackBar = inject(MatSnackBar);
   private oArticuloService = inject(ArticuloService);
   private oTipoarticuloService = inject(TipoarticuloService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
 
   articuloForm!: FormGroup;
@@ -98,12 +98,8 @@ export class ArticuloAdminForm implements OnInit {
   }
 
   openTipoarticuloFinderModal(): void {
-    const dialogRef = this.dialog.open(TipoarticuloAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((tipoarticulo: ITipoarticulo | null) => {
+    const ref = this.modalService.open<unknown, ITipoarticulo | null>(TipoarticuloAdminPlist);
+    ref.afterClosed$.subscribe((tipoarticulo: ITipoarticulo | null) => {
       if (tipoarticulo?.id != null) {
         this.articuloForm.patchValue({ id_tipoarticulo: tipoarticulo.id });
         this.selectedTipoarticulo.set(tipoarticulo);

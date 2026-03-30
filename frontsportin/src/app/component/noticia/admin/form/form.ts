@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { INoticia } from '../../../../model/noticia';
 import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
@@ -36,7 +36,7 @@ export class NoticiaAdminForm implements OnInit {
   selectedClub = signal<IClub | null>(null);
   displayIdClub = signal<number | null>(null);
 
-  constructor(private dialog: MatDialog) {}
+  private modalService = inject(ModalService);
 
   ngOnInit(): void {
     this.initForm();
@@ -194,18 +194,9 @@ export class NoticiaAdminForm implements OnInit {
   }
 
   openClubFinderModal(): void {
-    const dialogRef = this.dialog.open(ClubAdminPlist, {
-      height: '800px',
-      width: '1300px',
-      maxWidth: '95vw',
-      panelClass: 'club-dialog',
-      data: {
-        title: 'Aqui elegir club',
-        message: 'Plist finder para encontrar el club y asignarlo a la noticia',
-      },
-    });
+    const ref = this.modalService.open<unknown, IClub | null>(ClubAdminPlist);
 
-    dialogRef.afterClosed().subscribe((club: IClub | null) => {
+    ref.afterClosed$.subscribe((club: IClub | null) => {
       if (club) {
         this.noticiaForm.patchValue({ id_club: club.id });
         this.syncClub(club.id);

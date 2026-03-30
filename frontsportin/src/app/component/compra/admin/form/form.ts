@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { CompraService } from '../../../../service/compra';
 import { ArticuloService } from '../../../../service/articulo';
 import { FacturaService } from '../../../../service/factura-service';
@@ -17,7 +17,7 @@ import { FacturaAdminPlist } from '../../../factura/admin/plist/plist';
 @Component({
   selector: 'app-compra-admin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ArticuloAdminPlist, FacturaAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -32,7 +32,7 @@ export class CompraAdminForm implements OnInit {
   private oCompraService = inject(CompraService);
   private oArticuloService = inject(ArticuloService);
   private oFacturaService = inject(FacturaService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
 
   compraForm!: FormGroup;
@@ -111,12 +111,8 @@ export class CompraAdminForm implements OnInit {
   }
 
   openArticuloFinderModal(): void {
-    const dialogRef = this.dialog.open(ArticuloAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((articulo: IArticulo | null) => {
+    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloAdminPlist);
+    ref.afterClosed$.subscribe((articulo: IArticulo | null) => {
       if (articulo?.id != null) {
         this.compraForm.patchValue({ id_articulo: articulo.id });
         this.selectedArticulo.set(articulo);
@@ -126,12 +122,8 @@ export class CompraAdminForm implements OnInit {
   }
 
   openFacturaFinderModal(): void {
-    const dialogRef = this.dialog.open(FacturaAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((factura: IFactura | null) => {
+    const ref = this.modalService.open<unknown, IFactura | null>(FacturaAdminPlist);
+    ref.afterClosed$.subscribe((factura: IFactura | null) => {
       if (factura?.id != null) {
         this.compraForm.patchValue({ id_factura: factura.id });
         this.selectedFactura.set(factura);

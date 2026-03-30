@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, inject, signal, effect 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComentarioService } from '../../../../service/comentario';
 import { UsuarioService } from '../../../../service/usuarioService';
@@ -16,7 +16,7 @@ import { NoticiaAdminPlist } from '../../../noticia/admin/plist/plist';
 @Component({
   standalone: true,
   selector: 'app-comentario-admin-form',
-  imports: [CommonModule, ReactiveFormsModule, UsuarioAdminPlist, NoticiaAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -28,7 +28,7 @@ export class ComentarioAdminForm implements OnInit {
 
   private fb = inject(FormBuilder);
   private snackBar = inject(MatSnackBar);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private oComentarioService = inject(ComentarioService);
   private oUsuarioService = inject(UsuarioService);
   private oNoticiaService = inject(NoticiaService);
@@ -105,11 +105,8 @@ export class ComentarioAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const dialogRef = this.dialog.open(UsuarioAdminPlist, {
-      height: '800px', width: '1300px', maxWidth: '95vw', panelClass: 'usuario-dialog',
-      data: { title: 'Elegir usuario', message: 'Seleccione el usuario para el comentario' }
-    });
-    dialogRef.afterClosed().subscribe((usuario: IUsuario | null) => {
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario) {
         this.comentarioForm.patchValue({ id_usuario: usuario.id });
         this.syncUsuario(usuario.id);
@@ -119,11 +116,8 @@ export class ComentarioAdminForm implements OnInit {
   }
 
   openNoticiaFinderModal(): void {
-    const dialogRef = this.dialog.open(NoticiaAdminPlist, {
-      height: '800px', width: '1300px', maxWidth: '95vw', panelClass: 'noticia-dialog',
-      data: { title: 'Elegir noticia', message: 'Seleccione la noticia para el comentario' }
-    });
-    dialogRef.afterClosed().subscribe((noticia: INoticia | null) => {
+    const ref = this.modalService.open<unknown, INoticia | null>(NoticiaAdminPlist);
+    ref.afterClosed$.subscribe((noticia: INoticia | null) => {
       if (noticia) {
         this.comentarioForm.patchValue({ id_noticia: noticia.id });
         this.syncNoticia(noticia.id);

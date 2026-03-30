@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 
 export class ModalRef<TData = unknown, TResult = unknown> {
-    private readonly _afterClosed = new Subject<TResult | undefined>();
+    private readonly _afterClosed = new Subject<TResult>();
     readonly afterClosed$ = this._afterClosed.asObservable();
     readonly data: TData;
 
@@ -10,7 +10,7 @@ export class ModalRef<TData = unknown, TResult = unknown> {
     }
 
     close(result?: TResult): void {
-        this._afterClosed.next(result);
+        this._afterClosed.next(result as TResult);
         this._afterClosed.complete();
     }
 }

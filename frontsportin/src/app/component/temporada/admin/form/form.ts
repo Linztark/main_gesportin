@@ -7,7 +7,7 @@ import { ITemporada } from '../../../../model/temporada';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IClub } from '../../../../model/club';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { ClubService } from '../../../../service/club';
 import { ClubAdminPlist } from '../../../club/admin/plist/plist';
 
@@ -25,7 +25,7 @@ export class TemporadaAdminForm implements OnInit {
   private oTemporadaService = inject(TemporadaService);
   private oClubService = inject(ClubService);
   private snackBar = inject(MatSnackBar);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   session: SessionService = inject(SessionService);
 
   temporadaForm!: FormGroup;
@@ -137,18 +137,9 @@ export class TemporadaAdminForm implements OnInit {
   }
 
   openClubFinderModal(): void {
-    const dialogRef = this.dialog.open(ClubAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-      panelClass: 'club-dialog',
-      data: {
-        title: 'Aquí elegir club',
-        message: 'Plist finder para encontrar el club y asignarlo a la temporada',
-      },
-    });
+    const ref = this.modalService.open<unknown, IClub | null>(ClubAdminPlist);
 
-    dialogRef.afterClosed().subscribe((club: IClub | null) => {
+    ref.afterClosed$.subscribe((club: IClub | null) => {
       if (club) {
         this.temporadaForm.patchValue({ id_club: club.id });
         this.syncClub(club.id);

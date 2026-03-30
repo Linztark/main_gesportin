@@ -2,7 +2,8 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
-import { MatDialogRef } from '@angular/material/dialog';
+import { ModalRef } from '../../../shared/modal/modal-ref';
+import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { SessionService } from '../../../../service/session';
 import { IUsuario } from '../../../../model/usuario';
@@ -36,7 +37,7 @@ export class UsuarioAdminPlist {
 
   private usuarioService = inject(UsuarioService);
   private route = inject(ActivatedRoute);
-  private dialogRef = inject(MatDialogRef<UsuarioAdminPlist>, { optional: true });
+  private modalRef = inject(MODAL_REF, { optional: true });
   session = inject(SessionService);
 
   ngOnInit() {
@@ -128,10 +129,10 @@ export class UsuarioAdminPlist {
   }
 
   isDialogMode(): boolean {
-    return !!this.dialogRef;
+    return !!this.modalRef;
   }
 
   onSelect(usuario: IUsuario): void {
-    this.dialogRef?.close(usuario);
+    this.modalRef?.close(usuario);
   }
 }

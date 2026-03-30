@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { LigaService } from '../../../../service/liga';
 import { EquipoService } from '../../../../service/equipo';
 import { SessionService } from '../../../../service/session';
@@ -26,7 +26,7 @@ export class LigaAdminForm implements OnInit {
 
   private fb = inject(FormBuilder);
   private snackBar = inject(MatSnackBar);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private ligaService = inject(LigaService);
   private equipoService = inject(EquipoService);
   private sessionService = inject(SessionService);
@@ -128,15 +128,9 @@ export class LigaAdminForm implements OnInit {
   }
 
   openEquipoFinderModal(): void {
-    const dialogRef = this.dialog.open(EquipoAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-      panelClass: 'equipo-dialog',
-      data: { title: 'Elegir equipo', message: 'Selecciona el equipo para la liga' },
-    });
+    const ref = this.modalService.open<unknown, IEquipo | null>(EquipoAdminPlist);
 
-    dialogRef.afterClosed().subscribe((equipo: IEquipo | null) => {
+    ref.afterClosed$.subscribe((equipo: IEquipo | null) => {
       if (equipo && equipo.id != null) {
         this.ligaForm.patchValue({ id_equipo: equipo.id });
         this.syncEquipo(equipo.id);

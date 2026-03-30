@@ -2,7 +2,8 @@ import { Component, computed, inject, Input, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
-import { MatDialogRef } from '@angular/material/dialog';
+import { ModalRef } from '../../../shared/modal/modal-ref';
+import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { SessionService } from '../../../../service/session';
 import { ICarrito } from '../../../../model/carrito';
@@ -35,7 +36,7 @@ export class CarritoAdminPlist {
 
   private carritoService = inject(CarritoService);
   private route = inject(ActivatedRoute);
-  private dialogRef = inject(MatDialogRef<CarritoAdminPlist>, { optional: true });
+  private modalRef = inject(MODAL_REF, { optional: true });
   session = inject(SessionService);
 
   ngOnInit() {
@@ -120,10 +121,10 @@ export class CarritoAdminPlist {
   }
 
   isDialogMode(): boolean {
-    return !!this.dialogRef;
+    return !!this.modalRef;
   }
 
   onSelect(carrito: ICarrito): void {
-    this.dialogRef?.close(carrito);
+    this.modalRef?.close(carrito);
   }
 }

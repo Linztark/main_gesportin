@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { PagoService } from '../../../../service/pago';
 import { CuotaService } from '../../../../service/cuota';
 import { JugadorService } from '../../../../service/jugador-service';
@@ -17,7 +17,7 @@ import { JugadorAdminPlist } from '../../../jugador/admin/plist/plist';
 @Component({
   selector: 'app-pago-admin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CuotaAdminPlist, JugadorAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -32,7 +32,7 @@ export class PagoAdminForm implements OnInit {
   private oPagoService = inject(PagoService);
   private oCuotaService = inject(CuotaService);
   private oJugadorService = inject(JugadorService);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
 
   pagoForm!: FormGroup;
@@ -111,12 +111,8 @@ export class PagoAdminForm implements OnInit {
   }
 
   openCuotaFinderModal(): void {
-    const dialogRef = this.dialog.open(CuotaAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((cuota: ICuota | null) => {
+    const ref = this.modalService.open<unknown, ICuota | null>(CuotaAdminPlist);
+    ref.afterClosed$.subscribe((cuota: ICuota | null) => {
       if (cuota?.id != null) {
         this.pagoForm.patchValue({ id_cuota: cuota.id });
         this.selectedCuota.set(cuota);
@@ -126,12 +122,8 @@ export class PagoAdminForm implements OnInit {
   }
 
   openJugadorFinderModal(): void {
-    const dialogRef = this.dialog.open(JugadorAdminPlist, {
-      height: '800px',
-      width: '1100px',
-      maxWidth: '95vw',
-    });
-    dialogRef.afterClosed().subscribe((jugador: IJugador | null) => {
+    const ref = this.modalService.open<unknown, IJugador | null>(JugadorAdminPlist);
+    ref.afterClosed$.subscribe((jugador: IJugador | null) => {
       if (jugador?.id != null) {
         this.pagoForm.patchValue({ id_jugador: jugador.id });
         this.selectedJugador.set(jugador);

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, inject, signal, effect 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { ModalService } from '../../../shared/modal/modal.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PuntuacionService } from '../../../../service/puntuacion';
 import { NoticiaService } from '../../../../service/noticia';
@@ -16,7 +16,7 @@ import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
 @Component({
   standalone: true,
   selector: 'app-puntuacion-admin-form',
-  imports: [CommonModule, ReactiveFormsModule, NoticiaAdminPlist, UsuarioAdminPlist],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -28,7 +28,7 @@ export class PuntuacionAdminForm implements OnInit {
 
   private fb = inject(FormBuilder);
   private snackBar = inject(MatSnackBar);
-  private dialog = inject(MatDialog);
+  private modalService = inject(ModalService);
   private oPuntuacionService = inject(PuntuacionService);
   private oNoticiaService = inject(NoticiaService);
   private oUsuarioService = inject(UsuarioService);
@@ -101,8 +101,8 @@ export class PuntuacionAdminForm implements OnInit {
   }
 
   openNoticiaFinderModal(): void {
-    const dialogRef = this.dialog.open(NoticiaAdminPlist, { height: '800px', width: '1100px', maxWidth: '95vw' });
-    dialogRef.afterClosed().subscribe((noticia: INoticia | null) => {
+    const ref = this.modalService.open<unknown, INoticia | null>(NoticiaAdminPlist);
+    ref.afterClosed$.subscribe((noticia: INoticia | null) => {
       if (noticia?.id != null) {
         this.puntuacionForm.patchValue({ id_noticia: noticia.id });
         this.selectedNoticia.set(noticia);
@@ -112,8 +112,8 @@ export class PuntuacionAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const dialogRef = this.dialog.open(UsuarioAdminPlist, { height: '800px', width: '1100px', maxWidth: '95vw' });
-    dialogRef.afterClosed().subscribe((usuario: IUsuario | null) => {
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.puntuacionForm.patchValue({ id_usuario: usuario.id });
         this.selectedUsuario.set(usuario);
