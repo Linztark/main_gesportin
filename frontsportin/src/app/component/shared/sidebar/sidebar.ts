@@ -111,6 +111,14 @@ export class SidebarComponent {
           { label: 'Roles de Usuario', icon: 'shield-check', route: '/rolusuario' },
         ],
       });
+
+      items.push({
+        label: 'Sistema',
+        icon: 'database-gear',
+        children: [
+          { label: 'Herramientas de Datos', icon: 'database-fill-gear', route: '/admin/datos' },
+        ],
+      });
     }
 
     return items;

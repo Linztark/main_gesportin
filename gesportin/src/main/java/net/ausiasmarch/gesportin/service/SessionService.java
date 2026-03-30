@@ -22,7 +22,7 @@ public class SessionService {
 
     public TokenBean login(SessionBean oSessionBean) {
         UsuarioEntity oUsuarioEntity = oUsuarioRepository
-                .findByUsernameAndPassword(oSessionBean.getUsername(), oSessionBean.getPassword()).orElseThrow(() -> {
+                .findFirstByUsernameAndPassword(oSessionBean.getUsername(), oSessionBean.getPassword()).orElseThrow(() -> {
                     throw new UnauthorizedException("Usuario o contraseña incorrectos");
                 });
         return (new TokenBean(oJwtService.generateJWT(oSessionBean.getUsername(), oUsuarioEntity.getId(),
@@ -46,7 +46,7 @@ public class SessionService {
         if (username == null) {
             return false;
         }
-        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findByUsername(username).orElse(null);
+        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findFirstByUsername(username).orElse(null);
         return oUsuarioEntity != null && oUsuarioEntity.getTipousuario().getId() == 1;
     }
 
@@ -55,7 +55,7 @@ public class SessionService {
         if (username == null) {
             return false;
         }
-        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findByUsername(username).orElse(null);
+        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findFirstByUsername(username).orElse(null);
         return oUsuarioEntity != null && oUsuarioEntity.getTipousuario().getId() == 2;
     }
 
@@ -64,7 +64,7 @@ public class SessionService {
         if (username == null) {
             return false;
         }
-        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findByUsername(username).orElse(null);
+        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findFirstByUsername(username).orElse(null);
         return oUsuarioEntity != null && oUsuarioEntity.getTipousuario().getId() == 3;
     }
 
@@ -76,7 +76,7 @@ public class SessionService {
         if (username == null) {
             return null;
         }
-        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findByUsername(username).orElse(null);
+        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findFirstByUsername(username).orElse(null);
         if (oUsuarioEntity == null) {
             return null;
         }
@@ -92,7 +92,7 @@ public class SessionService {
         if (username == null) {
             return null;
         }
-        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findByUsername(username).orElse(null);
+        UsuarioEntity oUsuarioEntity = oUsuarioRepository.findFirstByUsername(username).orElse(null);
         if (oUsuarioEntity == null || oUsuarioEntity.getClub() == null) {
             return null;
         }

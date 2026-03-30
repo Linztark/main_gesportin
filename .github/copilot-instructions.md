@@ -33,3 +33,7 @@ Load the detailed guidance based on on context:
 ## Restricciones de integridad referencial para datos
 * Reference: [references/integridad.md](references/integridad.md)
 * Load When: Siempre que tengas que llenar o corregir datos en la base de datos o crear o modificar código que involucre estas restricciones, especialmente para asegurar la integridad referencial.
+
+## Fichero de referecnia
+* Reference: [references/references.md](references/references.md)
+* Load When: Siempre que tengas que desarrollar o modificar ficheros de referencia para modelos de inteligencia artificial en .github/references.

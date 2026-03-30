@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.TipousuarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
-import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.TipousuarioRepository;
 
 @Service
@@ -45,11 +44,8 @@ public class TipousuarioService {
 
     public Long fill() {
         oSessionService.requireAdmin();
-        for (int i = 0; i < TIPOS.length; i++) {
-            TipousuarioEntity oTipousuario = new TipousuarioEntity();
-            oTipousuario.setDescripcion(TIPOS[i % TIPOS.length]);
-            tipousuarioRepository.save(oTipousuario);
-        }
+        // Los tipos de usuario son datos del sistema gestionados por reset()/seed().
+        // Este método no crea registros adicionales.
         return this.count();
     }
 

@@ -1,0 +1,152 @@
+<div class="container-fluid my-3 px-3 px-md-4">
+
+  <!-- Header -->
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <i class="bi bi-database-gear fs-2 text-primary" aria-hidden="true"></i>
+    <div>
+      <h1 class="h3 mb-0">Herramientas de Datos</h1>
+      <small class="text-muted">Solo Administrador</small>
+    </div>
+    <button class="btn btn-sm btn-outline-secondary ms-auto" (click)="loadCounts()" [disabled]="running()">
+      <i class="bi bi-arrow-clockwise me-1"></i>Refrescar conteos
+    </button>
+  </div>
+
+  <!-- Counts table -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header fw-semibold">Registros actuales por entidad</div>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Entidad</th>
+            <th class="text-end">Registros</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows(); let i = index">
+            <td class="text-muted small">{{ i + 1 }}</td>
+            <td>{{ row.label }}</td>
+            <td class="text-end">
+              <span *ngIf="row.loading" class="spinner-border spinner-border-sm text-secondary" role="status"></span>
+              <span *ngIf="!row.loading && row.count !== null" class="badge text-bg-secondary">{{ row.count | number }}</span>
+              <span *ngIf="!row.loading && row.count === null" class="text-danger small">—</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="row g-3 mb-4">
+
+    <!-- Fill all -->
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-semibold text-success">
+          <i class="bi bi-plus-circle me-1"></i>Crear datos en todas las tablas
+        </div>
+        <div class="card-body">
+          <p class="small text-muted mb-3">
+            Genera registros aleatorios en todas las entidades respetando el orden
+            de dependencias (FK). La cantidad seleccionada se aplica a cada entidad
+            que admite cantidad; los datos de sistema (tipos de usuario y roles)
+            se crean con su fill estándar.
+          </p>
+          <p class="small mb-3 fw-semibold">Orden de creación:</p>
+          <div class="d-flex flex-wrap gap-1 mb-3">
+            <span *ngFor="let row of rows()" class="badge rounded-pill text-bg-success">{{ row.label }}</span>
+          </div>
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span class="fw-semibold small">Cantidad:</span>
+            <button type="button" class="btn btn-sm"
+              [class.btn-success]="selectedAmount() === 10"
+              [class.btn-outline-success]="selectedAmount() !== 10"
+              (click)="setAmount(10)" [disabled]="running()">10</button>
+            <button type="button" class="btn btn-sm"
+              [class.btn-success]="selectedAmount() === 100"
+              [class.btn-outline-success]="selectedAmount() !== 100"
+              (click)="setAmount(100)" [disabled]="running()">100</button>
+            <button type="button" class="btn btn-sm"
+              [class.btn-success]="selectedAmount() === 1000"
+              [class.btn-outline-success]="selectedAmount() !== 1000"
+              (click)="setAmount(1000)" [disabled]="running()">1000</button>
+            <button type="button" class="btn btn-success ms-auto" (click)="runFillAll()" [disabled]="running()">
+              <i class="bi bi-database-add me-1"></i>Crear {{ selectedAmount() }} registros
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reset all -->
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm h-100 border-danger">
+        <div class="card-header fw-semibold text-danger">
+          <i class="bi bi-trash me-1"></i>Resetear base de datos
+        </div>
+        <div class="card-body">
+          <p class="small text-muted mb-3">
+            Vacía <strong>todas las tablas</strong> en orden inverso (hijos antes que padres)
+            para evitar errores de integridad referencial. Tras el borrado, restaura
+            automáticamente los datos mínimos del sistema:
+          </p>
+          <ul class="small text-muted mb-3">
+            <li><strong>Tipos de usuario:</strong> 1-Administrador, 2-Administrador de equipo, 3-Usuario</li>
+            <li><strong>Rol de usuario:</strong> 1-Presidente</li>
+            <li><strong>Club:</strong> 1-Gesportin</li>
+            <li><strong>Usuarios:</strong> admin / clubadmin / usuario — contraseña: <code>ausias</code></li>
+          </ul>
+          <p class="small mb-3 fw-semibold">Orden de borrado:</p>
+          <div class="d-flex flex-wrap gap-1 mb-3">
+            <span class="badge rounded-pill text-bg-danger">Compra</span>
+            <span class="badge rounded-pill text-bg-danger">Factura</span>
+            <span class="badge rounded-pill text-bg-danger">Carrito</span>
+            <span class="badge rounded-pill text-bg-danger">Com. Artículo</span>
+            <span class="badge rounded-pill text-bg-danger">Puntuación</span>
+            <span class="badge rounded-pill text-bg-danger">Comentario</span>
+            <span class="badge rounded-pill text-bg-danger">Pago</span>
+            <span class="badge rounded-pill text-bg-danger">Partido</span>
+            <span class="badge rounded-pill text-bg-danger">Cuota</span>
+            <span class="badge rounded-pill text-bg-danger">Jugador</span>
+            <span class="badge rounded-pill text-bg-danger">Liga</span>
+            <span class="badge rounded-pill text-bg-danger">Equipo</span>
+            <span class="badge rounded-pill text-bg-danger">Artículo</span>
+            <span class="badge rounded-pill text-bg-danger">Categoría</span>
+            <span class="badge rounded-pill text-bg-danger">Tipo Artículo</span>
+            <span class="badge rounded-pill text-bg-danger">Noticia</span>
+            <span class="badge rounded-pill text-bg-danger">Temporada</span>
+            <span class="badge rounded-pill text-bg-danger">Usuario</span>
+            <span class="badge rounded-pill text-bg-danger">Club</span>
+            <span class="badge rounded-pill text-bg-danger">Rol Usuario</span>
+            <span class="badge rounded-pill text-bg-danger">Tipo Usuario</span>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-danger" (click)="runResetAll()" [disabled]="running()">
+              <i class="bi bi-database-x me-1"></i>Resetear todo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Execution log -->
+  <div class="card shadow-sm">
+    <div class="card-header fw-semibold d-flex align-items-center justify-content-between">
+      <span><i class="bi bi-terminal me-1"></i>Registro de ejecución</span>
+      <span *ngIf="running()" class="badge text-bg-warning gap-1">
+        <span class="spinner-border spinner-border-sm" role="status"></span> En curso
+      </span>
+    </div>
+    <div class="card-body p-0">
+      <div class="log-panel px-3 py-2">
+        <div *ngIf="logs().length === 0" class="text-muted small py-2">Sin ejecuciones todavía.</div>
+        <div *ngFor="let line of logs()" class="log-line" [class.log-ok]="line.startsWith('  ✓')" [class.log-err]="line.startsWith('ERROR')">{{ line }}</div>
+      </div>
+    </div>
+  </div>
+
+</div>

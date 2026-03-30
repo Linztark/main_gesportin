@@ -134,6 +134,7 @@ import { CuotaUsuarioPlistPage } from './page/cuota/usuario/plist/plist';
 import { CarritoUsuarioTiendaPage } from './page/carrito/usuario/tienda/tienda';
 import { FacturaUsuarioPlistPage } from './page/factura/usuario/plist/plist';
 import { JugadorUsuarioEquipoPlistPage } from './page/jugador/usuario/equipo-plist/plist';
+import { AdminDataToolsPage } from './page/admin/data-tools/data-tools';
 
 export const publicRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -142,6 +143,7 @@ export const publicRoutes: Routes = [
 
 const protectedRoutes: Routes = [
   { path: '', component: Home },
+  { path: 'admin/datos', component: AdminDataToolsPage },
   { path: 'usuario', component: UsuarioAdminPlistPage },
   { path: 'usuario/tipousuario/:id_tipousuario', component: UsuarioAdminPlistPage },
   { path: 'usuario/rol/:id_rol', component: UsuarioAdminPlistPage },

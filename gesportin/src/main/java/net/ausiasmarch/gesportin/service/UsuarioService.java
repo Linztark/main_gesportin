@@ -2,12 +2,12 @@ package net.ausiasmarch.gesportin.service;
 
 import java.time.LocalDateTime;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.stream.Collectors;
 
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
@@ -235,46 +235,9 @@ public class UsuarioService {
 
     public Long fill(Long cantidad) {
         oSessionService.requireAdmin();
-        // generar un admin
-        UsuarioEntity oUsuario = new UsuarioEntity();
-        oUsuario.setNombre("Jose");
-        oUsuario.setApellido1("Gutiérrez");
-        oUsuario.setApellido2("Cruz");
-        oUsuario.setUsername("admin");
-        oUsuario.setPassword("7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e");
-        oUsuario.setFechaAlta(LocalDateTime.now());
-        oUsuario.setGenero(0);
-        oUsuario.setTipousuario(oTipousuarioService.get(1L));
-        oUsuario.setClub(oClubService.get(1L));
-        oUsuario.setRolusuario(oRolusuarioService.get(1L));
-        oUsuarioRepository.save(oUsuario);
-        // generar un club admin
-        oUsuario = new UsuarioEntity();
-        oUsuario.setNombre("Maria");
-        oUsuario.setApellido1("García");
-        oUsuario.setApellido2("López");
-        oUsuario.setUsername("clubadmin");
-        oUsuario.setPassword("7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e");
-        oUsuario.setFechaAlta(LocalDateTime.now());
-        oUsuario.setGenero(1);
-        oUsuario.setTipousuario(oTipousuarioService.get(2L));
-        oUsuario.setClub(oClubService.get(2L));
-        oUsuario.setRolusuario(oRolusuarioService.get(2L));
-        oUsuarioRepository.save(oUsuario);
-        // generar un usuario normal
-        oUsuario = new UsuarioEntity();
-        oUsuario.setNombre("Carla");
-        oUsuario.setApellido1("Sánchez");
-        oUsuario.setApellido2("Martínez");
-        oUsuario.setUsername("usuario");
-        oUsuario.setPassword("7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e");
-        oUsuario.setFechaAlta(LocalDateTime.now());
-        oUsuario.setGenero(1);
-        oUsuario.setTipousuario(oTipousuarioService.get(3L));
-        oUsuario.setClub(oClubService.get(3L));
-        oUsuario.setRolusuario(oRolusuarioService.get(3L));
-        oUsuarioRepository.save(oUsuario);
-        // generar usuarios aleatorios
+        // Los usuarios del sistema (admin, clubadmin, usuario) son gestionados
+        // exclusivamente por reset()/seed() y nunca se crean aquí.
+        UsuarioEntity oUsuario;
         for (int i = 0; i < cantidad; i++) {
             oUsuario = new UsuarioEntity();
             // Generar género aleatorio: 0 para masculino, 1 para femenino
