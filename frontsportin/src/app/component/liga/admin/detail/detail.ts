@@ -4,12 +4,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { LigaService } from '../../../../service/liga';
 import { ILiga } from '../../../../model/liga';
+import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { SessionService } from '../../../../service/session';
 
 @Component({
   standalone: true,
   selector: 'app-liga-admin-detail',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DatetimePipe],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })

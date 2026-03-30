@@ -2,13 +2,14 @@ import { Component, signal, OnInit, inject, Input, Signal } from '@angular/core'
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { ComentarioService } from '../../../../service/comentario';
 import { IComentario } from '../../../../model/comentario';
 
 @Component({
   standalone: true,
   selector: 'app-comentario-admin-detail',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DatetimePipe],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })

@@ -4,11 +4,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { CategoriaService } from '../../../../service/categoria';
 import { ICategoria } from '../../../../model/categoria';
+import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { SessionService } from '../../../../service/session';
 
 @Component({
   selector: 'app-categoria-admin-detail',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DatetimePipe],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })

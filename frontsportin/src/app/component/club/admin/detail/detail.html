@@ -5,119 +5,86 @@
       <div class="fw-bold">Detalle de club</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
-    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
-       [routerLink]="session.isClubAdmin() ? '/club/teamadmin' : '/club'">
-      <i class="bi bi-arrow-left"></i>
-      Volver
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/club">
+      <i class="bi bi-arrow-left"></i> Volver
     </a>
   </div>
 
   @if (loading()) {
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="text-center py-3">
-          <div class="spinner-border text-secondary" role="status">
-            <span class="visually-hidden">Cargando...</span>
-          </div>
-          <p class="text-muted mt-2 mb-0">Cargando detalle...</p>
-        </div>
-      </div>
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <p class="text-muted small mt-2 mb-0">Cargando detalle...</p>
     </div>
   }
 
   @if (error()) {
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
-          <i class="bi bi-exclamation-triangle-fill"></i>
-          <span>{{ error() }}</span>
-        </div>
-      </div>
+    <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+      <i class="bi bi-exclamation-triangle-fill"></i> {{ error() }}
     </div>
   }
 
   @if (!loading() && !error() && oClub()) {
-    <div class="row g-3">
-      <div class="col-lg-4">
-        <div class="card border h-100">
-          <div class="card-header bg-light small text-uppercase fw-semibold">Identificacion</div>
-          <div class="card-body p-2">
-            <div class="fw-bold d-flex align-items-center gap-2 flex-wrap">
-              <span>{{ oClub()?.nombre }}</span>
-              <span class="badge bg-secondary-subtle text-secondary">ID {{ oClub()?.id }}</span>
-            </div>
-
-            <div class="row g-1 mt-2">
-              <div class="col-5 text-muted small text-uppercase">Direccion</div>
-              <div class="col-7 fw-semibold small">{{ oClub()?.direccion }}</div>
-              <div class="col-5 text-muted small text-uppercase">Telefono</div>
-              <div class="col-7 fw-semibold small">{{ oClub()?.telefono }}</div>
-              <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
-              <div class="col-7 fw-semibold small">{{ oClub()?.fechaAlta | datetime }}</div>
-            </div>
-          </div>
-        </div>
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+        <i class="bi bi-building-fill"></i>
+        <span class="fw-semibold">{{ oClub()?.nombre }}</span>
+        <span class="badge bg-white text-primary ms-auto">ID {{ oClub()?.id }}</span>
       </div>
-
-      <div class="col-lg-8">
-        <div class="card border h-100">
-          <div class="card-header bg-light small text-uppercase fw-semibold">Actividad</div>
-          <div class="card-body p-2">
-            <div class="row g-2">
-              <div class="col-6">
-                <div class="border rounded p-2 bg-white h-100">
-                  <div class="text-muted small text-uppercase">Temporadas</div>
-                  <div class="fw-bold">
-                    @if (oClub()?.temporadas === 0) {
-                      0
-                    } @else {
-                      <a class="text-decoration-none" [routerLink]="['/temporada/club', oClub()?.id]">
-                        {{ oClub()?.temporadas }}
-                      </a>
-                    }
-                  </div>
+      <div class="card-body">
+        <div class="row g-1 mb-3">
+          <div class="col-5 text-muted small text-uppercase">ID</div>
+          <div class="col-7 fw-semibold small">{{ oClub()?.id }}</div>
+          <div class="col-5 text-muted small text-uppercase">Nombre</div>
+          <div class="col-7 fw-semibold small">{{ oClub()?.nombre }}</div>
+          <div class="col-5 text-muted small text-uppercase">Dirección</div>
+          <div class="col-7 fw-semibold small">{{ oClub()?.direccion }}</div>
+          <div class="col-5 text-muted small text-uppercase">Teléfono</div>
+          <div class="col-7 fw-semibold small">{{ oClub()?.telefono }}</div>
+          <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
+          <div class="col-7 fw-semibold small">{{ oClub()?.fechaAlta | datetime }}</div>
+          <div class="col-5 text-muted small text-uppercase">Imagen</div>
+          <div class="col-7 fw-semibold small">@if (oClub()?.imagen) { <img [src]="'data:image/jpeg;base64,' + oClub()?.imagen" class="img-thumbnail" style="max-height:80px" alt="club"/> } @else { Sin imagen }</div>
+        </div>
+        <div class="border-top mt-3 pt-3">
+          <div class="text-uppercase small text-muted fw-semibold mb-2"><i class="bi bi-bar-chart-fill me-1"></i>Contadores</div>
+          <div class="row g-2">
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="border rounded p-2 text-center bg-light">
+                <div class="text-muted small text-uppercase">Temporadas</div>
+                <div class="fw-bold fs-5">
+                  @if ((oClub()?.temporadas ?? 0) > 0) {
+                    <a [routerLink]="['/temporada/club', oClub()?.id]" class="text-decoration-none">{{ oClub()?.temporadas }}</a>
+                  } @else { 0 }
                 </div>
               </div>
-              <div class="col-6">
-                <div class="border rounded p-2 bg-white h-100">
-                  <div class="text-muted small text-uppercase">Usuarios</div>
-                  <div class="fw-bold">
-                    @if (oClub()?.usuarios === 0) {
-                      0
-                    } @else {
-                      <a class="text-decoration-none" [routerLink]="['/usuario/club', oClub()?.id]">
-                        {{ oClub()?.usuarios }}
-                      </a>
-                    }
-                  </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="border rounded p-2 text-center bg-light">
+                <div class="text-muted small text-uppercase">Noticias</div>
+                <div class="fw-bold fs-5">
+                  @if ((oClub()?.noticias ?? 0) > 0) {
+                    <a [routerLink]="['/noticia/club', oClub()?.id]" class="text-decoration-none">{{ oClub()?.noticias }}</a>
+                  } @else { 0 }
                 </div>
               </div>
-              <div class="col-6">
-                <div class="border rounded p-2 bg-white h-100">
-                  <div class="text-muted small text-uppercase">Noticias</div>
-                  <div class="fw-bold">
-                    @if (oClub()?.noticias === 0) {
-                      0
-                    } @else {
-                      <a class="text-decoration-none" [routerLink]="['/noticia/club', oClub()?.id]">
-                        {{ oClub()?.noticias }}
-                      </a>
-                    }
-                  </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="border rounded p-2 text-center bg-light">
+                <div class="text-muted small text-uppercase">Tipos artículo</div>
+                <div class="fw-bold fs-5">
+                  @if ((oClub()?.tipoarticulos ?? 0) > 0) {
+                    <a [routerLink]="['/tipoarticulo/club', oClub()?.id]" class="text-decoration-none">{{ oClub()?.tipoarticulos }}</a>
+                  } @else { 0 }
                 </div>
               </div>
-              <div class="col-6">
-                <div class="border rounded p-2 bg-white h-100">
-                  <div class="text-muted small text-uppercase">Tipos articulos</div>
-                  <div class="fw-bold">
-                    @if (oClub()?.tipoarticulos === 0) {
-                      0
-                    } @else {
-                      <a class="text-decoration-none" [routerLink]="[session.isClubAdmin() ? '/tipoarticulo/teamadmin/club' : '/tipoarticulo/club', oClub()?.id]">
-                        {{ oClub()?.tipoarticulos }}
-                      </a>
-                    }
-                  </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="border rounded p-2 text-center bg-light">
+                <div class="text-muted small text-uppercase">Usuarios</div>
+                <div class="fw-bold fs-5">
+                  @if ((oClub()?.usuarios ?? 0) > 0) {
+                    <a [routerLink]="['/usuario/club', oClub()?.id]" class="text-decoration-none">{{ oClub()?.usuarios }}</a>
+                  } @else { 0 }
                 </div>
               </div>
             </div>
@@ -125,19 +92,5 @@
         </div>
       </div>
     </div>
-
-    @if (oClub()?.imagen) {
-      <div class="row g-3 mt-2">
-        <div class="col-12">
-          <div class="card border">
-            <div class="card-header bg-light small text-uppercase fw-semibold">Imagen</div>
-            <div class="card-body p-2">
-              <div class="text-muted small mb-2">Ruta de imagen</div>
-              <div class="fw-semibold small">{{ oClub()?.imagen }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    }
   }
 </div>

@@ -4,12 +4,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { CuotaService } from '../../../../service/cuota';
 import { ICuota } from '../../../../model/cuota';
+import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { SessionService } from '../../../../service/session';
 
 @Component({
   standalone: true,
   selector: 'app-cuota-admin-detail',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DatetimePipe],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })

@@ -242,7 +242,7 @@ const protectedRoutes: Routes = [
 
   { path: 'club/plist', component: ClubAdminPlistPage },
   { path: 'club', component: ClubAdminPlistPage },
-  { path: 'club/new', component: ClubAdminPlistPage },
+  { path: 'club/new', component: ClubAdminNewPage },
   { path: 'club/view/:id', component: ClubAdminViewPage, data: { allowClubAdmin: true } },
   { path: 'club/delete/:id', component: ClubAdminDeletePage },
   { path: 'club/edit/:id', component: ClubAdminEditPage },

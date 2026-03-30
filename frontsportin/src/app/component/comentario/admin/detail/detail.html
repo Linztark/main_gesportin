@@ -6,73 +6,208 @@
       <div class="text-muted small">Panel administrativo</div>
     </div>
     <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/comentario">
-      <i class="bi bi-arrow-left"></i>
-      Volver
+      <i class="bi bi-arrow-left"></i> Volver
     </a>
   </div>
 
   @if (loading()) {
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="text-center py-3">
-          <div class="spinner-border text-secondary" role="status">
-            <span class="visually-hidden">Cargando...</span>
-          </div>
-          <p class="text-muted mt-2 mb-0">Cargando detalle...</p>
-        </div>
-      </div>
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <p class="text-muted small mt-2 mb-0">Cargando detalle...</p>
     </div>
   }
 
   @if (error()) {
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
-          <i class="bi bi-exclamation-triangle-fill"></i>
-          <span>{{ error() }}</span>
-        </div>
-      </div>
+    <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+      <i class="bi bi-exclamation-triangle-fill"></i> {{ error() }}
     </div>
   }
 
   @if (!loading() && !error() && oComentario()) {
-    <div class="row g-3">
-      <div class="col-lg-4">
-        <div class="card border">
-          <div class="card-header bg-light small text-uppercase fw-semibold">Información</div>
-          <div class="card-body p-2">
-            <div class="row g-1">
-              <div class="col-5 text-muted small text-uppercase">ID de comentario</div>
-              <div class="col-7 fw-semibold small">{{ oComentario()?.id }}</div>
-              <div class="col-5 text-muted small text-uppercase">Contenido</div>
-              <div class="col-7 fw-semibold small">{{ oComentario()?.contenido }}</div>
-            </div>
-          </div>
-        </div>
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+        <i class="bi bi-chat-fill"></i>
+        <span class="fw-semibold">Comentario #{{ oComentario()?.id }}</span>
+        <span class="badge bg-white text-primary ms-auto">ID {{ oComentario()?.id }}</span>
       </div>
-
-      <div class="col-lg-4">
-        <div class="card border">
-          <div class="card-header bg-light small text-uppercase fw-semibold">Relaciones</div>
+      <div class="card-body">
+        <div class="row g-1 mb-3">
+          <div class="col-5 text-muted small text-uppercase">ID</div>
+          <div class="col-7 fw-semibold small">{{ oComentario()?.id }}</div>
+          <div class="col-5 text-muted small text-uppercase">Contenido</div>
+          <div class="col-7 fw-semibold small">{{ oComentario()?.contenido }}</div>
+        </div>
+        <div class="card border-start border-3 border-info mt-3">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+            <i class="bi bi-newspaper text-info small"></i>
+            <span class="text-uppercase small fw-semibold text-info">Noticia</span>
+            <a [routerLink]="['/noticia/view', oComentario()?.noticia?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+              {{ oComentario()?.noticia?.titulo | slice:0:30 }} <span class="opacity-75 ms-1">#{{oComentario()?.noticia?.id}}</span>
+              <i class="bi bi-box-arrow-up-right ms-1"></i>
+            </a>
+          </div>
           <div class="card-body p-2">
             <div class="row g-1">
-              <div class="col-5 text-muted small text-uppercase">Usuario</div>
-              <div class="col-7 fw-semibold small">
-                <a class="text-decoration-none" [routerLink]="['/usuario/view', oComentario()?.usuario?.id]">
-                  {{ oComentario()?.usuario?.nombre }} {{ oComentario()?.usuario?.apellido1 }} {{ oComentario()?.usuario?.apellido2 }} ({{ oComentario()?.usuario?.id }})
+              <div class="col-5 text-muted small text-uppercase">ID</div>
+              <div class="col-7 fw-semibold small">{{ oComentario()?.noticia?.id }}</div>
+              <div class="col-5 text-muted small text-uppercase">Título</div>
+              <div class="col-7 fw-semibold small">{{ oComentario()?.noticia?.titulo }}</div>
+              <div class="col-5 text-muted small text-uppercase">Fecha</div>
+              <div class="col-7 fw-semibold small">{{ oComentario()?.noticia?.fecha | datetime }}</div>
+              <div class="col-5 text-muted small text-uppercase">Comentarios</div>
+              <div class="col-7 fw-semibold small">@if ((oComentario()?.noticia?.comentarios ?? 0) > 0) { <a [routerLink]="['/comentario/noticia', oComentario()?.noticia?.id]" class="text-decoration-none">{{ oComentario()?.noticia?.comentarios }}</a> } @else { 0 }</div>
+              <div class="col-5 text-muted small text-uppercase">Puntuaciones</div>
+              <div class="col-7 fw-semibold small">@if ((oComentario()?.noticia?.puntuaciones ?? 0) > 0) { <a [routerLink]="['/puntuacion/noticia', oComentario()?.noticia?.id]" class="text-decoration-none">{{ oComentario()?.noticia?.puntuaciones }}</a> } @else { 0 }</div>
+            </div>
+            <div class="card border-start border-3 border-success mt-3">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+                <i class="bi bi-building-fill text-success small"></i>
+                <span class="text-uppercase small fw-semibold text-success">Club</span>
+                <a [routerLink]="['/club/view', oComentario()?.noticia?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                  {{ oComentario()?.noticia?.club?.nombre }} <span class="opacity-75 ms-1">#{{oComentario()?.noticia?.club?.id}}</span>
+                  <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
-            </div>
-            <div class="row g-1">
-              <div class="col-5 text-muted small text-uppercase">Noticia</div>
-              <div class="col-7 fw-semibold small">
-                <a class="text-decoration-none" [routerLink]="['/noticia/view', oComentario()?.noticia?.id]">
-                  {{ oComentario()?.noticia?.titulo }} ({{ oComentario()?.noticia?.id }})
-                </a>
+              <div class="card-body p-2">
+                <div class="row g-1">
+                  <div class="col-5 text-muted small text-uppercase">ID</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.noticia?.club?.id }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Nombre</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.noticia?.club?.nombre }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Dirección</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.noticia?.club?.direccion }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Teléfono</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.noticia?.club?.telefono }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.noticia?.club?.fechaAlta | datetime }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Temporadas</div>
+                  <div class="col-7 fw-semibold small">@if ((oComentario()?.noticia?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oComentario()?.noticia?.club?.id]" class="text-decoration-none">{{ oComentario()?.noticia?.club?.temporadas }}</a> } @else { 0 }</div>
+                  <div class="col-5 text-muted small text-uppercase">Noticias</div>
+                  <div class="col-7 fw-semibold small">@if ((oComentario()?.noticia?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oComentario()?.noticia?.club?.id]" class="text-decoration-none">{{ oComentario()?.noticia?.club?.noticias }}</a> } @else { 0 }</div>
+                  <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
+                  <div class="col-7 fw-semibold small">@if ((oComentario()?.noticia?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oComentario()?.noticia?.club?.id]" class="text-decoration-none">{{ oComentario()?.noticia?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+                  <div class="col-5 text-muted small text-uppercase">Usuarios</div>
+                  <div class="col-7 fw-semibold small">@if ((oComentario()?.noticia?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oComentario()?.noticia?.club?.id]" class="text-decoration-none">{{ oComentario()?.noticia?.club?.usuarios }}</a> } @else { 0 }</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="card border-start border-3 border-info mt-3">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+            <i class="bi bi-person-fill text-info small"></i>
+            <span class="text-uppercase small fw-semibold text-info">Usuario</span>
+            <a [routerLink]="['/usuario/view', oComentario()?.usuario?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+              {{ oComentario()?.usuario?.nombre }} {{ oComentario()?.usuario?.apellido1 }} <span class="opacity-75 ms-1">#{{oComentario()?.usuario?.id}}</span>
+              <i class="bi bi-box-arrow-up-right ms-1"></i>
+            </a>
+          </div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">ID</div>
+              <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.id }}</div>
+              <div class="col-5 text-muted small text-uppercase">Nombre</div>
+              <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.nombre }}</div>
+              <div class="col-5 text-muted small text-uppercase">Apellido 1</div>
+              <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.apellido1 }}</div>
+              <div class="col-5 text-muted small text-uppercase">Apellido 2</div>
+              <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.apellido2 || '-' }}</div>
+              <div class="col-5 text-muted small text-uppercase">Username</div>
+              <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.username }}</div>
+              <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
+              <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.fechaAlta | datetime }}</div>
+              <div class="col-5 text-muted small text-uppercase">Género</div>
+              <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
+              <div class="col-5 text-muted small text-uppercase">Comentarios</div>
+              <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.comentarios ?? 0) > 0) { <a [routerLink]="['/comentario/usuario', oComentario()?.usuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.comentarios }}</a> } @else { 0 }</div>
+              <div class="col-5 text-muted small text-uppercase">Puntuaciones</div>
+              <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.puntuaciones ?? 0) > 0) { <a [routerLink]="['/puntuacion/usuario', oComentario()?.usuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.puntuaciones }}</a> } @else { 0 }</div>
+              <div class="col-5 text-muted small text-uppercase">Com. artículos</div>
+              <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.comentarioarts ?? 0) > 0) { <a [routerLink]="['/comentarioart/usuario', oComentario()?.usuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.comentarioarts }}</a> } @else { 0 }</div>
+              <div class="col-5 text-muted small text-uppercase">Carritos</div>
+              <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.carritos ?? 0) > 0) { <a [routerLink]="['/carrito/usuario', oComentario()?.usuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.carritos }}</a> } @else { 0 }</div>
+              <div class="col-5 text-muted small text-uppercase">Facturas</div>
+              <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.facturas ?? 0) > 0) { <a [routerLink]="['/factura/usuario', oComentario()?.usuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.facturas }}</a> } @else { 0 }</div>
+              <div class="col-5 text-muted small text-uppercase">Equipos entren.</div>
+              <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.equiposentrenados ?? 0) > 0) { <a [routerLink]="['/equipo/usuario', oComentario()?.usuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.equiposentrenados }}</a> } @else { 0 }</div>
+              <div class="col-5 text-muted small text-uppercase">Jugadores</div>
+              <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/usuario', oComentario()?.usuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.jugadores }}</a> } @else { 0 }</div>
+            </div>
+            <div class="card border-start border-3 border-success mt-3">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+                <i class="bi bi-person-badge-fill text-success small"></i>
+                <span class="text-uppercase small fw-semibold text-success">Tipo de usuario</span>
+                <a [routerLink]="['/tipousuario/view', oComentario()?.usuario?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                  {{ oComentario()?.usuario?.tipousuario?.descripcion }} <span class="opacity-75 ms-1">#{{oComentario()?.usuario?.tipousuario?.id}}</span>
+                  <i class="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
+              </div>
+              <div class="card-body p-2">
+                <div class="row g-1">
+                  <div class="col-5 text-muted small text-uppercase">ID</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.tipousuario?.id }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Descripción</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.tipousuario?.descripcion }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Usuarios</div>
+                  <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oComentario()?.usuario?.tipousuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
+                </div>
+              </div>
+            </div>
+            <div class="card border-start border-3 border-success mt-3">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+                <i class="bi bi-shield-fill text-success small"></i>
+                <span class="text-uppercase small fw-semibold text-success">Rol de usuario</span>
+                <a [routerLink]="['/rolusuario/view', oComentario()?.usuario?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                  {{ oComentario()?.usuario?.rolusuario?.descripcion }} <span class="opacity-75 ms-1">#{{oComentario()?.usuario?.rolusuario?.id}}</span>
+                  <i class="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
+              </div>
+              <div class="card-body p-2">
+                <div class="row g-1">
+                  <div class="col-5 text-muted small text-uppercase">ID</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.rolusuario?.id }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Descripción</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.rolusuario?.descripcion }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Usuarios</div>
+                  <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oComentario()?.usuario?.rolusuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
+                </div>
+              </div>
+            </div>
+            <div class="card border-start border-3 border-success mt-3">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+                <i class="bi bi-building-fill text-success small"></i>
+                <span class="text-uppercase small fw-semibold text-success">Club</span>
+                <a [routerLink]="['/club/view', oComentario()?.usuario?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                  {{ oComentario()?.usuario?.club?.nombre }} <span class="opacity-75 ms-1">#{{oComentario()?.usuario?.club?.id}}</span>
+                  <i class="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
+              </div>
+              <div class="card-body p-2">
+                <div class="row g-1">
+                  <div class="col-5 text-muted small text-uppercase">ID</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.club?.id }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Nombre</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.club?.nombre }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Dirección</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.club?.direccion }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Teléfono</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.club?.telefono }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
+                  <div class="col-7 fw-semibold small">{{ oComentario()?.usuario?.club?.fechaAlta | datetime }}</div>
+                  <div class="col-5 text-muted small text-uppercase">Temporadas</div>
+                  <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oComentario()?.usuario?.club?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.club?.temporadas }}</a> } @else { 0 }</div>
+                  <div class="col-5 text-muted small text-uppercase">Noticias</div>
+                  <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oComentario()?.usuario?.club?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.club?.noticias }}</a> } @else { 0 }</div>
+                  <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
+                  <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oComentario()?.usuario?.club?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+                  <div class="col-5 text-muted small text-uppercase">Usuarios</div>
+                  <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oComentario()?.usuario?.club?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.club?.usuarios }}</a> } @else { 0 }</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   }

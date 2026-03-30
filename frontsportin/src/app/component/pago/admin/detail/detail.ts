@@ -2,13 +2,14 @@ import { Component, signal, OnInit, inject, Input, Signal } from '@angular/core'
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { PagoService } from '../../../../service/pago';
 import { IPago } from '../../../../model/pago';
 
 @Component({
   standalone: true,
   selector: 'app-pago-admin-detail',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DatetimePipe],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })

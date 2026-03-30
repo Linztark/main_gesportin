@@ -3,12 +3,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ITemporada } from '../../../../model/temporada';
+import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { TemporadaService } from '../../../../service/temporada';
 import { SessionService } from '../../../../service/session';
 
 @Component({
   selector: 'app-temporada-admin-detail',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DatetimePipe],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })
