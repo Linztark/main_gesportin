@@ -11,11 +11,12 @@ import { IPartido } from '../../../../model/partido';
 import { ILiga } from '../../../../model/liga';
 import { SessionService } from '../../../../service/session';
 import { LigaAdminPlist } from '../../../liga/admin/plist/plist';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-partido-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -37,6 +38,15 @@ export class PartidoTeamadminForm implements OnInit {
   loading = signal<boolean>(false);
   submitting = signal(false);
   selectedLiga = signal<ILiga | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Temporadas', route: '/temporada/teamadmin' },
+    { label: 'Categorías', route: '/categoria/teamadmin' },
+    { label: 'Equipos', route: '/equipo/teamadmin' },
+    { label: 'Ligas', route: '/liga/teamadmin' },
+    { label: 'Partidos', route: '/partido/teamadmin' },
+    { label: 'Partido' },
+  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -91,7 +101,26 @@ export class PartidoTeamadminForm implements OnInit {
 
   private loadLiga(idLiga: number): void {
     this.oLigaService.get(idLiga).subscribe({
-      next: (liga) => this.selectedLiga.set(liga),
+      next: (liga) => {
+        this.selectedLiga.set(liga);
+        const equipo = liga.equipo;
+        const cat = equipo?.categoria;
+        const temp = cat?.temporada;
+        const isEdit = this.id() > 0;
+        this.breadcrumbItems.set([
+          { label: 'Mis Clubes', route: '/club/teamadmin' },
+          { label: 'Temporadas', route: '/temporada/teamadmin' },
+          ...(temp ? [{ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` }] : []),
+          { label: 'Categorías', route: temp ? `/categoria/teamadmin/temporada/${temp.id}` : '/categoria/teamadmin' },
+          ...(cat ? [{ label: cat.nombre, route: `/categoria/teamadmin/view/${cat.id}` }] : []),
+          { label: 'Equipos', route: cat ? `/equipo/teamadmin/categoria/${cat.id}` : '/equipo/teamadmin' },
+          ...(equipo ? [{ label: equipo.nombre ?? '', route: `/equipo/teamadmin/view/${equipo.id}` }] : []),
+          { label: 'Ligas', route: equipo ? `/liga/teamadmin/equipo/${equipo.id}` : '/liga/teamadmin' },
+          { label: liga.nombre, route: `/liga/teamadmin/view/${liga.id}` },
+          { label: 'Partidos', route: `/partido/teamadmin/liga/${liga.id}` },
+          ...(isEdit ? [{ label: 'Editar Partido' }] : [{ label: 'Nuevo Partido' }]),
+        ]);
+      },
       error: () => this.selectedLiga.set(null),
     });
   }

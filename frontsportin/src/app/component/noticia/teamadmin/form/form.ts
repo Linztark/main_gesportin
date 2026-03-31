@@ -12,10 +12,11 @@ import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
 import { NoticiaService } from '../../../../service/noticia';
 import { ClubAdminPlist } from '../../../club/admin/plist/plist';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-noticia-teamadmin-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -36,6 +37,11 @@ export class NoticiaTeamadminForm implements OnInit {
   error = signal<string | null>(null);
   selectedClub = signal<IClub | null>(null);
   displayIdClub = signal<number | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Noticias', route: '/noticia/teamadmin' },
+    { label: 'Nueva Noticia' },
+  ]);
 
   private modalService = inject(ModalService);
 
@@ -105,6 +111,14 @@ export class NoticiaTeamadminForm implements OnInit {
       imagen: noticia.imagen || null,
       id_club: noticia.club?.id,
     });
+
+    this.breadcrumbItems.set([
+      { label: 'Mis Clubes', route: '/club/teamadmin' },
+      ...(noticia.club ? [{ label: noticia.club.nombre, route: `/club/teamadmin/view/${noticia.club.id}` }] : []),
+      { label: 'Noticias', route: noticia.club ? `/noticia/teamadmin/club/${noticia.club.id}` : '/noticia/teamadmin' },
+      { label: noticia.titulo, route: `/noticia/teamadmin/view/${noticia.id}` },
+      { label: 'Editar' },
+    ]);
 
     if (noticia.club) {
       this.syncClub(noticia.club.id);

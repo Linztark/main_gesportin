@@ -11,11 +11,12 @@ import { SessionService } from '../../../../service/session';
 import { ICategoria } from '../../../../model/categoria';
 import { ITemporada } from '../../../../model/temporada';
 import { TemporadaAdminPlist } from '../../../temporada/admin/plist/plist';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-categoria-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -38,6 +39,12 @@ export class CategoriaTeamadminForm implements OnInit {
   submitting = signal(false);
   temporadas = signal<ITemporada[]>([]);
   selectedTemporada = signal<ITemporada | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Temporadas', route: '/temporada/teamadmin' },
+    { label: 'Categorías', route: '/categoria/teamadmin' },
+    { label: 'Nueva Categoría' },
+  ]);
 
   get mode(): 'create' | 'edit' {
     return this.id() > 0 ? 'edit' : 'create';
@@ -95,6 +102,15 @@ export class CategoriaTeamadminForm implements OnInit {
     this.oTemporadaService.get(id).subscribe({
       next: (temporada) => {
         this.selectedTemporada.set(temporada);
+        if (this.id() === 0) {
+          this.breadcrumbItems.set([
+            { label: 'Mis Clubes', route: '/club/teamadmin' },
+            { label: 'Temporadas', route: '/temporada/teamadmin' },
+            { label: temporada.descripcion, route: `/temporada/teamadmin/view/${temporada.id}` },
+            { label: 'Categorías', route: `/categoria/teamadmin/temporada/${temporada.id}` },
+            { label: 'Nueva Categoría' },
+          ]);
+        }
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al sincronizar temporada:', err);

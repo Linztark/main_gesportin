@@ -11,11 +11,12 @@ import { ClubAdminPlist } from '../../../club/admin/plist/plist';
 import { ITipoarticulo } from '../../../../model/tipoarticulo';
 import { IClub } from '../../../../model/club';
 import { SessionService } from '../../../../service/session';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-tipoarticulo-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -36,6 +37,11 @@ export class TipoarticuloTeamadminForm implements OnInit {
   loading = signal<boolean>(false);
   submitting = signal(false);
   selectedClub = signal<IClub | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Tipos de Artículos', route: '/tipoarticulo/teamadmin' },
+    { label: 'Nuevo Tipo de Artículo' },
+  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -84,6 +90,14 @@ export class TipoarticuloTeamadminForm implements OnInit {
       descripcion: tipoarticulo.descripcion,
       id_club: tipoarticulo.club?.id,
     });
+    const club = tipoarticulo.club;
+    this.breadcrumbItems.set([
+      { label: 'Mis Clubes', route: '/club/teamadmin' },
+      ...(club ? [{ label: club.nombre, route: `/club/teamadmin/view/${club.id}` }] : []),
+      { label: 'Tipos de Artículos', route: club ? `/tipoarticulo/teamadmin/club/${club.id}` : '/tipoarticulo/teamadmin' },
+      { label: tipoarticulo.descripcion, route: `/tipoarticulo/teamadmin/view/${tipoarticulo.id}` },
+      { label: 'Editar' },
+    ]);
     if (tipoarticulo.club?.id) {
       this.loadClub(tipoarticulo.club.id);
     }

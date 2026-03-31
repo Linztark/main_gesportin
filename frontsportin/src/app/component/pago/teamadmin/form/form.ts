@@ -14,11 +14,12 @@ import { IJugador } from '../../../../model/jugador';
 import { SessionService } from '../../../../service/session';
 import { CuotaAdminPlist } from '../../../cuota/admin/plist/plist';
 import { JugadorAdminPlist } from '../../../jugador/admin/plist/plist';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-pago-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -42,6 +43,15 @@ export class PagoTeamadminForm implements OnInit {
   submitting = signal(false);
   selectedCuota = signal<ICuota | null>(null);
   selectedJugador = signal<IJugador | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Temporadas', route: '/temporada/teamadmin' },
+    { label: 'Categorías', route: '/categoria/teamadmin' },
+    { label: 'Equipos', route: '/equipo/teamadmin' },
+    { label: 'Cuotas', route: '/cuota/teamadmin' },
+    { label: 'Pagos', route: '/pago/teamadmin' },
+    { label: 'Pago' },
+  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -97,7 +107,26 @@ export class PagoTeamadminForm implements OnInit {
 
   private loadCuota(idCuota: number): void {
     this.oCuotaService.get(idCuota).subscribe({
-      next: (cuota) => this.selectedCuota.set(cuota),
+      next: (cuota) => {
+        this.selectedCuota.set(cuota);
+        const equipo = cuota.equipo;
+        const cat = equipo?.categoria;
+        const temp = cat?.temporada;
+        const isEdit = this.id() > 0;
+        this.breadcrumbItems.set([
+          { label: 'Mis Clubes', route: '/club/teamadmin' },
+          { label: 'Temporadas', route: '/temporada/teamadmin' },
+          ...(temp ? [{ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` }] : []),
+          { label: 'Categorías', route: temp ? `/categoria/teamadmin/temporada/${temp.id}` : '/categoria/teamadmin' },
+          ...(cat ? [{ label: cat.nombre, route: `/categoria/teamadmin/view/${cat.id}` }] : []),
+          { label: 'Equipos', route: cat ? `/equipo/teamadmin/categoria/${cat.id}` : '/equipo/teamadmin' },
+          ...(equipo ? [{ label: equipo.nombre ?? '', route: `/equipo/teamadmin/view/${equipo.id}` }] : []),
+          { label: 'Cuotas', route: equipo ? `/cuota/teamadmin/equipo/${equipo.id}` : '/cuota/teamadmin' },
+          { label: cuota.descripcion, route: `/cuota/teamadmin/view/${cuota.id}` },
+          { label: 'Pagos', route: `/pago/teamadmin/cuota/${cuota.id}` },
+          ...(isEdit ? [{ label: 'Editar Pago' }] : [{ label: 'Nuevo Pago' }]),
+        ]);
+      },
       error: () => this.selectedCuota.set(null),
     });
   }

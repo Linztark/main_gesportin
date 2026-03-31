@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { FacturaService } from '../../../../service/factura-service';
 import { IFactura } from '../../../../model/factura';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   standalone: true,
   selector: 'app-factura-teamadmin-detail',
-  imports: [CommonModule, RouterLink, DatetimePipe],
+  imports: [CommonModule, RouterLink, DatetimePipe, BreadcrumbComponent],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })
@@ -21,6 +22,12 @@ export class FacturaTeamadminDetail implements OnInit {
   oFactura = signal<IFactura | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Usuarios', route: '/usuario/teamadmin' },
+    { label: 'Facturas', route: '/factura/teamadmin' },
+    { label: 'Factura' },
+  ]);
 
   ngOnInit(): void {
     const idFactura = this.id();
@@ -37,6 +44,14 @@ export class FacturaTeamadminDetail implements OnInit {
       next: (data) => {
         this.oFactura.set(data);
         this.loading.set(false);
+        const usuario = data.usuario;
+        this.breadcrumbItems.set([
+          { label: 'Mis Clubes', route: '/club/teamadmin' },
+          { label: 'Usuarios', route: '/usuario/teamadmin' },
+          ...(usuario ? [{ label: `${usuario.nombre} ${usuario.apellido1}`, route: `/usuario/teamadmin/view/${usuario.id}` }] : []),
+          { label: 'Facturas', route: usuario ? `/factura/teamadmin/usuario/${usuario.id}` : '/factura/teamadmin' },
+          { label: `#${data.id}` },
+        ]);
       },
       error: (err: HttpErrorResponse) => {
         this.error.set('Error cargando la factura');

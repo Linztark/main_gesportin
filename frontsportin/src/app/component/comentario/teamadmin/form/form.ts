@@ -14,11 +14,12 @@ import { INoticia } from '../../../../model/noticia';
 import { SessionService } from '../../../../service/session';
 import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
 import { NoticiaAdminPlist } from '../../../noticia/admin/plist/plist';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-comentario-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -42,6 +43,12 @@ export class ComentarioTeamadminForm implements OnInit {
   submitting = signal(false);
   selectedUsuario = signal<IUsuario | null>(null);
   selectedNoticia = signal<INoticia | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Noticias', route: '/noticia/teamadmin' },
+    { label: 'Comentarios', route: '/comentario/teamadmin' },
+    { label: 'Nuevo Comentario' },
+  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -88,6 +95,18 @@ export class ComentarioTeamadminForm implements OnInit {
       id_usuario: comentario.usuario?.id ?? null,
       id_noticia: comentario.noticia?.id ?? null,
     });
+    const noticia = comentario.noticia;
+    if (noticia) {
+      const titulo = noticia.titulo;
+      this.breadcrumbItems.set([
+        { label: 'Mis Clubes', route: '/club/teamadmin' },
+        { label: 'Noticias', route: '/noticia/teamadmin' },
+        { label: titulo.length > 40 ? titulo.substring(0, 40) + '…' : titulo, route: `/noticia/teamadmin/view/${noticia.id}` },
+        { label: 'Comentarios', route: `/comentario/teamadmin/noticia/${noticia.id}` },
+        { label: `#${comentario.id}`, route: `/comentario/teamadmin/view/${comentario.id}` },
+        { label: 'Editar' },
+      ]);
+    }
     if (comentario.usuario?.id) this.loadUsuario(comentario.usuario.id);
     if (comentario.noticia?.id) this.loadNoticia(comentario.noticia.id);
   }
@@ -101,7 +120,19 @@ export class ComentarioTeamadminForm implements OnInit {
 
   private loadNoticia(idNoticia: number): void {
     this.oNoticiaService.getById(idNoticia).subscribe({
-      next: (noticia) => this.selectedNoticia.set(noticia),
+      next: (noticia) => {
+        this.selectedNoticia.set(noticia);
+        if (this.id() === 0) {
+          const titulo = noticia.titulo;
+          this.breadcrumbItems.set([
+            { label: 'Mis Clubes', route: '/club/teamadmin' },
+            { label: 'Noticias', route: '/noticia/teamadmin' },
+            { label: titulo.length > 40 ? titulo.substring(0, 40) + '…' : titulo, route: `/noticia/teamadmin/view/${noticia.id}` },
+            { label: 'Comentarios', route: `/comentario/teamadmin/noticia/${noticia.id}` },
+            { label: 'Nuevo Comentario' },
+          ]);
+        }
+      },
       error: () => this.selectedNoticia.set(null),
     });
   }

@@ -11,11 +11,12 @@ import { ICuota } from '../../../../model/cuota';
 import { IEquipo } from '../../../../model/equipo';
 import { SessionService } from '../../../../service/session';
 import { EquipoAdminPlist } from '../../../equipo/admin/plist/plist';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-cuota-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -37,6 +38,14 @@ export class CuotaTeamadminForm implements OnInit {
   loading = signal<boolean>(false);
   submitting = signal(false);
   selectedEquipo = signal<IEquipo | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Temporadas', route: '/temporada/teamadmin' },
+    { label: 'Categorías', route: '/categoria/teamadmin' },
+    { label: 'Equipos', route: '/equipo/teamadmin' },
+    { label: 'Cuotas', route: '/cuota/teamadmin' },
+    { label: 'Cuota' },
+  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -91,7 +100,24 @@ export class CuotaTeamadminForm implements OnInit {
 
   private loadEquipo(idEquipo: number): void {
     this.oEquipoService.get(idEquipo).subscribe({
-      next: (equipo) => this.selectedEquipo.set(equipo),
+      next: (equipo) => {
+        this.selectedEquipo.set(equipo);
+        const cat = equipo.categoria;
+        const temp = cat?.temporada;
+        const isEdit = this.id() > 0;
+        const descripcion = this.cuotaForm.get('descripcion')?.value ?? '';
+        this.breadcrumbItems.set([
+          { label: 'Mis Clubes', route: '/club/teamadmin' },
+          { label: 'Temporadas', route: '/temporada/teamadmin' },
+          ...(temp ? [{ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` }] : []),
+          { label: 'Categorías', route: temp ? `/categoria/teamadmin/temporada/${temp.id}` : '/categoria/teamadmin' },
+          ...(cat ? [{ label: cat.nombre, route: `/categoria/teamadmin/view/${cat.id}` }] : []),
+          { label: 'Equipos', route: cat ? `/equipo/teamadmin/categoria/${cat.id}` : '/equipo/teamadmin' },
+          { label: equipo.nombre ?? '', route: `/equipo/teamadmin/view/${equipo.id}` },
+          { label: 'Cuotas', route: `/cuota/teamadmin/equipo/${equipo.id}` },
+          ...(isEdit ? [{ label: descripcion || 'Cuota', route: `/cuota/teamadmin/view/${this.id()}` }, { label: 'Editar' }] : [{ label: 'Nueva Cuota' }]),
+        ]);
+      },
       error: () => this.selectedEquipo.set(null),
     });
   }

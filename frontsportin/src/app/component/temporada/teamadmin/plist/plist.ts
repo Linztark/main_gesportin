@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, signal } from '@angular/core';
+import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { IPage } from '../../../../model/plist';
 import { ITemporada } from '../../../../model/temporada';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
@@ -11,6 +11,7 @@ import { TrimPipe } from '../../../../pipe/trim-pipe';
 import { SessionService } from '../../../../service/session';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
+import { ClubService } from '../../../../service/club';
 
 @Component({
   selector: 'app-temporada-teamadmin-plist',
@@ -21,10 +22,10 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/
 export class TemporadaTeamadminPlist {
   @Input() id_club?: number;
 
-  breadcrumbItems: BreadcrumbItem[] = [
+  breadcrumbItems = signal<BreadcrumbItem[]>([
     { label: 'Mis Clubes', route: '/club/teamadmin' },
     { label: 'Temporadas' },
-  ];
+  ]);
 
   oPage = signal<IPage<ITemporada> | null>(null);
   numPage = signal<number>(0);
@@ -42,8 +43,18 @@ export class TemporadaTeamadminPlist {
   oTemporadaService = inject(TemporadaService);
   private route = inject(ActivatedRoute);
   session: SessionService = inject(SessionService);
+  private clubService = inject(ClubService);
 
   ngOnInit(): void {
+    if (this.id_club) {
+      this.clubService.get(this.id_club).subscribe({
+        next: (club) => this.breadcrumbItems.set([
+          { label: 'Mis Clubes', route: '/club/teamadmin' },
+          { label: club.nombre, route: `/club/teamadmin/view/${club.id}` },
+          { label: 'Temporadas' },
+        ]),
+      });
+    }
     this.searchSubscription = this.searchSubject
       .pipe(debounceTime(debounceTimeSearch), distinctUntilChanged())
       .subscribe((searchTerm) => {

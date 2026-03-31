@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { TipoarticuloAdminPlist } from '../../../tipoarticulo/admin/plist/plist';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
+import { ClubService } from '../../../../service/club';
 
 @Component({
   standalone: true,
@@ -9,11 +10,25 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
-export class TipoarticuloTeamadminPlist {
+export class TipoarticuloTeamadminPlist implements OnInit {
   @Input() id_club?: number;
 
-  breadcrumbItems: BreadcrumbItem[] = [
+  breadcrumbItems = signal<BreadcrumbItem[]>([
     { label: 'Mis Clubes', route: '/club/teamadmin' },
     { label: 'Tipos de Artículos' },
-  ];
+  ]);
+
+  private clubService = inject(ClubService);
+
+  ngOnInit(): void {
+    if (this.id_club) {
+      this.clubService.get(this.id_club).subscribe({
+        next: (club) => this.breadcrumbItems.set([
+          { label: 'Mis Clubes', route: '/club/teamadmin' },
+          { label: club.nombre, route: `/club/teamadmin/view/${club.id}` },
+          { label: 'Tipos de Artículos' },
+        ]),
+      });
+    }
+  }
 }

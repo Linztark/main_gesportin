@@ -9,6 +9,7 @@ import { SessionService } from '../../../../service/session';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { TrimPipe } from '../../../../pipe/trim-pipe';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
+import { ClubService } from '../../../../service/club';
 
 @Component({
   selector: 'app-noticia-teamadmin-plist',
@@ -19,10 +20,10 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/
 export class NoticiaTeamadminPlist {
   @Input() id_club?: number;
 
-  breadcrumbItems: BreadcrumbItem[] = [
+  breadcrumbItems = signal<BreadcrumbItem[]>([
     { label: 'Mis Clubes', route: '/club/teamadmin' },
     { label: 'Noticias' },
-  ];
+  ]);
 
   oPage = signal<IPage<INoticia> | null>(null);
   numPage = signal<number>(0);
@@ -38,8 +39,18 @@ export class NoticiaTeamadminPlist {
   private oNoticiaService = inject(NoticiaService);
   private route = inject(ActivatedRoute);
   session: SessionService = inject(SessionService);
+  private clubService = inject(ClubService);
 
   ngOnInit() {
+    if (this.id_club) {
+      this.clubService.get(this.id_club).subscribe({
+        next: (club) => this.breadcrumbItems.set([
+          { label: 'Mis Clubes', route: '/club/teamadmin' },
+          { label: club.nombre, route: `/club/teamadmin/view/${club.id}` },
+          { label: 'Noticias' },
+        ]),
+      });
+    }
     const msg = this.route.snapshot.queryParamMap.get('msg');
     if (msg) {
       this.showMessage(msg);
