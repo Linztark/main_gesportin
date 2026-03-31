@@ -40,12 +40,12 @@ Load the detailed guidance based on on context:
 
 ## Diseño de UI para el perfil Administrador
 * Reference: [references/diseño-1.md](references/diseño-1.md)
-* Load When: Siempre que tengas que desarrollar o modificar vistas (plist, detail, form) del perfil Administrador (tipousuario id=1) en el frontend, para mantener el diseño unificado de la aplicación.
+* Load When: Siempre que tengas que desarrollar o modificar páginas o  vistas (plist, detail, form) del perfil Administrador (tipousuario id=1) en el frontend, para mantener el diseño unificado de la aplicación.
 
 ## Diseño de UI para el perfil Administrador de club
 * Reference: [references/diseño-2.md](references/diseño-2.md)
-* Load When: Siempre que tengas que desarrollar o modificar vistas (plist, detail, form) del perfil Administrador de club (tipousuario id=2) en el frontend, para mantener el diseño unificado de la aplicación.
+* Load When: Siempre que tengas que desarrollar o modificar páginas o vistas (plist, detail, form) del perfil Administrador de club (tipousuario id=2) en el frontend, para mantener el diseño unificado de la aplicación.
 
 ## Diseño de UI para el perfil Usuario
 * Reference: [references/diseño-3.md](references/diseño-3.md)
-* Load When: Siempre que tengas que desarrollar o modificar vistas (plist, detail, form) del perfil Usuario (tipousuario id=3) en el frontend, para mantener el diseño unificado de la aplicación.
+* Load When: Siempre que tengas que desarrollar o modificar páginas o vistas (plist, detail, form) del perfil Usuario (tipousuario id=3) en el frontend, para mantener el diseño unificado de la aplicación.
