@@ -5,7 +5,7 @@ import { ClubTeamadminDetail } from '../../../../component/club/teamadmin/detail
 @Component({
   selector: 'app-club-teamadmin-view-page',
   imports: [ClubTeamadminDetail],
-  template: '<div class="container"><app-club-teamadmin-detail [id]="id_club"></app-club-teamadmin-detail></div>',
+  template: '<div class="container-fluid"><app-club-teamadmin-detail [id]="id_club"></app-club-teamadmin-detail></div>',
 })
 export class ClubTeamadminViewPage implements OnInit {
   private route = inject(ActivatedRoute);
