@@ -17,13 +17,40 @@ export class ArticuloTeamadminDeletePage implements OnInit {
   private articuloService = inject(ArticuloService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Artículos', route: '/articulo/teamadmin' }, { label: 'Eliminar Artículo' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Tipos de Artículo', route: '/tipoarticulo/teamadmin' },
+    { label: 'Artículos', route: '/articulo/teamadmin' },
+    { label: 'Eliminar Artículo' },
+  ]);
   id_articulo = signal<number>(0);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.id_articulo.set(id ? Number(id) : NaN);
-    if (isNaN(this.id_articulo())) this.error.set('ID no válido');
+    const n = id ? Number(id) : NaN;
+    this.id_articulo.set(n);
+    if (!isNaN(n)) {
+      this.articuloService.get(n).subscribe({
+        next: (art) => {
+          const tipo = art.tipoarticulo;
+          const items: BreadcrumbItem[] = [{ label: 'Mis Clubes', route: '/club/teamadmin' }];
+          if (tipo?.club) {
+            items.push({ label: tipo.club.nombre, route: `/club/teamadmin/view/${tipo.club.id}` });
+          }
+          items.push({ label: 'Tipos de Artículo', route: '/tipoarticulo/teamadmin' });
+          if (tipo) {
+            items.push({ label: tipo.descripcion, route: `/tipoarticulo/teamadmin/view/${tipo.id}` });
+          }
+          items.push({ label: 'Artículos', route: tipo ? `/articulo/teamadmin/tipoarticulo/${tipo.id}` : '/articulo/teamadmin' });
+          items.push({ label: art.descripcion, route: `/articulo/teamadmin/view/${art.id}` });
+          items.push({ label: 'Eliminar Artículo' });
+          this.breadcrumbItems.set(items);
+        },
+        error: () => { this.error.set('Error cargando el registro'); },
+      });
+    } else {
+      this.error.set('ID no válido');
+    }
   }
 
   doDelete(): void {

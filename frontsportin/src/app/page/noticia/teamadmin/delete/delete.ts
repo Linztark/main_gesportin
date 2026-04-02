@@ -17,13 +17,34 @@ export class NoticiaTeamadminDeletePage implements OnInit {
   private noticiaService = inject(NoticiaService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Noticias', route: '/noticia/teamadmin' }, { label: 'Eliminar Noticia' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Noticias', route: '/noticia/teamadmin' },
+    { label: 'Eliminar Noticia' },
+  ]);
   id_noticia = signal<number>(0);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.id_noticia.set(id ? Number(id) : NaN);
-    if (isNaN(this.id_noticia())) this.error.set('ID no válido');
+    const n = id ? Number(id) : NaN;
+    this.id_noticia.set(n);
+    if (!isNaN(n)) {
+      this.noticiaService.getById(n).subscribe({
+        next: (noticia) => {
+          const items: BreadcrumbItem[] = [{ label: 'Mis Clubes', route: '/club/teamadmin' }];
+          if (noticia.club) {
+            items.push({ label: noticia.club.nombre, route: `/club/teamadmin/view/${noticia.club.id}` });
+          }
+          items.push({ label: 'Noticias', route: '/noticia/teamadmin' });
+          items.push({ label: noticia.titulo, route: `/noticia/teamadmin/view/${noticia.id}` });
+          items.push({ label: 'Eliminar Noticia' });
+          this.breadcrumbItems.set(items);
+        },
+        error: () => { this.error.set('Error cargando el registro'); },
+      });
+    } else {
+      this.error.set('ID no válido');
+    }
   }
 
   doDelete(): void {

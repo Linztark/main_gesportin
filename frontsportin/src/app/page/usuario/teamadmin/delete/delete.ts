@@ -17,13 +17,34 @@ export class UsuarioTeamadminDeletePage implements OnInit {
   private usuarioService = inject(UsuarioService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Usuarios', route: '/usuario/teamadmin' }, { label: 'Eliminar Usuario' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Usuarios', route: '/usuario/teamadmin' },
+    { label: 'Eliminar Usuario' },
+  ]);
   id_usuario = signal<number>(0);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.id_usuario.set(id ? Number(id) : NaN);
-    if (isNaN(this.id_usuario())) this.error.set('ID no válido');
+    const n = id ? Number(id) : NaN;
+    this.id_usuario.set(n);
+    if (!isNaN(n)) {
+      this.usuarioService.get(n).subscribe({
+        next: (usuario) => {
+          const items: BreadcrumbItem[] = [{ label: 'Mis Clubes', route: '/club/teamadmin' }];
+          if (usuario.club) {
+            items.push({ label: usuario.club.nombre, route: `/club/teamadmin/view/${usuario.club.id}` });
+          }
+          items.push({ label: 'Usuarios', route: '/usuario/teamadmin' });
+          items.push({ label: `${usuario.nombre} ${usuario.apellido1}`, route: `/usuario/teamadmin/view/${usuario.id}` });
+          items.push({ label: 'Eliminar Usuario' });
+          this.breadcrumbItems.set(items);
+        },
+        error: () => { this.error.set('Error cargando el registro'); },
+      });
+    } else {
+      this.error.set('ID no válido');
+    }
   }
 
   doDelete(): void {

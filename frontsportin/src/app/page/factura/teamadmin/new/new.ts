@@ -8,7 +8,7 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/share
   template: '<app-breadcrumb [items]=\"breadcrumbItems()\"></app-breadcrumb><app-factura-teamadmin-form [returnUrl]="returnUrl"></app-factura-teamadmin-form>',
 })
 export class FacturaTeamadminNewPage {
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Facturas', route: '/factura/teamadmin' }, { label: 'Nueva Factura' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Mis Clubes', route: '/club/teamadmin' }, { label: 'Usuarios', route: '/usuario/teamadmin' }, { label: 'Facturas', route: '/factura/teamadmin' }, { label: 'Nueva Factura' }]);
 
   returnUrl = '/factura/teamadmin';
 }

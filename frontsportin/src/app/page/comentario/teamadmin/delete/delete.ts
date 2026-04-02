@@ -17,13 +17,39 @@ export class ComentarioTeamadminDeletePage implements OnInit {
   private comentarioService = inject(ComentarioService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Comentarios', route: '/comentario/teamadmin' }, { label: 'Eliminar Comentario' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Noticias', route: '/noticia/teamadmin' },
+    { label: 'Comentarios', route: '/comentario/teamadmin' },
+    { label: 'Eliminar Comentario' },
+  ]);
   id_comentario = signal<number>(0);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.id_comentario.set(id ? Number(id) : NaN);
-    if (isNaN(this.id_comentario())) this.error.set('ID no válido');
+    const n = id ? Number(id) : NaN;
+    this.id_comentario.set(n);
+    if (!isNaN(n)) {
+      this.comentarioService.get(n).subscribe({
+        next: (com) => {
+          const noticia = com.noticia;
+          const items: BreadcrumbItem[] = [{ label: 'Mis Clubes', route: '/club/teamadmin' }];
+          if (noticia?.club) {
+            items.push({ label: noticia.club.nombre, route: `/club/teamadmin/view/${noticia.club.id}` });
+          }
+          items.push({ label: 'Noticias', route: '/noticia/teamadmin' });
+          if (noticia) {
+            items.push({ label: noticia.titulo, route: `/noticia/teamadmin/view/${noticia.id}` });
+          }
+          items.push({ label: 'Comentarios', route: noticia ? `/comentario/teamadmin/noticia/${noticia.id}` : '/comentario/teamadmin' });
+          items.push({ label: 'Eliminar Comentario' });
+          this.breadcrumbItems.set(items);
+        },
+        error: () => { this.error.set('Error cargando el registro'); },
+      });
+    } else {
+      this.error.set('ID no válido');
+    }
   }
 
   doDelete(): void {

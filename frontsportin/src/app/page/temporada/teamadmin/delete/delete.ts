@@ -18,13 +18,34 @@ export class TemporadaTeamadminDeletePage implements OnInit {
   private temporadaService = inject(TemporadaService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Temporadas', route: '/temporada/teamadmin' }, { label: 'Eliminar Temporada' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Temporadas', route: '/temporada/teamadmin' },
+    { label: 'Eliminar Temporada' },
+  ]);
   id_temporada = signal<number>(0);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.id_temporada.set(id ? Number(id) : NaN);
-    if (isNaN(this.id_temporada())) this.error.set('ID no válido');
+    const n = id ? Number(id) : NaN;
+    this.id_temporada.set(n);
+    if (!isNaN(n)) {
+      this.temporadaService.get(n).subscribe({
+        next: (temp) => {
+          const items: BreadcrumbItem[] = [{ label: 'Mis Clubes', route: '/club/teamadmin' }];
+          if (temp.club) {
+            items.push({ label: temp.club.nombre, route: `/club/teamadmin/view/${temp.club.id}` });
+          }
+          items.push({ label: 'Temporadas', route: '/temporada/teamadmin' });
+          items.push({ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` });
+          items.push({ label: 'Eliminar Temporada' });
+          this.breadcrumbItems.set(items);
+        },
+        error: () => { this.error.set('Error cargando el registro'); },
+      });
+    } else {
+      this.error.set('ID no válido');
+    }
   }
 
   doDelete(): void {

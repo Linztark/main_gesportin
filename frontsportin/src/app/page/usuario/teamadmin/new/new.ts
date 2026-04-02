@@ -8,7 +8,7 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/share
   template: '<app-breadcrumb [items]=\"breadcrumbItems()\"></app-breadcrumb><app-usuario-teamadmin-form [returnUrl]="returnUrl"></app-usuario-teamadmin-form>',
 })
 export class UsuarioTeamadminNewPage {
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Usuarios', route: '/usuario/teamadmin' }, { label: 'Nuevo Usuario' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Mis Clubes', route: '/club/teamadmin' }, { label: 'Usuarios', route: '/usuario/teamadmin' }, { label: 'Nuevo Usuario' }]);
 
   returnUrl = '/usuario/teamadmin';
 }

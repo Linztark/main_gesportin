@@ -17,13 +17,45 @@ export class CompraTeamadminDeletePage implements OnInit {
   private compraService = inject(CompraService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Compras', route: '/compra/teamadmin' }, { label: 'Eliminar Compra' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Tipos de Artículo', route: '/tipoarticulo/teamadmin' },
+    { label: 'Artículos', route: '/articulo/teamadmin' },
+    { label: 'Compras', route: '/compra/teamadmin' },
+    { label: 'Eliminar Compra' },
+  ]);
   id_compra = signal<number>(0);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.id_compra.set(id ? Number(id) : NaN);
-    if (isNaN(this.id_compra())) this.error.set('ID no válido');
+    const n = id ? Number(id) : NaN;
+    this.id_compra.set(n);
+    if (!isNaN(n)) {
+      this.compraService.get(n).subscribe({
+        next: (compra) => {
+          const art = compra.articulo;
+          const tipo = art?.tipoarticulo;
+          const items: BreadcrumbItem[] = [{ label: 'Mis Clubes', route: '/club/teamadmin' }];
+          if (tipo?.club) {
+            items.push({ label: tipo.club.nombre, route: `/club/teamadmin/view/${tipo.club.id}` });
+          }
+          items.push({ label: 'Tipos de Artículo', route: '/tipoarticulo/teamadmin' });
+          if (tipo) {
+            items.push({ label: tipo.descripcion, route: `/tipoarticulo/teamadmin/view/${tipo.id}` });
+          }
+          items.push({ label: 'Artículos', route: tipo ? `/articulo/teamadmin/tipoarticulo/${tipo.id}` : '/articulo/teamadmin' });
+          if (art) {
+            items.push({ label: art.descripcion, route: `/articulo/teamadmin/view/${art.id}` });
+          }
+          items.push({ label: 'Compras', route: art ? `/compra/teamadmin/articulo/${art.id}` : '/compra/teamadmin' });
+          items.push({ label: 'Eliminar Compra' });
+          this.breadcrumbItems.set(items);
+        },
+        error: () => { this.error.set('Error cargando el registro'); },
+      });
+    } else {
+      this.error.set('ID no válido');
+    }
   }
 
   doDelete(): void {

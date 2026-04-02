@@ -17,13 +17,48 @@ export class EquipoTeamadminDeletePage implements OnInit {
   private equipoService = inject(EquipoService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Equipos', route: '/equipo/teamadmin' }, { label: 'Eliminar Equipo' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Temporadas', route: '/temporada/teamadmin' },
+    { label: 'Categorías', route: '/categoria/teamadmin' },
+    { label: 'Equipos', route: '/equipo/teamadmin' },
+    { label: 'Eliminar Equipo' },
+  ]);
   id_equipo = signal<number>(0);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.id_equipo.set(id ? Number(id) : NaN);
-    if (isNaN(this.id_equipo())) this.error.set('ID no válido');
+    const n = id ? Number(id) : NaN;
+    this.id_equipo.set(n);
+    if (!isNaN(n)) {
+      this.equipoService.get(n).subscribe({
+        next: (equipo) => {
+          const cat = equipo.categoria;
+          const temp = cat?.temporada;
+          const items: BreadcrumbItem[] = [{ label: 'Mis Clubes', route: '/club/teamadmin' }];
+          if (temp?.club) {
+            items.push({ label: temp.club.nombre, route: `/club/teamadmin/view/${temp.club.id}` });
+          }
+          items.push({ label: 'Temporadas', route: '/temporada/teamadmin' });
+          if (temp) {
+            items.push({ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` });
+          }
+          if (cat) {
+            items.push({ label: 'Categorías', route: temp ? `/categoria/teamadmin/temporada/${temp.id}` : '/categoria/teamadmin' });
+            items.push({ label: cat.nombre!, route: `/categoria/teamadmin/view/${cat.id}` });
+          } else {
+            items.push({ label: 'Categorías', route: '/categoria/teamadmin' });
+          }
+          items.push({ label: 'Equipos', route: cat ? `/equipo/teamadmin/categoria/${cat.id}` : '/equipo/teamadmin' });
+          items.push({ label: equipo.nombre!, route: `/equipo/teamadmin/view/${equipo.id}` });
+          items.push({ label: 'Eliminar Equipo' });
+          this.breadcrumbItems.set(items);
+        },
+        error: () => { this.error.set('Error cargando el registro'); },
+      });
+    } else {
+      this.error.set('ID no válido');
+    }
   }
 
   doDelete(): void {

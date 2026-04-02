@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PartidoTeamadminForm } from '../../../../component/partido/teamadmin/form/form';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
+import { PartidoService } from '../../../../service/partido';
 
 @Component({
   selector: 'app-partido-teamadmin-edit-page',
@@ -9,14 +10,62 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/share
   template: '<app-breadcrumb [items]=\"breadcrumbItems()\"></app-breadcrumb><app-partido-teamadmin-form [id]="id_partido()" [returnUrl]="returnUrl"></app-partido-teamadmin-form>',
 })
 export class PartidoTeamadminEditPage implements OnInit {
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Ligas', route: '/liga/teamadmin' }, { label: 'Partidos', route: '/partido/teamadmin' }, { label: 'Editar Partido' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Ligas', route: '/liga/teamadmin' },
+    { label: 'Partidos', route: '/partido/teamadmin' },
+    { label: 'Editar Partido' },
+  ]);
 
   private route = inject(ActivatedRoute);
+  private partidoService = inject(PartidoService);
   id_partido = signal<number>(0);
   returnUrl = '/partido/teamadmin';
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.id_partido.set(id ? Number(id) : NaN);
+    const n = id ? Number(id) : NaN;
+    this.id_partido.set(n);
+    if (!isNaN(n)) {
+      this.partidoService.get(n).subscribe({
+        next: (partido) => {
+          const liga = partido.liga;
+          const equipo = liga?.equipo;
+          const cat = equipo?.categoria;
+          const temp = cat?.temporada;
+          const items: BreadcrumbItem[] = [{ label: 'Mis Clubes', route: '/club/teamadmin' }];
+          if (temp?.club) {
+            items.push({ label: temp.club.nombre, route: `/club/teamadmin/view/${temp.club.id}` });
+          }
+          items.push({ label: 'Temporadas', route: '/temporada/teamadmin' });
+          if (temp) {
+            items.push({ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` });
+          }
+          if (cat) {
+            items.push({ label: 'Categorías', route: temp ? `/categoria/teamadmin/temporada/${temp.id}` : '/categoria/teamadmin' });
+            items.push({ label: cat.nombre!, route: `/categoria/teamadmin/view/${cat.id}` });
+          } else {
+            items.push({ label: 'Categorías', route: '/categoria/teamadmin' });
+          }
+          if (equipo) {
+            items.push({ label: 'Equipos', route: cat ? `/equipo/teamadmin/categoria/${cat.id}` : '/equipo/teamadmin' });
+            items.push({ label: equipo.nombre!, route: `/equipo/teamadmin/view/${equipo.id}` });
+          } else {
+            items.push({ label: 'Equipos', route: '/equipo/teamadmin' });
+          }
+          if (liga) {
+            items.push({ label: 'Ligas', route: equipo ? `/liga/teamadmin/equipo/${equipo.id}` : '/liga/teamadmin' });
+            items.push({ label: liga.nombre, route: `/liga/teamadmin/view/${liga.id}` });
+          } else {
+            items.push({ label: 'Ligas', route: '/liga/teamadmin' });
+          }
+          items.push({ label: 'Partidos', route: liga ? `/partido/teamadmin/liga/${liga.id}` : '/partido/teamadmin' });
+          items.push({ label: partido.rival, route: `/partido/teamadmin/view/${partido.id}` });
+          items.push({ label: 'Editar Partido' });
+          this.breadcrumbItems.set(items);
+        },
+        error: () => {},
+      });
+    }
   }
 }

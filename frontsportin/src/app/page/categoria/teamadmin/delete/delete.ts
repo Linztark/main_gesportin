@@ -17,13 +17,40 @@ export class CategoriaTeamadminDeletePage implements OnInit {
   private categoriaService = inject(CategoriaService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Categorías', route: '/categoria/teamadmin' }, { label: 'Eliminar Categoría' }]);
+  breadcrumbItems = signal<BreadcrumbItem[]>([
+    { label: 'Mis Clubes', route: '/club/teamadmin' },
+    { label: 'Temporadas', route: '/temporada/teamadmin' },
+    { label: 'Categorías', route: '/categoria/teamadmin' },
+    { label: 'Eliminar Categoría' },
+  ]);
   id_categoria = signal<number>(0);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.id_categoria.set(id ? Number(id) : NaN);
-    if (isNaN(this.id_categoria())) this.error.set('ID no válido');
+    const n = id ? Number(id) : NaN;
+    this.id_categoria.set(n);
+    if (!isNaN(n)) {
+      this.categoriaService.get(n).subscribe({
+        next: (cat) => {
+          const temp = cat.temporada;
+          const items: BreadcrumbItem[] = [{ label: 'Mis Clubes', route: '/club/teamadmin' }];
+          if (temp?.club) {
+            items.push({ label: temp.club.nombre, route: `/club/teamadmin/view/${temp.club.id}` });
+          }
+          items.push({ label: 'Temporadas', route: '/temporada/teamadmin' });
+          if (temp) {
+            items.push({ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` });
+          }
+          items.push({ label: 'Categorías', route: temp ? `/categoria/teamadmin/temporada/${temp.id}` : '/categoria/teamadmin' });
+          items.push({ label: cat.nombre, route: `/categoria/teamadmin/view/${cat.id}` });
+          items.push({ label: 'Eliminar Categoría' });
+          this.breadcrumbItems.set(items);
+        },
+        error: () => { this.error.set('Error cargando el registro'); },
+      });
+    } else {
+      this.error.set('ID no válido');
+    }
   }
 
   doDelete(): void {
