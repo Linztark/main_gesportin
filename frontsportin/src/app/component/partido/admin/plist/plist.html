@@ -18,7 +18,7 @@
     @if (liga && liga > 0) {
       <small class="text-muted ms-3">Filtro: id de liga = {{ liga }}</small>
       @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="['/partido']" role="button" title="Quitar filtro">
+        <a class="ms-2" [routerLink]="strRole ? ['/partido', strRole] : ['/partido']" role="button" title="Quitar filtro">
           <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
         </a>
       }
@@ -145,12 +145,12 @@
                           @if (isDialogMode()) {
                             {{ oPartido.liga.nombre || 'N/A' }}
                           } @else {
-                            <a [routerLink]="['/liga/view', oPartido.liga.id]">{{ oPartido.liga.nombre || 'N/A' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/partido/liga', oPartido.liga.id]" role="button" title="Filtrar por liga"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                            <a [routerLink]="strRole ? ['/liga', strRole, 'view', oPartido.liga.id] : ['/liga/view', oPartido.liga.id]">{{ oPartido.liga.nombre || 'N/A' }}</a>
+                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="strRole ? ['/partido', strRole, 'liga', oPartido.liga.id] : ['/partido/liga', oPartido.liga.id]" role="button" title="Filtrar por liga"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                           }
                         </td>
                         <td class="text-center">
-                          <app-botonera-actions-plist [id]="oPartido.id" strEntity="partido"></app-botonera-actions-plist>
+                          <app-botonera-actions-plist [id]="oPartido.id" strEntity="partido" [strRole]="strRole"></app-botonera-actions-plist>
                         </td>
                       </tr>
                     }
