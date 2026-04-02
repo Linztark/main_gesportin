@@ -6,7 +6,7 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/share
 @Component({
   selector: 'app-club-teamadmin-view-page',
   imports: [ClubTeamadminDetail, BreadcrumbComponent],
-  template: '<div class="container-fluid"><app-club-teamadmin-detail [id]="id_club"></app-club-teamadmin-detail></div>',
+  template: '<app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb><div class="container-fluid"><app-club-teamadmin-detail [id]="id_club"></app-club-teamadmin-detail></div>',
 })
 export class ClubTeamadminViewPage implements OnInit {
   breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Mis Clubes', route: '/club/teamadmin' }, { label: 'Club' }]);
