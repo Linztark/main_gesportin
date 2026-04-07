@@ -27,9 +27,10 @@ export class CuotaTeamadminPlist implements OnInit, OnDestroy {
   numPage = signal<number>(0);
   numRpp = signal<number>(6);
   descripcion = signal<string>('');
-  orderField = signal<string>('id');
-  orderDirection = signal<'asc' | 'desc'>('asc');
+  orderField = signal<string>('fecha');
+  orderDirection = signal<'asc' | 'desc'>('desc');
   totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
+  totalPages = computed(() => this.oPage()?.totalPages ?? 1);
   pagosByCuota = signal<Map<number, IPago[]>>(new Map());
 
   private searchSubject = new Subject<string>();

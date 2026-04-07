@@ -22,21 +22,33 @@
 
   @if (totalRecords() > 0) {
     <div class="container-fluid p-0 my-1">
-      <div class="controls-row mb-2">
-        <div class="col-control left">
-          <app-paginacion [numPage]="numPage()" [numPages]="oPage()?.totalPages || 1" (pageChange)="goToPage($event)"></app-paginacion>
+      @if (totalPages() > 1) {
+        <div class="controls-row mb-2">
+          <div class="col-control left">
+            <app-paginacion
+              [numPage]="numPage()"
+              [numPages]="oPage()?.totalPages || 1"
+              (pageChange)="goToPage($event)"
+            ></app-paginacion>
+          </div>
+          <div class="col-control right">
+            <app-botonera-rpp
+              [options]="[6, 12, 60]"
+              [numRpp]="numRpp()"
+              (rppChange)="onRppChange($event)"
+            ></app-botonera-rpp>
+          </div>
         </div>
-        <div class="col-control right">
-          <app-botonera-rpp [numRpp]="numRpp()" (rppChange)="onRppChange($event)"></app-botonera-rpp>
-        </div>
-      </div>
+      }
       @if (!isDialogMode()) {
         <div class="d-flex my-1">
           <div class="w-100 d-flex justify-content-center">
-            <a class="btn btn-primary new-btn"
-               [routerLink]="['/cuota/teamadmin/new']"
-               [queryParams]="id_equipo ? { id_equipo: id_equipo } : {}"
-               role="button">
+            <a
+              class="btn btn-primary new-btn"
+              [routerLink]="['/cuota/teamadmin/new']"
+              [queryParams]="id_equipo ? { id_equipo: id_equipo } : {}"
+              role="button"
+            >
               <i class="bi bi-plus-circle" aria-hidden="true"></i>
               <span class="d-none d-sm-inline">Crear cuota</span>
             </a>
@@ -49,7 +61,11 @@
   <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
     @for (oCuota of oPage()?.content; track oCuota.id) {
       <div class="col">
-        <div class="card h-100 shadow-sm" (click)="onSelect(oCuota)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+        <div
+          class="card h-100 shadow-sm"
+          (click)="onSelect(oCuota)"
+          [style.cursor]="isDialogMode() ? 'pointer' : 'default'"
+        >
           <div class="card-header d-flex align-items-center gap-2">
             <i class="bi bi-cash-coin fs-5" aria-hidden="true"></i>
             <strong class="text-truncate">{{ oCuota.descripcion }}</strong>
@@ -79,13 +95,20 @@
             }
             <div class="d-flex flex-wrap gap-2 mt-2">
               @if (!oCuota.pagos || oCuota.pagos === 0) {
-                <a [routerLink]="['/pago/teamadmin/new']" [queryParams]="{ id_cuota: oCuota.id }"
-                   class="badge bg-warning text-dark text-decoration-none" title="Crear primer pago">
+                <a
+                  [routerLink]="['/pago/teamadmin/new']"
+                  [queryParams]="{ id_cuota: oCuota.id }"
+                  class="badge bg-warning text-dark text-decoration-none"
+                  title="Crear primer pago"
+                >
                   <i class="bi bi-plus-circle me-1"></i>0 pagos
                 </a>
               } @else {
-                <a [routerLink]="['/pago/teamadmin/cuota', oCuota.id]"
-                   class="badge bg-primary text-decoration-none" title="Ver pagos">
+                <a
+                  [routerLink]="['/pago/teamadmin/cuota', oCuota.id]"
+                  class="badge bg-primary text-decoration-none"
+                  title="Ver pagos"
+                >
                   <i class="bi bi-credit-card me-1"></i>{{ oCuota.pagos }} pagos
                 </a>
               }
@@ -95,18 +118,21 @@
                 <table class="table table-sm table-borderless mb-0 w-100">
                   <thead>
                     <tr class="border-bottom">
-                      <th class="ps-0 text-muted fw-normal" style="font-size:0.72rem">Jugador</th>
-                      <th class="text-muted fw-normal" style="font-size:0.72rem">Fecha</th>
-                      <th class="text-end pe-0 text-muted fw-normal" style="font-size:0.72rem">Estado</th>
+                      <th class="ps-0 text-muted fw-normal" style="font-size: 0.72rem">Jugador</th>
+                      <th class="text-muted fw-normal" style="font-size: 0.72rem">Fecha</th>
+                      <th class="text-end pe-0 text-muted fw-normal" style="font-size: 0.72rem">
+                        Estado
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     @for (pago of getPagosForCuota(oCuota.id); track pago.id) {
                       <tr>
-                        <td class="ps-0 py-1" style="font-size:0.75rem">
-                          {{ pago.jugador.usuario.nombre }} {{ pago.jugador.usuario.apellido1 }} {{ pago.jugador.usuario.apellido2 }}
+                        <td class="ps-0 py-1" style="font-size: 0.75rem">
+                          {{ pago.jugador.usuario.nombre }} {{ pago.jugador.usuario.apellido1 }}
+                          {{ pago.jugador.usuario.apellido2 }}
                         </td>
-                        <td class="py-1" style="font-size:0.75rem">{{ pago.fecha }}</td>
+                        <td class="py-1" style="font-size: 0.75rem">{{ pago.fecha }}</td>
                         <td class="text-end pe-0 py-1">
                           @if (pago.abonado) {
                             <i class="bi bi-check-circle-fill text-success" title="Abonado"></i>
@@ -123,11 +149,18 @@
           </div>
           @if (!isDialogMode()) {
             <div class="card-footer d-flex justify-content-end gap-2">
-              <a [routerLink]="['/cuota/teamadmin/view', oCuota.id]" class="btn btn-outline-primary btn-sm">
+              <a
+                [routerLink]="['/cuota/teamadmin/view', oCuota.id]"
+                class="btn btn-outline-primary btn-sm"
+              >
                 <i class="bi bi-eye" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline ms-1">Ver</span>
               </a>
-              <app-botonera-actions-plist [id]="oCuota.id" strEntity="cuota" strRole="teamadmin"></app-botonera-actions-plist>
+              <app-botonera-actions-plist
+                [id]="oCuota.id"
+                strEntity="cuota"
+                strRole="teamadmin"
+              ></app-botonera-actions-plist>
             </div>
           }
         </div>
@@ -135,4 +168,3 @@
     }
   </div>
 </div>
-
