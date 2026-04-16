@@ -71,6 +71,7 @@ export class UsuarioAdminForm implements OnInit {
       apellido2: ['', [Validators.maxLength(100)]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      genero: ['', Validators.required],
       id_tipousuario: [null, Validators.required],
       id_rolusuario: [null, Validators.required],
       id_club: [null, Validators.required],
@@ -91,6 +92,7 @@ export class UsuarioAdminForm implements OnInit {
       apellido1: usuario.apellido1,
       apellido2: usuario.apellido2,
       username: usuario.username,
+      genero: usuario.genero,
       id_tipousuario: usuario.tipousuario?.id,
       id_rolusuario: usuario.rolusuario?.id,
       id_club: usuario.club?.id,
@@ -153,6 +155,10 @@ export class UsuarioAdminForm implements OnInit {
     return this.usuarioForm.get('id_club');
   }
 
+  get genero() {
+    return this.usuarioForm.get('genero');
+  }
+
   openTipousuarioFinderModal(): void {
     const ref = this.modalService.open<unknown, ITipousuario | null>(TipousuarioAdminPlist);
     ref.afterClosed$.subscribe((tipo: ITipousuario | null) => {
@@ -199,6 +205,7 @@ export class UsuarioAdminForm implements OnInit {
       apellido1: this.usuarioForm.value.apellido1,
       apellido2: this.usuarioForm.value.apellido2,
       username: this.usuarioForm.value.username,
+      genero: Number(this.usuarioForm.value.genero),
       tipousuario: { id: Number(this.usuarioForm.value.id_tipousuario) },
       rolusuario: { id: Number(this.usuarioForm.value.id_rolusuario) },
       club: { id: Number(this.usuarioForm.value.id_club) },
